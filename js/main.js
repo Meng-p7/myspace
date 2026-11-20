@@ -562,6 +562,21 @@ homeLayer.addEventListener("pointermove", (e) => {
   }
 });
 
+/* Pull-to-refresh guard for older iOS Safari, which ignores
+   `overscroll-behavior`. Block ONLY a downward pull while the page is at the
+   very top over Home — never normal scrolling, never the spotlight follow.
+   Modern Chrome/Safari already handle this in CSS; this is a narrow fallback. */
+let homeTouchStartY = 0;
+homeLayer.addEventListener("touchstart", (e) => {
+  homeTouchStartY = e.touches.length ? e.touches[0].clientY : 0;
+}, { passive: true });
+homeLayer.addEventListener("touchmove", (e) => {
+  if (window.scrollY > 1) return;                       // scrolled down: let native scroll run
+  const t = e.touches[0];
+  if (!t || t.clientY <= homeTouchStartY + 1) return;   // not pulling downward
+  e.preventDefault();                                    // suppress refresh only
+}, { passive: false });
+
 function spotLoopAllowed() {
   return isCoarsePointer && !prefersReducedMotion && lastP.reveal < 0.62;
 }
@@ -1025,11 +1040,40 @@ endingSection.addEventListener("pointermove", (e) => {
 });
 
 /* =========================================================
+   JOURNAL IMAGE PREWARM
+   The five journal photos are the entire emotional payload of the flipbook,
+   but they lived behind loading="lazy" and only started downloading on the
+   exact page turn — hence a 1-2s blank before the page rendered. Warm every
+   page image into cache during idle time, after the first paint, so any leaf
+   is instantly ready whichever direction the reader flips.
+========================================================= */
+const journalImageUrls = [...new Set(
+  Object.values(I18N).flatMap(d => (d.journalSpreads || []).flatMap(s => [
+    ...(s.leftHtml.match(/assets\/journal-[\w-]+\.webp/g) || []),
+    ...(s.rightHtml.match(/assets\/journal-[\w-]+\.webp/g) || [])
+  ]))
+)];
+function prewarmJournalImages() {
+  journalImageUrls.forEach(src => {
+    const im = new Image();
+    im.decoding = "async";
+    im.src = src;
+  });
+}
+function schedulePrewarm() {
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(prewarmJournalImages, { timeout: 2500 });
+  } else {
+    setTimeout(prewarmJournalImages, 1200);
+  }
+}
+
+/* =========================================================
    BOOT
 ========================================================= */
 attachBookInteraction();
 applyLanguage("zh");
-window.addEventListener("load", scheduleMetricsRefresh);
+window.addEventListener("load", () => { scheduleMetricsRefresh(); schedulePrewarm(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleMetricsRefresh);
 if ("ResizeObserver" in window) {
   new ResizeObserver(scheduleMetricsRefresh).observe(document.body);

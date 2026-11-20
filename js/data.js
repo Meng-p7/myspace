@@ -89,7 +89,7 @@ const I18N = {
             <div class="j-meta-row"><span>DESK PET</span><span>V0.1</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="My first desktop pet built from servos, wires and an ultrasonic sensor" />
+              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="My first desktop pet built from servos, wires and an ultrasonic sensor" />
               <div class="j-polaroid-cap">舵机和一堆没整理过的飞线</div>
             </div>
             <p class="j-handnote">焊坏的板子，比写对的代码多。</p>
@@ -103,7 +103,7 @@ const I18N = {
             <div class="j-meta-row"><span>THE LAB</span><span>HUMANOID</span></div>
             <div class="j-polaroid tilt-left" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">科研实习第一次见到的人形机器人</div>
             </div>
             <p class="j-handnote">第一次意识到，机器人可以安静地坐在人对面。</p>
@@ -146,7 +146,7 @@ const I18N = {
             <div class="j-meta-row"><span>WITH HER</span><span>US</span></div>
             <div class="j-polaroid tilt-right" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">一起比身高的那天</div>
             </div>
             <p class="j-handnote">她说我站过去显矮，我说是鞋子的问题。</p>
@@ -160,7 +160,7 @@ const I18N = {
             <div class="j-meta-row"><span>ON THE ROAD</span><span>NIGHT</span></div>
             <div class="j-polaroid tilt-left">
               <div class="j-tape"></div>
-              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Night skyline across the river with a ferris wheel" />
+              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="Night skyline across the river with a ferris wheel" />
               <div class="j-polaroid-cap">江边的夜，灯比星星亮</div>
             </div>
             <p class="j-handnote">关掉电脑，世界还在运行。</p>
@@ -190,7 +190,7 @@ const I18N = {
             <div class="j-meta-row"><span>CLOSING NOTE</span><span>MIDNIGHT</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
+              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
               <div class="j-polaroid-cap">山里的湖，雾还没散</div>
             </div>
             <p class="j-handnote" style="margin-top:1.2rem;">— Moon, Shanghai</p>
@@ -276,7 +276,7 @@ const I18N = {
             <div class="j-meta-row"><span>DESK PET</span><span>V0.1</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="My first desktop pet built from servos and wires" />
+              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="My first desktop pet built from servos and wires" />
               <div class="j-polaroid-cap">Servos and a nest of loose wires</div>
             </div>
             <p class="j-handnote">More burnt boards than correct code.</p>
@@ -290,7 +290,7 @@ const I18N = {
             <div class="j-meta-row"><span>THE LAB</span><span>HUMANOID</span></div>
             <div class="j-polaroid tilt-left" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">The first humanoid I met on a research internship</div>
             </div>
             <p class="j-handnote">The first time I realised a robot could sit quietly across from a person.</p>
@@ -333,7 +333,7 @@ const I18N = {
             <div class="j-meta-row"><span>WITH HER</span><span>US</span></div>
             <div class="j-polaroid tilt-right" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">Us, at the height chart</div>
             </div>
             <p class="j-handnote">She said I looked short up there. I blamed the shoes.</p>
@@ -347,7 +347,7 @@ const I18N = {
             <div class="j-meta-row"><span>ON THE ROAD</span><span>NIGHT</span></div>
             <div class="j-polaroid tilt-left">
               <div class="j-tape"></div>
-              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Night skyline across the river with a ferris wheel" />
+              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="Night skyline across the river with a ferris wheel" />
               <div class="j-polaroid-cap">Lights along the river, brighter than the stars</div>
             </div>
             <p class="j-handnote">Close the laptop. The world keeps running.</p>
@@ -377,7 +377,7 @@ const I18N = {
             <div class="j-meta-row"><span>CLOSING NOTE</span><span>MIDNIGHT</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
+              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="eager" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
               <div class="j-polaroid-cap">A lake in the mountains, still under fog</div>
             </div>
             <p class="j-handnote" style="margin-top:1.2rem;">— Moon, Shanghai</p>

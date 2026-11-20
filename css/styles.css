@@ -35,8 +35,10 @@ html {
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
-  /* kill pull-to-refresh at the top of Home while keeping native scroll */
-  overscroll-behavior-y: contain;
+  /* kill pull-to-refresh at the top of Home while keeping native scroll.
+     `none` also suppresses iOS Safari's rubber-band refresh, which `contain`
+     does not reliably do. A conditional touch guard in main.js covers old iOS. */
+  overscroll-behavior-y: none;
   scrollbar-color: #c9c0ac var(--paper);
   scrollbar-width: thin;
 }
@@ -46,7 +48,7 @@ body {
   color: var(--ink);
   line-height: 1.65;
   overflow-x: clip;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: none;
 }
 
 /* scrollbars drawn in the paper language, not the browser default */
