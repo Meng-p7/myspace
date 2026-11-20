@@ -20,7 +20,7 @@ const I18N = {
     labelIdentity: "Identity",
     labelAge: "Age",
     labelLocation: "Location",
-    aboutIdentity: "机械设计制造及其自动化专业 · 华东理工大学",
+    aboutIdentity: "机械设计制造及其自动化 · 华东理工大学",
     aboutLocation: "中国 · 上海",
     copyBtn: "复制",
     copiedBtn: "已复制 ✓",
@@ -31,7 +31,8 @@ const I18N = {
         title: "Bimanual Folding",
         tone: "light",
         description: "暑期科研项目：双 Piper 机械臂协同折毛巾，基于 ACT 模仿学习与 physical_ai_runtime，自研细指夹爪并完成 150 次试验评估。",
-        image: "assets/bimanual-folding.jpg",
+        image: "assets/bimanual-folding.webp",
+        imageSm: "assets/bimanual-folding-sm.webp",
         tags: ["Research", "Bimanual", "Imitation Learning"],
         projectUrl: "https://dream25851.github.io/Bimanual_Folding/",
         projectLabel: "Project ↗",
@@ -40,15 +41,18 @@ const I18N = {
       {
         num: "02",
         title: "ROBOCON Competition Robot",
-        description: "竞赛项目：华东理工大学 ROBOCON 参赛机器人，集成全向底盘、同步带传动与气动执行机构。",
-        image: "assets/robocon.jpg",
+        tone: "light",
+        description: "竞赛项目：华东理工大学 ROBOCON2026 参赛机器人，集成麦轮底盘、同步带传动与气动执行机构。",
+        image: "assets/robocon.webp",
+        imageSm: "assets/robocon-sm.webp",
         tags: ["ROBOCON", "Mechatronics", "CAD"]
       },
       {
         num: "03",
         title: "PiperSim",
         description: "基于 ROS 2 的 AgileX Piper 六轴机械臂工作区：MoveIt 运动规划、MuJoCo 仿真、SocketCAN 真机控制与手眼标定。",
-        image: "assets/arm-simulation.jpg",
+        image: "assets/arm-simulation.webp",
+        imageSm: "assets/arm-simulation-sm.webp",
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
       },
@@ -56,8 +60,9 @@ const I18N = {
         num: "04",
         title: "LifeOS",
         tone: "light",
-        description: "个人生活工作台：考研倒计时、任务管理、番茄钟、健身打卡与周复盘，数据存本地、可导出备份。",
-        image: "assets/lifeos.jpg",
+        description: "个人生活工作台：考试倒计时、任务管理、番茄钟与健身打卡。",
+        image: "assets/lifeos.webp",
+        imageSm: "assets/lifeos-sm.webp",
         tags: ["Web App", "Productivity", "Local-first"],
         projectUrl: "https://meng-p7.github.io/LifeOs/",
         projectLabel: "Website ↗",
@@ -70,7 +75,7 @@ const I18N = {
           <div>
             <div class="j-meta-row"><span>ENTRY 01</span><span>FIRST BUILD</span></div>
             <h3 class="j-title">从一堆杜邦线开始</h3>
-            <p class="j-body">第一次碰嵌入式，是给一块开发板接上舵机和超声波。线接错了就拔掉重来，直到它抬起胳膊，跟我打了个招呼。</p>
+            <p class="j-body">第一次碰嵌入式，是给一块开发板接上舵机。线接错了就拔掉重来，直到它抬起胳膊，跟我打了个招呼。</p>
             <div class="j-sticky-note">“它只会三个动作，但那是我第一次让想法真的动起来。”</div>
           </div>
           <div class="j-page-num">01</div>
@@ -80,8 +85,8 @@ const I18N = {
             <div class="j-meta-row"><span>DESK PET</span><span>V0.1</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-deskpet.jpg" alt="My first desktop pet built from servos, wires and an ultrasonic sensor" />
-              <div class="j-polaroid-cap">舵机、超声波，和一堆没整理过的飞线</div>
+              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="My first desktop pet built from servos, wires and an ultrasonic sensor" />
+              <div class="j-polaroid-cap">舵机和一堆没整理过的飞线</div>
             </div>
             <p class="j-handnote">焊坏的板子，比写对的代码多。</p>
           </div>
@@ -94,7 +99,7 @@ const I18N = {
             <div class="j-meta-row"><span>THE LAB</span><span>HUMANOID</span></div>
             <div class="j-polaroid tilt-left" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-humanoid.jpg" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">科研实习第一次见到的人形机器人</div>
             </div>
             <p class="j-handnote">第一次意识到，机器人可以安静地坐在人对面。</p>
@@ -137,7 +142,7 @@ const I18N = {
             <div class="j-meta-row"><span>WITH HER</span><span>US</span></div>
             <div class="j-polaroid tilt-right" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-us.jpg" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">一起比身高的那天</div>
             </div>
             <p class="j-handnote">她说我站过去显矮，我说是鞋子的问题。</p>
@@ -151,7 +156,7 @@ const I18N = {
             <div class="j-meta-row"><span>ON THE ROAD</span><span>NIGHT</span></div>
             <div class="j-polaroid tilt-left">
               <div class="j-tape"></div>
-              <img src="assets/journal-night-city.jpg" alt="Night skyline across the river with a ferris wheel" />
+              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Night skyline across the river with a ferris wheel" />
               <div class="j-polaroid-cap">江边的夜，灯比星星亮</div>
             </div>
             <p class="j-handnote">关掉电脑，世界还在运行。</p>
@@ -181,7 +186,7 @@ const I18N = {
             <div class="j-meta-row"><span>CLOSING NOTE</span><span>MIDNIGHT</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-lake.jpg" alt="A turquoise mountain lake with fog and a bare tree" />
+              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
               <div class="j-polaroid-cap">山里的湖，雾还没散</div>
             </div>
             <p class="j-handnote" style="margin-top:1.2rem;">— Moon, Shanghai</p>
@@ -209,7 +214,8 @@ const I18N = {
         title: "Bimanual Folding",
         tone: "light",
         description: "Summer research: two Piper arms folding towels together, built on ACT imitation learning and physical_ai_runtime, with custom slim fingers and a 150-trial evaluation.",
-        image: "assets/bimanual-folding.jpg",
+        image: "assets/bimanual-folding.webp",
+        imageSm: "assets/bimanual-folding-sm.webp",
         tags: ["Research", "Bimanual", "Imitation Learning"],
         projectUrl: "https://dream25851.github.io/Bimanual_Folding/",
         projectLabel: "Project ↗",
@@ -218,15 +224,18 @@ const I18N = {
       {
         num: "02",
         title: "ROBOCON Competition Robot",
-        description: "Custom-built ECUST ROBOCON robot integrating omni-wheel drive, belt transmissions, and pneumatic actuators.",
-        image: "assets/robocon.jpg",
+        tone: "light",
+        description: "Custom-built ECUST ROBOCON2026 robot integrating omni-wheel drive, belt transmissions, and pneumatic actuators.",
+        image: "assets/robocon.webp",
+        imageSm: "assets/robocon-sm.webp",
         tags: ["ROBOCON", "Mechatronics", "CAD"]
       },
       {
         num: "03",
         title: "PiperSim",
         description: "A ROS 2 workspace for the AgileX Piper six-axis arm: MoveIt planning, MuJoCo simulation, SocketCAN hardware control and eye-to-hand calibration.",
-        image: "assets/arm-simulation.jpg",
+        image: "assets/arm-simulation.webp",
+        imageSm: "assets/arm-simulation-sm.webp",
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
       },
@@ -234,8 +243,9 @@ const I18N = {
         num: "04",
         title: "LifeOS",
         tone: "light",
-        description: "A personal life-OS workbench: exam countdown, tasks, pomodoro timer, fitness logging and weekly reviews — local-first, with JSON export.",
-        image: "assets/lifeos.jpg",
+        description: "A personal life-OS workbench: exam countdown, tasks, pomodoro timer and fitness logging .",
+        image: "assets/lifeos.webp",
+        imageSm: "assets/lifeos-sm.webp",
         tags: ["Web App", "Productivity", "Local-first"],
         projectUrl: "https://meng-p7.github.io/LifeOs/",
         projectLabel: "Website ↗",
@@ -258,8 +268,8 @@ const I18N = {
             <div class="j-meta-row"><span>DESK PET</span><span>V0.1</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-deskpet.jpg" alt="My first desktop pet built from servos, wires and an ultrasonic sensor" />
-              <div class="j-polaroid-cap">Servos, an ultrasonic sensor and a nest of loose wires</div>
+              <img src="assets/journal-deskpet.webp" srcset="assets/journal-deskpet-sm.webp 560w, assets/journal-deskpet.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="My first desktop pet built from servos and wires" />
+              <div class="j-polaroid-cap">Servos and a nest of loose wires</div>
             </div>
             <p class="j-handnote">More burnt boards than correct code.</p>
           </div>
@@ -272,7 +282,7 @@ const I18N = {
             <div class="j-meta-row"><span>THE LAB</span><span>HUMANOID</span></div>
             <div class="j-polaroid tilt-left" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-humanoid.jpg" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-humanoid.webp" srcset="assets/journal-humanoid-sm.webp 560w, assets/journal-humanoid.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A humanoid robot sitting quietly at a table during a research internship" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">The first humanoid I met on a research internship</div>
             </div>
             <p class="j-handnote">The first time I realised a robot could sit quietly across from a person.</p>
@@ -315,7 +325,7 @@ const I18N = {
             <div class="j-meta-row"><span>WITH HER</span><span>US</span></div>
             <div class="j-polaroid tilt-right" style="max-width:62%;">
               <div class="j-tape"></div>
-              <img src="assets/journal-us.jpg" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
+              <img src="assets/journal-us.webp" srcset="assets/journal-us-sm.webp 560w, assets/journal-us.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Illustration of us standing in front of a height chart together" style="aspect-ratio:3/4;" />
               <div class="j-polaroid-cap">Us, at the height chart</div>
             </div>
             <p class="j-handnote">She said I looked short up there. I blamed the shoes.</p>
@@ -329,7 +339,7 @@ const I18N = {
             <div class="j-meta-row"><span>ON THE ROAD</span><span>NIGHT</span></div>
             <div class="j-polaroid tilt-left">
               <div class="j-tape"></div>
-              <img src="assets/journal-night-city.jpg" alt="Night skyline across the river with a ferris wheel" />
+              <img src="assets/journal-night-city.webp" srcset="assets/journal-night-city-sm.webp 560w, assets/journal-night-city.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="Night skyline across the river with a ferris wheel" />
               <div class="j-polaroid-cap">Lights along the river, brighter than the stars</div>
             </div>
             <p class="j-handnote">Close the laptop. The world keeps running.</p>
@@ -359,7 +369,7 @@ const I18N = {
             <div class="j-meta-row"><span>CLOSING NOTE</span><span>MIDNIGHT</span></div>
             <div class="j-polaroid tilt-right">
               <div class="j-tape"></div>
-              <img src="assets/journal-lake.jpg" alt="A turquoise mountain lake with fog and a bare tree" />
+              <img src="assets/journal-lake.webp" srcset="assets/journal-lake-sm.webp 560w, assets/journal-lake.webp 1000w" sizes="(max-width: 820px) 76vw, 300px" loading="lazy" decoding="async" alt="A turquoise mountain lake with fog and a bare tree" />
               <div class="j-polaroid-cap">A lake in the mountains, still under fog</div>
             </div>
             <p class="j-handnote" style="margin-top:1.2rem;">— Moon, Shanghai</p>

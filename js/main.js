@@ -11,7 +11,6 @@ const aboutBioEl = document.getElementById("aboutBio");
 const aboutIdentityEl = document.getElementById("aboutIdentity");
 const aboutLocationEl = document.getElementById("aboutLocation");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
-const projectsHeading = document.getElementById("projectsHeading");
 const inplaceProjectsTitle = document.getElementById("inplaceProjectsTitle");
 const backToTopBtn = document.getElementById("backToTopBtn");
 
@@ -51,7 +50,11 @@ function renderProjects(data) {
   const track = document.getElementById("galleryTrack");
   track.innerHTML = data.projects.map((p, idx) => `
     <article class="project-card${p.tone === "light" ? " is-light" : ""}" data-index="${idx}">
-      <img src="${p.image}" alt="${p.title}" class="project-card-img" />
+      <img src="${p.image}"
+           srcset="${p.imageSm} 600w, ${p.image} 1200w"
+           sizes="(max-width: 768px) 84vw, 52vw"
+           loading="lazy" decoding="async"
+           alt="${p.title}" class="project-card-img" />
       <div class="project-card-content">
         <div class="project-card-top">
           <span class="project-num">PROJECT // ${p.num}</span>
@@ -267,7 +270,6 @@ function applyLanguage(lang) {
   aboutIdentityEl.textContent = data.aboutIdentity;
   aboutLocationEl.textContent = data.aboutLocation;
   copyEmailBtn.textContent = data.copyBtn;
-  projectsHeading.textContent = data.projectsTitle;
   inplaceProjectsTitle.textContent = data.projectsTitle;
   backToTopBtn.textContent = data.backToTop;
 
@@ -610,8 +612,6 @@ function scrollGalleryByStep(direction) {
   window.scrollTo({ top: gTop + targetP * gScrollable, behavior: "smooth" });
 }
 
-document.getElementById("galleryPrevBtn").addEventListener("click", () => scrollGalleryByStep(-1));
-document.getElementById("galleryNextBtn").addEventListener("click", () => scrollGalleryByStep(1));
 
 /* =========================================================
    ENDING SUBTLE MOUSE PARALLAX

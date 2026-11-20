@@ -62,16 +62,23 @@
       <!-- 01. HOME -->
       <div class="home-layer" id="homeLayer">
         <img
-          src="assets/home-sketch.jpg"
+          src="assets/home-sketch.webp"
+          srcset="assets/home-sketch-sm.webp 900w, assets/home-sketch.webp 1672w"
+          sizes="100vw"
           alt="Moon studio pencil sketch"
           class="home-bg-base"
+          fetchpriority="high"
+          decoding="async"
         />
         <img
-          src="assets/home-color.jpg"
+          src="assets/home-color.webp"
+          srcset="assets/home-color-sm.webp 900w, assets/home-color.webp 1672w"
+          sizes="100vw"
           alt=""
           aria-hidden="true"
           class="home-bg-color"
           id="homeSpotlightImg"
+          decoding="async"
         />
         <div class="home-text-scrim"></div>
 
@@ -111,7 +118,9 @@
               <div class="polaroid-card">
                 <div class="polaroid-tape" aria-hidden="true"></div>
                 <img
-                  src="assets/avatar.jpg"
+                  src="assets/avatar.webp"
+                  loading="lazy"
+                  decoding="async"
                   alt="Moon portrait illustration"
                   class="polaroid-img"
                 />
@@ -193,16 +202,6 @@
     ========================================================= -->
     <section id="projects" class="gallery-scroll-zone" aria-label="Projects">
       <div class="gallery-sticky">
-        <div class="gallery-topbar">
-          <div>
-            <h3 class="gallery-kicker" id="projectsHeading">Projects</h3>
-          </div>
-          <div class="gallery-controls">
-            <button type="button" class="gallery-btn" id="galleryPrevBtn" aria-label="Previous project">←</button>
-            <button type="button" class="gallery-btn" id="galleryNextBtn" aria-label="Next project">→</button>
-          </div>
-        </div>
-
         <div class="gallery-viewport">
           <div class="gallery-track" id="galleryTrack"></div>
         </div>
@@ -222,8 +221,63 @@
       <div class="journal-sticky">
         <!-- Warm Desk Props (visible around the ONE real notebook) -->
         <div class="desk-backdrop" id="deskBackdrop" aria-hidden="true">
-          <div class="desk-prop-photo desk-prop-left" id="deskPropLeft">
-            <img src="assets/robocon.jpg" alt="" />
+          <div class="desk-prop-photo desk-prop-left" id="deskPropLeft" aria-hidden="true">
+            <svg class="desk-sketch" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-label="Sketch of a desk lamp lighting an open notebook">
+              <defs>
+                <linearGradient id="dsBeam" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#ffd98a" stop-opacity="0.5" />
+                  <stop offset="1" stop-color="#ffd98a" stop-opacity="0" />
+                </linearGradient>
+                <radialGradient id="dsGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0" stop-color="#ffe3a8" stop-opacity="0.8" />
+                  <stop offset="1" stop-color="#ffe3a8" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <g transform="translate(-25 -18) scale(1.12)">
+              <path d="M214 110 L322 252 L142 252 Z" fill="url(#dsBeam)" />
+              <circle cx="228" cy="122" r="56" fill="url(#dsGlow)" />
+
+              <g fill="none" stroke="#26241f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <ellipse cx="100" cy="252" rx="24" ry="6" />
+                <path d="M76 252 h48" />
+                <path d="M100 246 V176" />
+                <circle cx="100" cy="176" r="3.6" fill="#26241f" />
+                <path d="M100 176 L170 126" />
+                <path d="M170 126 l24 12" />
+                <path d="M180 110 L228 106 L240 140 L194 144 Z" />
+                <path d="M214 142 l9 11" />
+              </g>
+
+              <g stroke="#26241f" stroke-width="2.6" fill="#fdfcf8" stroke-linejoin="round">
+                <path d="M126 252 C156 240 192 240 218 250 L218 212 C192 202 156 202 126 214 Z" />
+                <path d="M218 250 C246 240 282 240 310 252 L310 214 C282 202 246 202 218 212 Z" />
+              </g>
+              <g stroke="#26241f" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round">
+                <path d="M142 234 h56" />
+                <path d="M142 242 h44" />
+                <path d="M232 234 h60" />
+                <path d="M232 242 h42" />
+              </g>
+              <g stroke="#2f6fd0" stroke-width="2" fill="none" stroke-linecap="round">
+                <circle cx="162" cy="226" r="8" stroke-dasharray="3 3" />
+                <path d="M170 224 L190 218" />
+                <circle cx="190" cy="218" r="3" fill="#2f6fd0" stroke="none" />
+              </g>
+
+              <g transform="rotate(-14 344 246)">
+                <path d="M320 242 h56 v9 h-56 z" fill="#f3c969" stroke="#26241f" stroke-width="2" />
+                <path d="M320 242 l-15 4.5 l15 4.5 z" fill="#fdfcf8" stroke="#26241f" stroke-width="2" />
+                <path d="M305 246.5 h-7" stroke="#26241f" stroke-width="2" />
+              </g>
+
+              <g stroke="#26241f" stroke-width="1.8" fill="none" opacity="0.45" stroke-linecap="round">
+                <path d="M338 108 v18 M329 117 h18" />
+                <path d="M66 104 v13 M59.5 110.5 h13" />
+              </g>
+              </g>
+            </svg>
           </div>
           <div class="desk-pencil" id="deskPencil"></div>
         </div>
@@ -293,10 +347,14 @@
   ========================================================= -->
   <footer class="ending-section" id="ending" aria-label="Ending">
     <img
-      src="assets/ending-night.jpg"
+      src="assets/ending-night.webp"
+      srcset="assets/ending-night-sm.webp 900w, assets/ending-night.webp 1376w"
+      sizes="100vw"
       alt="Nighttime studio with warm desk lamp and city lights"
       class="ending-bg"
       id="endingBg"
+      loading="lazy"
+      decoding="async"
     />
     <div class="ending-lamp-glow" aria-hidden="true"></div>
     <div class="ending-vignette" aria-hidden="true"></div>

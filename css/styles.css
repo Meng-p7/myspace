@@ -549,7 +549,7 @@ button {
 }
 
 .about-bio {
-  font-size: clamp(1rem, 1.28vw, 1.1rem);
+  font-size: clamp(1.12rem, 1.5vw, 1.3rem);
   color: var(--ink-soft);
   max-width: 48ch;
   line-height: 1.75;
@@ -568,13 +568,13 @@ button {
   display: flex;
   align-items: center;
   gap: 0.9rem;
-  font-size: 0.95rem;
+  font-size: 1.06rem;
   color: var(--ink);
 }
 
 .meta-icon {
-  width: 28px;
-  height: 28px;
+  width: 31px;
+  height: 31px;
   border-radius: 50%;
   border: 1px solid var(--hairline);
   display: inline-flex;
@@ -1074,7 +1074,8 @@ button {
   will-change: transform, opacity;
 }
 
-.desk-prop-photo img {
+.desk-prop-photo img,
+.desk-prop-photo .desk-sketch {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
@@ -1429,11 +1430,24 @@ button {
   pointer-events: none;
 }
 
+/* The leaf layer must keep its own 3D context, otherwise the sheets are
+   flattened into this plane: their depth is lost and the cover's inside page
+   ends up painted over every turned leaf (pages 03/05/07/09 vanished).
+   It also needs a real box, otherwise the absolutely positioned sheets have
+   no height to fill. */
+#flipSheetsLayer {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* minmax(0, 1fr): the empty left slot must not let the right page's
+   min-content width squeeze it out of the grid. */
 .spread-base-grid {
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
 .journal-page {
