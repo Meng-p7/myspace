@@ -61,25 +61,31 @@
     <div class="reveal-sticky">
       <!-- 01. HOME -->
       <div class="home-layer" id="homeLayer">
-        <img
-          src="assets/home-sketch.webp"
-          srcset="assets/home-sketch-sm.webp 900w, assets/home-sketch.webp 1672w"
-          sizes="100vw"
-          alt="Moon studio pencil sketch"
-          class="home-bg-base"
-          fetchpriority="high"
-          decoding="async"
-        />
-        <img
-          src="assets/home-color.webp"
-          srcset="assets/home-color-sm.webp 900w, assets/home-color.webp 1672w"
-          sizes="100vw"
-          alt=""
-          aria-hidden="true"
-          class="home-bg-color"
-          id="homeSpotlightImg"
-          decoding="async"
-        />
+        <picture class="home-bg-media">
+          <source media="(max-width: 820px)" srcset="assets/home-sketch-m.webp" />
+          <img
+            src="assets/home-sketch.webp"
+            srcset="assets/home-sketch-sm.webp 900w, assets/home-sketch.webp 1672w"
+            sizes="100vw"
+            alt="Moon studio pencil sketch"
+            class="home-bg-base"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </picture>
+        <picture class="home-bg-media">
+          <source media="(max-width: 820px)" srcset="assets/home-color-m.webp" />
+          <img
+            src="assets/home-color.webp"
+            srcset="assets/home-color-sm.webp 900w, assets/home-color.webp 1672w"
+            sizes="100vw"
+            alt=""
+            aria-hidden="true"
+            class="home-bg-color"
+            id="homeSpotlightImg"
+            decoding="async"
+          />
+        </picture>
         <div class="home-text-scrim"></div>
 
         <div class="home-overlay-content">
@@ -346,16 +352,19 @@
        05. ENDING — Night Studio
   ========================================================= -->
   <footer class="ending-section" id="ending" aria-label="Ending">
-    <img
-      src="assets/ending-night.webp"
-      srcset="assets/ending-night-sm.webp 900w, assets/ending-night.webp 1376w"
-      sizes="100vw"
-      alt="Nighttime studio with warm desk lamp and city lights"
-      class="ending-bg"
-      id="endingBg"
-      loading="lazy"
-      decoding="async"
-    />
+    <picture class="ending-bg-media">
+      <source media="(max-width: 820px)" srcset="assets/ending-night-m.webp" />
+      <img
+        src="assets/ending-night.webp"
+        srcset="assets/ending-night-sm.webp 900w, assets/ending-night.webp 1376w"
+        sizes="100vw"
+        alt="Nighttime studio with warm desk lamp and city lights"
+        class="ending-bg"
+        id="endingBg"
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
     <div class="ending-lamp-glow" aria-hidden="true"></div>
     <div class="ending-vignette" aria-hidden="true"></div>
 

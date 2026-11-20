@@ -267,10 +267,16 @@ button {
   will-change: transform;
 }
 
-.home-bg-base,
-.home-bg-color {
+/* <picture> wrapper: phones get a portrait crop of the artwork, the desktop
+   the full panorama */
+.home-bg-media {
   position: absolute;
   inset: 0;
+  display: block;
+}
+
+.home-bg-base,
+.home-bg-color {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1647,7 +1653,7 @@ button {
 @media (max-width: 820px) {
   .journal-unified-stage {
     height: auto;
-    padding: 3rem 1rem 4rem;
+    padding: 5.5rem 1rem 4rem;
   }
   .journal-sticky {
     position: relative;
@@ -1676,6 +1682,116 @@ button {
   }
   .mobile-journal-view {
     display: block !important;
+  }
+
+  /* --- the notebook, for real, on a phone --------------------------- */
+  .mobile-notebook {
+    position: relative;
+    perspective: 1300px;
+    overflow: hidden;
+    margin: 0 auto 1.5rem;
+  }
+
+  .mobile-notebook-cover {
+    position: relative;
+    z-index: 3;
+    height: 40vh;
+    min-height: 230px;
+    border-radius: 6px 14px 14px 6px;
+    background: linear-gradient(135deg, #2a2e38 0%, #191c23 55%, #12151b 100%);
+    color: #f6f3eb;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 26px 50px rgba(23, 20, 14, 0.34),
+      inset 14px 0 22px -15px rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform-origin: left center;
+    transform: perspective(1200px) rotateY(0deg);
+    transition:
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1),
+      height 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      min-height 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.85s ease;
+  }
+
+  /* the cover swings open AND gives its space back, so the pages move up
+     into the place the cover occupied */
+  .mobile-notebook.is-open .mobile-notebook-cover {
+    transform: perspective(1200px) rotateY(-104deg);
+    height: 0;
+    min-height: 0;
+    opacity: 0.16;
+  }
+
+  .mobile-cover-groove {
+    position: absolute;
+    top: 14px;
+    bottom: 14px;
+    left: 11px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 2px 0 0 rgba(0, 0, 0, 0.45);
+  }
+
+  .mobile-cover-title {
+    font-family: var(--serif);
+    font-size: clamp(2.1rem, 11vw, 3rem);
+    letter-spacing: 0.04em;
+  }
+
+  .mobile-cover-sub {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-top: 0.55rem;
+  }
+
+  .mobile-cover-pageedge {
+    position: absolute;
+    top: 12px;
+    bottom: 12px;
+    right: 7px;
+    width: 6px;
+    border-radius: 3px;
+    background: repeating-linear-gradient(to left, #cdc4b1 0 1px, #f4efe2 1px 3px);
+    opacity: 0.85;
+  }
+
+  .mobile-notebook-pages {
+    position: relative;
+    z-index: 2;
+    transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .mobile-notebook.is-open .mobile-notebook-pages {
+    transform: translateY(-14px);
+  }
+
+  @keyframes mCardFlip {
+    from {
+      opacity: 0;
+      transform: perspective(1200px) rotateY(-48deg);
+    }
+    to {
+      opacity: 1;
+      transform: perspective(1200px) rotateY(0deg);
+    }
+  }
+
+  .mobile-spread-card.flip-in {
+    animation: mCardFlip 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* the desk prop sketch stays, it reads well at phone size */
+  .desk-prop-left {
+    width: 96px;
+    top: 6%;
+    opacity: 0.5;
   }
 }
 
@@ -1716,11 +1832,17 @@ button {
   justify-content: center;
 }
 
-.ending-bg {
+.ending-bg-media {
   position: absolute;
   inset: -3%;
   width: 106%;
   height: 106%;
+  display: block;
+}
+
+.ending-bg {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center center;
   opacity: 0.92;

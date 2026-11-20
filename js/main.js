@@ -170,12 +170,61 @@ function updateJournalUI() {
 
   const s = spreads[currentSpread];
   mobileJournalView.innerHTML = `
-    <div class="mobile-spread-card">
-      <div>${s.leftHtml}</div>
-      <hr style="border:none;border-top:1px dashed rgba(23,23,23,0.16);" />
-      <div>${s.rightHtml}</div>
+    <div class="mobile-notebook" id="mobileNotebook">
+      <div class="mobile-notebook-cover" aria-hidden="true">
+        <div class="mobile-cover-groove"></div>
+        <div class="mobile-cover-title">Journal</div>
+        <div class="mobile-cover-sub">MOON</div>
+        <div class="mobile-cover-pageedge"></div>
+      </div>
+      <div class="mobile-notebook-pages">
+        <div class="mobile-spread-card">
+          <div>${s.leftHtml}</div>
+          <hr style="border:none;border-top:1px dashed rgba(23,23,23,0.16);" />
+          <div>${s.rightHtml}</div>
+        </div>
+      </div>
     </div>
   `;
+  setupMobileNotebook();
+}
+
+/* On a phone the journal is a real notebook too: the cover lifts away when
+   the section comes into view, and every spread change turns the page. */
+function setupMobileNotebook() {
+  const notebook = document.getElementById("mobileNotebook");
+  if (!notebook) return;
+
+  const card = notebook.querySelector(".mobile-spread-card");
+  if (card) {
+    card.classList.remove("flip-in");
+    void card.offsetWidth;
+    card.classList.add("flip-in");
+  }
+
+  if (notebook.dataset.opened === "1") {
+    notebook.classList.add("is-open");
+    return;
+  }
+  if (!("IntersectionObserver" in window)) {
+    notebook.classList.add("is-open");
+    notebook.dataset.opened = "1";
+    return;
+  }
+  const cover = notebook.querySelector(".mobile-notebook-cover") || notebook;
+  let timer = null;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        notebook.classList.add("is-open");
+        notebook.dataset.opened = "1";
+        io.disconnect();
+      }, 260);
+    });
+  }, { threshold: 0.55 });
+  io.observe(cover);
 }
 
 function goToSpread(idx) {
