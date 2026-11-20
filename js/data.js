@@ -32,6 +32,7 @@ const I18N = {
         tone: "light",
         description: "暑期科研项目：双 Piper 机械臂协同折毛巾，基于 ACT 模仿学习与 physical_ai_runtime，自研细指夹爪并完成 150 次试验评估。",
         image: "assets/bimanual-folding.webp",
+        ar: "1006 / 628",
         imageSm: "assets/bimanual-folding-sm.webp",
         tags: ["Research", "Bimanual", "Imitation Learning"],
         projectUrl: "https://dream25851.github.io/Bimanual_Folding/",
@@ -44,6 +45,7 @@ const I18N = {
         tone: "light",
         description: "竞赛项目：华东理工大学 ROBOCON2026 参赛机器人，集成麦轮底盘、同步带传动与气动执行机构。",
         image: "assets/robocon.webp",
+        ar: "1168 / 880",
         imageSm: "assets/robocon-sm.webp",
         tags: ["ROBOCON", "Mechatronics", "CAD"]
       },
@@ -52,6 +54,7 @@ const I18N = {
         title: "PiperSim",
         description: "基于 ROS 2 的 AgileX Piper 六轴机械臂工作区：MoveIt 运动规划、MuJoCo 仿真、SocketCAN 真机控制与手眼标定。",
         image: "assets/arm-simulation.webp",
+        ar: "1200 / 896",
         imageSm: "assets/arm-simulation-sm.webp",
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
@@ -62,6 +65,7 @@ const I18N = {
         tone: "light",
         description: "个人生活工作台：考试倒计时、任务管理、番茄钟与健身打卡。",
         image: "assets/lifeos.webp",
+        ar: "1187 / 767",
         imageSm: "assets/lifeos-sm.webp",
         tags: ["Web App", "Productivity", "Local-first"],
         projectUrl: "https://meng-p7.github.io/LifeOs/",
@@ -215,6 +219,7 @@ const I18N = {
         tone: "light",
         description: "Summer research: two Piper arms folding towels together, built on ACT imitation learning and physical_ai_runtime, with custom slim fingers and a 150-trial evaluation.",
         image: "assets/bimanual-folding.webp",
+        ar: "1006 / 628",
         imageSm: "assets/bimanual-folding-sm.webp",
         tags: ["Research", "Bimanual", "Imitation Learning"],
         projectUrl: "https://dream25851.github.io/Bimanual_Folding/",
@@ -227,6 +232,7 @@ const I18N = {
         tone: "light",
         description: "Custom-built ECUST ROBOCON2026 robot integrating omni-wheel drive, belt transmissions, and pneumatic actuators.",
         image: "assets/robocon.webp",
+        ar: "1168 / 880",
         imageSm: "assets/robocon-sm.webp",
         tags: ["ROBOCON", "Mechatronics", "CAD"]
       },
@@ -235,6 +241,7 @@ const I18N = {
         title: "PiperSim",
         description: "A ROS 2 workspace for the AgileX Piper six-axis arm: MoveIt planning, MuJoCo simulation, SocketCAN hardware control and eye-to-hand calibration.",
         image: "assets/arm-simulation.webp",
+        ar: "1200 / 896",
         imageSm: "assets/arm-simulation-sm.webp",
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
@@ -245,6 +252,7 @@ const I18N = {
         tone: "light",
         description: "A personal life-OS workbench: exam countdown, tasks, pomodoro timer and fitness logging .",
         image: "assets/lifeos.webp",
+        ar: "1187 / 767",
         imageSm: "assets/lifeos-sm.webp",
         tags: ["Web App", "Productivity", "Local-first"],
         projectUrl: "https://meng-p7.github.io/LifeOs/",
