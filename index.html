@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moon — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Inline SVG Filter for Warm White Paper Fiber Texture -->
+  <svg width="0" height="0" style="position:absolute;pointer-events:none;" aria-hidden="true">
+    <defs>
+      <filter id="paper-fiber" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch" result="noise" />
+        <feDiffuseLighting in="noise" lighting-color="#f6f3eb" surfaceScale="1.35" result="light">
+          <feDistantLight azimuth="45" elevation="62" />
+        </feDiffuseLighting>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Navigation -->
+  <header class="site-nav on-home" id="siteNav">
+    <a href="#home" class="nav-brand">
+      Moon<span class="nav-brand-dot" aria-hidden="true"></span>
+    </a>
+
+    <div class="nav-right-group">
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+        Menu
+      </button>
+
+      <nav class="nav-links" id="navLinks" aria-label="Primary Navigation">
+        <a href="#home" class="nav-link active" data-target="home">Home</a>
+        <a href="#about" class="nav-link" data-target="about">About</a>
+        <a href="#projects" class="nav-link" data-target="projects">Projects</a>
+        <a href="#journal" class="nav-link" data-target="journal">Journal</a>
+      </nav>
+
+      <button type="button" class="lang-toggle-btn" id="langToggleBtn" aria-label="Switch language">EN</button>
+
+      <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer" class="nav-github" aria-label="GitHub Profile">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <div id="home"></div>
+
+  <!-- =========================================================
+       STAGE 1 & 2: HOME -> 3D PAPER REVEAL -> ABOUT ME -> IN-PLACE "My Projects"
+  ========================================================= -->
+  <section class="reveal-stage" id="revealStage" aria-label="Home and About Me">
+    <div id="about" style="position:absolute;top:145vh;left:0;width:1px;height:1px;" aria-hidden="true"></div>
+
+    <div class="reveal-sticky">
+      <!-- 01. HOME -->
+      <div class="home-layer" id="homeLayer">
+        <img
+          src="assets/home-sketch.jpg"
+          alt="Moon studio pencil sketch"
+          class="home-bg-base"
+        />
+        <img
+          src="assets/home-color.jpg"
+          alt=""
+          aria-hidden="true"
+          class="home-bg-color"
+          id="homeSpotlightImg"
+        />
+        <div class="home-text-scrim"></div>
+
+        <div class="home-overlay-content">
+          <div class="home-hero-copy">
+            <h1 class="home-title">Moon</h1>
+          </div>
+
+          <button type="button" class="home-scroll-arrow" id="scrollToAboutBtn" aria-label="Scroll down">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14"/>
+              <path d="m18 13-6 6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 02. 3D PAPER REVEAL + ABOUT ME + IN-PLACE MY PROJECTS MORPH -->
+      <div class="paper-sheet-wrap" id="paperSheet">
+        <div class="paper-cast-shadow" id="paperCastShadow"></div>
+        <div class="paper-curl-lip" id="paperCurlLip"></div>
+
+        <div class="paper-surface">
+          <div class="paper-fiber-layer" aria-hidden="true"></div>
+
+          <svg class="paper-sketch-decor" id="paperSketchDecor" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <circle cx="1360" cy="430" r="240" stroke="#171717" stroke-width="0.6" stroke-dasharray="4 6" />
+            <ellipse cx="1310" cy="420" rx="340" ry="120" transform="rotate(-18 1310 420)" stroke="#171717" stroke-width="0.55" />
+            <circle cx="1210" cy="235" r="9" fill="#d9d3c4" stroke="#171717" stroke-width="0.7" />
+            <line x1="940" y1="235" x2="1200" y2="235" stroke="#171717" stroke-width="0.6" />
+            <line x1="80" y1="820" x2="420" y2="820" stroke="#171717" stroke-width="0.5" stroke-dasharray="3 5" />
+          </svg>
+
+          <!-- About Me Content (fades out in place when scrolling down) -->
+          <div class="about-container" id="aboutContainer">
+            <div class="polaroid-stage" id="aboutLeft">
+              <div class="polaroid-card">
+                <div class="polaroid-tape" aria-hidden="true"></div>
+                <img
+                  src="assets/avatar.jpg"
+                  alt="Moon portrait illustration"
+                  class="polaroid-img"
+                />
+                <div class="polaroid-caption">
+                  <span>Moon</span>
+                  <span style="font-family:var(--mono);font-size:0.75rem;">Shanghai</span>
+                </div>
+              </div>
+              <div class="handwritten-note">Dream Big, Build Better.</div>
+            </div>
+
+            <div class="about-editorial" id="aboutRight">
+              <h2 class="editorial-heading">About Me</h2>
+              <p class="about-bio" id="aboutBio"></p>
+
+              <ul class="about-meta-list">
+                <li class="about-meta-item">
+                  <span class="meta-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                  </span>
+                  <span class="meta-label" id="labelIdentity">Identity</span>
+                  <span id="aboutIdentity"></span>
+                </li>
+                <li class="about-meta-item">
+                  <span class="meta-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+                  </span>
+                  <span class="meta-label" id="labelAge">Age</span>
+                  <span>21</span>
+                </li>
+                <li class="about-meta-item">
+                  <span class="meta-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  </span>
+                  <span class="meta-label" id="labelLocation">Location</span>
+                  <span id="aboutLocation"></span>
+                </li>
+                <li class="about-meta-item">
+                  <span class="meta-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                  </span>
+                  <span class="meta-label">Email</span>
+                  <span class="email-copy-row">
+                    <span>dreamxiang4413@gmail.com</span>
+                    <button type="button" class="copy-email-btn" id="copyEmailBtn">复制</button>
+                  </span>
+                </li>
+                <li class="about-meta-item">
+                  <span class="meta-icon" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                  </span>
+                  <span class="meta-label">GitHub</span>
+                  <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer" class="meta-link">github.com/Meng-p7</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- In-place "My Projects" 3D Exhibition Frames Reveal -->
+          <div class="inplace-exhibition-layer" id="inplaceExhibitionLayer" aria-hidden="true">
+            <div class="exh-line-h" id="exhLineTop" style="top:14%;width:12%;"></div>
+            <div class="exh-line-h" id="exhLineBottom" style="bottom:14%;width:12%;"></div>
+            <div class="exh-frame exh-frame-1" id="exhFrame1"></div>
+            <div class="exh-frame exh-frame-2" id="exhFrame2"></div>
+            <div class="exh-frame exh-frame-3" id="exhFrame3"></div>
+            <h2 class="inplace-projects-title" id="inplaceProjectsTitle">My Projects</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================
+       CONTINUOUS PAPER FLOW
+  ========================================================= -->
+  <main class="paper-flow">
+    <!-- =========================================================
+         03. PROJECTS — Horizontal Scrolling 3D Gallery
+    ========================================================= -->
+    <section id="projects" class="gallery-scroll-zone" aria-label="Projects">
+      <div class="gallery-sticky">
+        <div class="gallery-topbar">
+          <div>
+            <h3 class="gallery-kicker" id="projectsHeading">Projects</h3>
+          </div>
+          <div class="gallery-controls">
+            <button type="button" class="gallery-btn" id="galleryPrevBtn" aria-label="Previous project">←</button>
+            <button type="button" class="gallery-btn" id="galleryNextBtn" aria-label="Next project">→</button>
+          </div>
+        </div>
+
+        <div class="gallery-viewport">
+          <div class="gallery-track" id="galleryTrack"></div>
+        </div>
+
+        <div class="gallery-progress-bar" aria-hidden="true">
+          <div class="gallery-progress-fill" id="galleryProgressFill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         04. UNIFIED SINGLE JOURNAL (Desk Transition + One Real 3D Flipbook)
+    ========================================================= -->
+    <section class="journal-unified-stage" id="journalStage" aria-label="Journal">
+      <div id="journal" style="position:absolute;top:110vh;left:0;width:1px;height:1px;" aria-hidden="true"></div>
+
+      <div class="journal-sticky">
+        <!-- Warm Desk Props (visible around the ONE real notebook) -->
+        <div class="desk-backdrop" id="deskBackdrop" aria-hidden="true">
+          <div class="desk-prop-photo desk-prop-left" id="deskPropLeft">
+            <img src="assets/robocon.jpg" alt="" />
+          </div>
+          <div class="desk-pencil" id="deskPencil"></div>
+        </div>
+
+        <div class="journal-header" id="journalHeader">
+          <div class="journal-title-block">
+            <h2 class="editorial-heading">Journal</h2>
+            <p class="journal-sub">Thoughts, sketches &amp; little moments.</p>
+          </div>
+
+          <div class="journal-controls">
+            <button type="button" class="journal-nav-btn" id="journalPrevBtn" aria-label="Previous spread">←</button>
+            <span class="journal-page-counter" id="journalCounter">01 / 04</span>
+            <button type="button" class="journal-nav-btn" id="journalNextBtn" aria-label="Next spread">→</button>
+          </div>
+        </div>
+
+        <!-- THE ONE REAL 3D NOTEBOOK -->
+        <div class="notebook-stage" id="notebookStage">
+          <!-- shadow pool on the desk, behind the book -->
+          <div class="notebook-desk-shadow" aria-hidden="true"></div>
+
+          <div class="notebook-book" id="notebookBook">
+
+            <!-- Hard board under the right-hand page block -->
+            <div class="notebook-board notebook-board-right" aria-hidden="true"></div>
+
+            <!-- Page block thickness, so the shut book has real depth -->
+            <div class="notebook-block-edge notebook-block-right" id="notebookBlockRight" aria-hidden="true"></div>
+            <div class="notebook-block-edge notebook-block-bottom" id="notebookBlockBottom" aria-hidden="true"></div>
+
+            <div class="notebook-spread-shell" id="notebookSpreadShell">
+              <div class="notebook-spine" aria-hidden="true"></div>
+              <div class="spread-base-grid" id="spreadBaseGrid"></div>
+              <div id="flipSheetsLayer"></div>
+            </div>
+
+            <div class="notebook-cover-shadow" id="notebookCoverShadow" aria-hidden="true"></div>
+
+            <!-- The cover is a leaf with two faces: the hardcover outside and
+                 the cream endpaper inside, so it keeps its look past 90deg. -->
+            <div class="notebook-front-cover" id="notebookFrontCover">
+              <div class="notebook-cover-face notebook-cover-front">
+                <div class="notebook-cover-groove" aria-hidden="true"></div>
+                <div class="notebook-cover-label">Journal</div>
+                <div class="notebook-cover-sub">Moon</div>
+                <div class="notebook-turn-shade notebook-turn-shade-front" aria-hidden="true"></div>
+              </div>
+              <div class="notebook-cover-face notebook-cover-back">
+                <div class="journal-page journal-page-left" id="coverBackPage"></div>
+                <div class="notebook-turn-shade notebook-turn-shade-back" aria-hidden="true"></div>
+              </div>
+            </div>
+
+            <div class="mobile-journal-view" id="mobileJournalView"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- TRANSITION 3: JOURNAL -> ENDING -->
+  <div class="dusk-transition" aria-hidden="true"></div>
+
+  <!-- =========================================================
+       05. ENDING — Night Studio
+  ========================================================= -->
+  <footer class="ending-section" id="ending" aria-label="Ending">
+    <img
+      src="assets/ending-night.jpg"
+      alt="Nighttime studio with warm desk lamp and city lights"
+      class="ending-bg"
+      id="endingBg"
+    />
+    <div class="ending-lamp-glow" aria-hidden="true"></div>
+    <div class="ending-vignette" aria-hidden="true"></div>
+
+    <div class="ending-copy">
+      <p class="ending-line-1">Thanks for visiting.</p>
+      <p class="ending-line-2">The journey continues.</p>
+      <a href="#home" class="back-to-top" id="backToTopBtn">↑ Back to top</a>
+    </div>
+  </footer>
+
+  <script src="js/data.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>
