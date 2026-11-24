@@ -85,6 +85,8 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
   const [room, setRoom] = useState(0);
   const [panelPageId, setPanelPageId] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
+  // every command to the book bumps this, which hands the scene one frame
+  const [pulse, setPulse] = useState(0);
   const spotsRef = useRef<ScreenSpot[]>([]);
   const zonesRef = useRef<TurnZones | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -180,12 +182,14 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
     const clamped = Math.max(0, Math.min(SCENES.length - 1, logical));
     book.focusTarget = physicalOf(clamped);
     setRoom(clamped);
+    setPulse((p) => p + 1);
   }, []);
 
   const setBookOpen = useCallback(
     (value: boolean) => {
       book.openTarget = value ? 1 : 0;
       setOpen(value);
+      setPulse((p) => p + 1);
       if (value) {
         book.focusTarget = physicalOf(room);
       } else {
@@ -329,6 +333,7 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
               onZones={(zones) => {
                 zonesRef.current = zones;
               }}
+              pulse={pulse}
             />
           </Canvas>
         ) : null}

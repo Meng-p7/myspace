@@ -11,7 +11,7 @@
  *    another frame while something is still moving.
  */
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import {
@@ -29,7 +29,7 @@ import {
   smooth,
 } from "../core/fold";
 import { INK, makePaperMaterial } from "../core/paper";
-import { book, damp } from "../core/store";
+import { book, damp, isMoving } from "../core/store";
 import type { BookTextures } from "../core/textures";
 import { SCENE_ART } from "../scenes";
 
@@ -115,10 +115,29 @@ type Props = {
   mobile: boolean;
   onSpots: (spots: ScreenSpot[]) => void;
   onZones: (zones: TurnZones) => void;
+  /**
+   * Bumped by the page every time the book is told to open, close or turn.
+   * The render loop only runs while something moves, so an idle book needs one
+   * frame handed to it to notice a new target — this is that frame, and it is
+   * asked for explicitly rather than hoping a React commit happens to do it.
+   */
+  pulse: number;
 };
 
-export default function Book({ textures, mobile, onSpots, onZones }: Props) {
-  const { camera, size } = useThree();
+export default function Book({ textures, mobile, onSpots, onZones, pulse }: Props) {
+  const { camera, size, invalidate } = useThree();
+
+  // one frame for every command the page sends, and a slow watchdog that
+  // catches anything the frame would have missed
+  useEffect(() => {
+    invalidate();
+  }, [invalidate, pulse]);
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (isMoving(book)) invalidate();
+    }, 350);
+    return () => window.clearInterval(id);
+  }, [invalidate]);
 
   const pageGeo = useMemo(() => {
     const front = flipV(new THREE.PlaneGeometry(PAGE_W, PAGE_H).translate(PAGE_W / 2, PAGE_H / 2, 0));
@@ -212,6 +231,11 @@ export default function Book({ textures, mobile, onSpots, onZones }: Props) {
   const outlines = useMemo(
     () => Array.from({ length: ROOM_COUNT + 1 }, (_, k) => wobbleRect(k + 1, PAGE_W, PAGE_H)),
     [],
+  );
+
+  const outlineBuffers = useMemo(
+    () => outlines.map((o) => new Float32Array(o.flatMap((v) => [v.x, v.y, v.z]))),
+    [outlines],
   );
 
   // Every drawn mark that opens a page, resolved once per texture set.
@@ -514,7 +538,7 @@ export default function Book({ textures, mobile, onSpots, onZones }: Props) {
             <bufferGeometry>
               <bufferAttribute
                 attach="attributes-position"
-                args={[new Float32Array(outlines[k].flatMap((v) => [v.x, v.y, v.z])), 3]}
+                args={[outlineBuffers[k], 3]}
               />
             </bufferGeometry>
             <lineBasicMaterial color={INK} transparent opacity={0.35} />
