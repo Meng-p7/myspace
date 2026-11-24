@@ -84,13 +84,40 @@ export type ScreenSpot = {
   visible: boolean;
 };
 
+/** A horizontal band of the canvas that turns the book. */
+export type TurnZone = {
+  /** left edge, in canvas pixels */
+  x0: number;
+  /** right edge, in canvas pixels */
+  x1: number;
+};
+
+/**
+ * Where the book can be turned.
+ *
+ * `prev` is the band on the left of the focused room, `next` the band on its
+ * right. The focused room itself is never part of a band, so the drawings and
+ * the pop-up cards in the middle cannot be mistaken for a page edge.
+ */
+export type TurnZones = {
+  prev: TurnZone | null;
+  next: TurnZone | null;
+  /** the outer edge of the book on the left, where the shadow gathers */
+  edgeLeft: number | null;
+  /** the outer edge of the book on the right */
+  edgeRight: number | null;
+  /** true while the book is still moving, so a turn cannot be queued */
+  moving: boolean;
+};
+
 type Props = {
   textures: BookTextures;
   mobile: boolean;
   onSpots: (spots: ScreenSpot[]) => void;
+  onZones: (zones: TurnZones) => void;
 };
 
-export default function Book({ textures, mobile, onSpots }: Props) {
+export default function Book({ textures, mobile, onSpots, onZones }: Props) {
   const { camera, size } = useThree();
 
   const pageGeo = useMemo(() => {
@@ -246,11 +273,15 @@ export default function Book({ textures, mobile, onSpots }: Props) {
   useFrame(({ invalidate }, dtRaw) => {
     const dt = Math.min(dtRaw, 1 / 20);
 
-    if (!book.dragging) book.focus = damp(book.focus, book.focusTarget, 7, dt);
+    book.focus = damp(book.focus, book.focusTarget, 7, dt);
     book.open = damp(book.open, book.openTarget, 7, dt);
     book.zoom = damp(book.zoom, book.zoomTarget, 6, dt);
     if (Math.abs(book.openTarget - book.open) < 1e-4) book.open = book.openTarget;
     if (Math.abs(book.focusTarget - book.focus) < 1e-4) book.focus = book.focusTarget;
+    const moving =
+      Math.abs(book.openTarget - book.open) > 0.0005 ||
+      Math.abs(book.focusTarget - book.focus) > 0.0005 ||
+      Math.abs(book.zoomTarget - book.zoom) > 0.0005;
 
     const openness = smooth(book.open);
     const spread = mobile ? 0.16 : 0.82;
@@ -420,17 +451,57 @@ export default function Book({ textures, mobile, onSpots }: Props) {
     ortho.zoom = Math.min(size.height / viewH, size.width / viewW) * (1 + 2.2 * zm);
     ortho.updateProjectionMatrix();
 
+    // ---- the bands that turn the book ------------------------------------
+    // The focused room lives between the physical pages f and f+1. The lower
+    // page angle is on the right of the screen, so page f is the right hand
+    // wall and page f+1 the left hand wall. Everything to the right of the
+    // room leads forward, everything to the left leads back.
+    const f = Math.max(0, Math.min(ROOM_COUNT - 1, Math.round(focus)));
+    // The outer edge of a wall is a vertical line; the camera looks down on
+    // the book, so the foot of the wall is the widest part of the room. All
+    // three heights are sampled and the widest one is kept, otherwise the
+    // shadow of a page would fall across the floor.
+    const edgeX = (k: number, side: "right" | "left"): number => {
+      const g = pageRefs.current[k];
+      if (!g) return Number.NaN;
+      let best = Number.NaN;
+      for (const y of [0, PAGE_H * 0.5, PAGE_H]) {
+        projected.set(PAGE_W, y, 0);
+        g.localToWorld(projected);
+        projected.project(camera);
+        const x = (projected.x * 0.5 + 0.5) * size.width;
+        if (!Number.isFinite(best)) best = x;
+        else if (side === "right" ? x > best : x < best) best = x;
+      }
+      return best;
+    };
+    const xRight = edgeX(f, "right");
+    const xLeft = edgeX(f + 1, "left");
+    let prevZone: TurnZone | null = null;
+    let nextZone: TurnZone | null = null;
+    if (Number.isFinite(xRight) && Number.isFinite(xLeft) && xRight > xLeft) {
+      // a band never reaches into the room, but it is never so narrow that a
+      // finger cannot hit it either
+      const minZone = mobile ? 64 : 56;
+      const x0 = Math.max(0, Math.min(xRight, size.width - minZone));
+      const x1 = Math.min(size.width, Math.max(xLeft, minZone));
+      if (x0 < size.width) nextZone = { x0, x1: size.width };
+      if (x1 > 0) prevZone = { x0: 0, x1 };
+    }
+    // the edges are kept inside the canvas: on a phone the book is wider than
+    // the frame, and the edge of the page is where it leaves the picture
+    onZones({
+      prev: prevZone,
+      next: nextZone,
+      edgeLeft: Number.isFinite(xLeft) ? Math.max(0, xLeft) : null,
+      edgeRight: Number.isFinite(xRight) ? Math.min(size.width, xRight) : null,
+      moving,
+    });
+
     onSpots(spots);
 
     // keep the loop alive only while something is moving
-    if (
-      Math.abs(book.openTarget - book.open) > 0.0005 ||
-      Math.abs(book.focusTarget - book.focus) > 0.0005 ||
-      Math.abs(book.zoomTarget - book.zoom) > 0.0005 ||
-      book.dragging
-    ) {
-      invalidate();
-    }
+    if (moving) invalidate();
   });
 
   return (

@@ -9,9 +9,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
-import Book, { type ScreenSpot } from "./Book";
+import Book, { type ScreenSpot, type TurnZones } from "./Book";
 import HotspotLayer from "./HotspotLayer";
 import Panel from "./Panel";
+import TurnLayer from "./TurnLayer";
 import { SCENES, type JournalPage, type Locale } from "../core/content";
 import { physicalOf } from "../core/fold";
 import { book } from "../core/store";
@@ -85,7 +86,11 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
   const [panelPageId, setPanelPageId] = useState<string | null>(null);
   const [visible, setVisible] = useState(true);
   const spotsRef = useRef<ScreenSpot[]>([]);
+  const zonesRef = useRef<TurnZones | null>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  // a turn may not be queued while the book is still moving
+  const busyRef = useRef(false);
+  const settleRaf = useRef(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -243,56 +248,50 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
     return () => window.removeEventListener("journal3d:open", onOpen);
   }, [setBookOpen]);
 
-  // ---- pointer: drag to turn, tap the cover to open -----------------------
-  const gesture = useRef({
-    active: false,
-    x0: 0,
-    y0: 0,
-    lastX: 0,
-    axis: null as null | "x" | "y",
-  });
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    gesture.current = {
-      active: true,
-      x0: e.clientX,
-      y0: e.clientY,
-      lastX: e.clientX,
-      axis: null,
+  // ---- turning the book --------------------------------------------------
+  // The book turns by being clicked: the band on the right of the focused
+  // room goes forward, the band on its left goes back. The same function
+  // serves the arrow buttons, so both ways behave the same.
+  const watchSettle = useCallback(() => {
+    cancelAnimationFrame(settleRaf.current);
+    const tick = () => {
+      // the visible part of a turn is over well before the damping settles,
+      // so the lock is released on the visible motion
+      const still =
+        Math.abs(book.focusTarget - book.focus) < 0.008 &&
+        Math.abs(book.openTarget - book.open) < 0.008 &&
+        Math.abs(book.zoomTarget - book.zoom) < 0.008;
+      if (still) {
+        busyRef.current = false;
+        return;
+      }
+      settleRaf.current = requestAnimationFrame(tick);
     };
-  };
+    settleRaf.current = requestAnimationFrame(tick);
+  }, []);
 
-  const onPointerMove = (e: React.PointerEvent) => {
-    const g = gesture.current;
-    if (!g.active) return;
-    const dx = e.clientX - g.x0;
-    const dy = e.clientY - g.y0;
-    if (g.axis === null) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      // lock the axis: only a clear horizontal drag takes over the gesture, so
-      // a vertical scroll is never stolen by the canvas
-      g.axis = Math.abs(dx) > Math.abs(dy) * 1.25 ? "x" : "y";
-      if (g.axis === "x") book.dragging = true;
-    }
-    if (g.axis === "x" && open) {
-      const delta = e.clientX - g.lastX;
-      g.lastX = e.clientX;
-      book.focus = Math.max(0, Math.min(SCENES.length - 1, book.focus + delta / 190));
-    }
-  };
+  const handleTurn = useCallback(
+    (dir: -1 | 1) => {
+      if (busyRef.current) return;
+      const z = zonesRef.current;
+      if (!z || z.moving) return;
+      if (dir > 0) {
+        // the last page is the end of the book
+        if (room >= SCENES.length - 1) return;
+        busyRef.current = true;
+        goToRoom(room + 1);
+      } else {
+        busyRef.current = true;
+        // before the first page the book closes again
+        if (room === 0) setBookOpen(false);
+        else goToRoom(room - 1);
+      }
+      watchSettle();
+    },
+    [room, goToRoom, setBookOpen, watchSettle],
+  );
 
-  const onPointerUp = (e: React.PointerEvent) => {
-    const g = gesture.current;
-    if (!g.active) return;
-    g.active = false;
-    const moved = Math.abs(e.clientX - g.x0) > 6;
-    if (g.axis === "x") {
-      book.dragging = false;
-      if (open) goToRoom(Math.round(book.focus));
-      return;
-    }
-    if (!moved && !open) setBookOpen(true);
-  };
+  useEffect(() => () => cancelAnimationFrame(settleRaf.current), []);
 
   const spotLabels = useMemo(() => {
     const map: Record<string, string> = {};
@@ -309,13 +308,7 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
 
   return (
     <div className={styles.root} ref={wrapRef}>
-      <div
-        className={styles.canvasWrap}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
+      <div className={styles.canvasWrap}>
         {ready && textures ? (
           <Canvas
             orthographic
@@ -333,12 +326,27 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
               onSpots={(spots) => {
                 spotsRef.current = spots;
               }}
+              onZones={(zones) => {
+                zonesRef.current = zones;
+              }}
             />
           </Canvas>
         ) : null}
 
         {ready && textures ? (
-          <HotspotLayer spotsRef={spotsRef} labels={spotLabels} onPick={openPage} />
+          <>
+            <TurnLayer
+              zonesRef={zonesRef}
+              labels={{ open: labels.open, prev: labels.prev, next: labels.next }}
+              open={open}
+              enabled={open && !panelPageId}
+              canNext={room < SCENES.length - 1}
+              canPrev
+              onTurn={handleTurn}
+              onOpen={() => setBookOpen(true)}
+            />
+            <HotspotLayer spotsRef={spotsRef} labels={spotLabels} onPick={openPage} />
+          </>
         ) : null}
 
         {!ready ? <div className={styles.loading}>{labels.loading}</div> : null}
@@ -360,10 +368,8 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
           <button
             type="button"
             className={styles.arrow}
-            onClick={() =>
-              open ? (room === 0 ? setBookOpen(false) : goToRoom(room - 1)) : setBookOpen(true)
-            }
-            aria-label={open && room > 0 ? labels.prev : labels.open}
+            onClick={() => (open ? handleTurn(-1) : setBookOpen(true))}
+            aria-label={open ? (room > 0 ? labels.prev : labels.close) : labels.open}
           >
             ←
           </button>
@@ -373,7 +379,7 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
           <button
             type="button"
             className={styles.arrow}
-            onClick={() => (open ? goToRoom(room + 1) : setBookOpen(true))}
+            onClick={() => (open ? handleTurn(1) : setBookOpen(true))}
             aria-label={open ? labels.next : labels.open}
             disabled={open && room >= SCENES.length - 1}
           >

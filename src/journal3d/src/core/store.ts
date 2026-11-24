@@ -14,8 +14,6 @@ export type BookState = {
   /** Continuous room index the book is turning towards. */
   focus: number;
   focusTarget: number;
-  /** True while the user is dragging the book. */
-  dragging: boolean;
   /** Camera push in on a hotspot, 0..1. */
   zoom: number;
   zoomTarget: number;
@@ -28,7 +26,6 @@ export const book: BookState = {
   openTarget: 0,
   focus: 0,
   focusTarget: 0,
-  dragging: false,
   zoom: 0,
   zoomTarget: 0,
   zoomAt: [0, 0, 0],

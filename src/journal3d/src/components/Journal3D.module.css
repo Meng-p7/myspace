@@ -16,13 +16,8 @@
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
-  /* the browser keeps the vertical scroll, we only claim horizontal drags */
+  /* the browser keeps the vertical scroll of the page */
   touch-action: pan-y;
-  cursor: grab;
-}
-
-.canvasWrap:active {
-  cursor: grabbing;
 }
 
 .canvasWrap canvas {
@@ -31,11 +26,127 @@
   height: 100% !important;
 }
 
+/* the bands that turn the book, real buttons on top of the canvas */
+.turnLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.turnZone {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* the edge of the page lights up when the book can be turned there */
+.turnZone::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  background: rgba(37, 99, 235, 0.6);
+  /* the rule fades out at the top and the bottom of the page */
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+
+.turnZonePrev::before {
+  right: max(0px, calc(var(--edge, 0px) - 1px));
+}
+
+.turnZoneNext::before {
+  left: max(0px, calc(var(--edge, 0px) - 1px));
+}
+
+/* a drawn chevron: it keeps its shape over any drawing on the paper */
+.turnCue {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(37, 99, 235, 0.85);
+  border-bottom: 2px solid rgba(37, 99, 235, 0.85);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.8);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  filter: drop-shadow(0 0 2px rgba(250, 247, 239, 0.9));
+  pointer-events: none;
+}
+
+/* the cue sits on the edge of the page, just inside it */
+.turnZonePrev .turnCue {
+  right: max(0px, calc(var(--edge, 0px) - 22px));
+  transform: translateY(-50%) rotate(135deg) scale(0.8);
+}
+
+.turnZoneNext .turnCue {
+  left: max(0px, calc(var(--edge, 0px) - 22px));
+  transform: translateY(-50%) rotate(-45deg) scale(0.8);
+}
+
+.turnZone:hover::before,
+.turnZone:focus-visible::before,
+.turnZone:hover .turnCue,
+.turnZone:focus-visible .turnCue {
+  opacity: 1;
+}
+
+.turnZonePrev:hover .turnCue,
+.turnZonePrev:focus-visible .turnCue {
+  transform: translateY(-50%) rotate(135deg) scale(1);
+}
+
+.turnZoneNext:hover .turnCue,
+.turnZoneNext:focus-visible .turnCue {
+  transform: translateY(-50%) rotate(-45deg) scale(1);
+}
+
+.turnZone:disabled {
+  cursor: default;
+}
+
+.turnZone:disabled::before,
+.turnZone:disabled .turnCue {
+  opacity: 0;
+}
+
+.turnZone:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -3px;
+}
+
+/* the closed book: the whole canvas opens it */
+.openZone {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
 /* the clickable marks on the paper, real buttons on top of the canvas */
 .spots {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: 2;
 }
 
 .spot {
@@ -300,6 +411,21 @@
   .spot {
     width: 56px;
     height: 56px;
+  }
+
+  .turnCue {
+    width: 12px;
+    height: 12px;
+    border-right-width: 2.5px;
+    border-bottom-width: 2.5px;
+  }
+
+  .turnZonePrev .turnCue {
+    right: max(0px, calc(var(--edge, 0px) - 20px));
+  }
+
+  .turnZoneNext .turnCue {
+    left: max(0px, calc(var(--edge, 0px) - 20px));
   }
 
   .spot::after {
