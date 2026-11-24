@@ -191,6 +191,7 @@ export default function Book({ textures, mobile, onSpots }: Props) {
   const wallMarks = useMemo(() => {
     const out: {
       page: number;
+      room: number;
       face: "front" | "back";
       spot: string;
       pageId: string;
@@ -203,7 +204,15 @@ export default function Book({ textures, mobile, onSpots }: Props) {
         const art = SCENE_ART[sceneIdx];
         for (const [spot, rect] of Object.entries(tex?.right?.marks ?? {})) {
           const pageId = art.spots[spot];
-          if (pageId) out.push({ page: k, face: "front", spot, pageId, rect: rect as [number, number, number, number] });
+          if (pageId)
+            out.push({
+              page: k,
+              room: k,
+              face: "front",
+              spot,
+              pageId,
+              rect: rect as [number, number, number, number],
+            });
         }
       }
       if (k > 0) {
@@ -212,7 +221,15 @@ export default function Book({ textures, mobile, onSpots }: Props) {
         const art = SCENE_ART[prevIdx];
         for (const [spot, rect] of Object.entries(tex?.left?.marks ?? {})) {
           const pageId = art.spots[spot];
-          if (pageId) out.push({ page: k, face: "back", spot, pageId, rect: rect as [number, number, number, number] });
+          if (pageId)
+            out.push({
+              page: k,
+              room: k - 1,
+              face: "back",
+              spot,
+              pageId,
+              rect: rect as [number, number, number, number],
+            });
         }
       }
     }
@@ -363,8 +380,8 @@ export default function Book({ textures, mobile, onSpots }: Props) {
       projected.set(localX, localY, localZ);
       group.localToWorld(projected);
       projected.project(camera);
-      const roomIdx = mark.page === ROOM_COUNT ? -1 : logicalOf(mark.page);
-      const roomFocus = roomIdx < 0 ? 1 : focusOf(roomIdx, focus);
+      // the mark belongs to the room whose wall it is drawn on
+      const roomFocus = focusOf(mark.room, focus);
       spots.push({
         key: `w${mark.page}-${mark.face}-${mark.spot}`,
         pageId: mark.pageId,
