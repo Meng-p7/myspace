@@ -1,0 +1,331 @@
+/* Journal 3D — all class names are hashed by the CSS module, so nothing here
+   can leak into the rest of MySpace. */
+
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  color: #232c38;
+  font-family: var(--serif, Georgia, "Songti SC", serif);
+}
+
+.canvasWrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  /* the browser keeps the vertical scroll, we only claim horizontal drags */
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.canvasWrap:active {
+  cursor: grabbing;
+}
+
+.canvasWrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* the clickable marks on the paper, real buttons on top of the canvas */
+.spots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.spot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.spot::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(37, 99, 235, 0.55);
+  background: rgba(37, 99, 235, 0.1);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.spot:hover::after,
+.spot:focus-visible::after {
+  transform: scale(1.35);
+  background: rgba(37, 99, 235, 0.22);
+}
+
+.spot:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(35, 44, 56, 0.5);
+  background: rgba(246, 243, 235, 0.6);
+}
+
+/* the quiet editorial footer */
+.footer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 0.2rem 0.2rem;
+  border-top: 1px solid rgba(23, 23, 23, 0.1);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.sceneName {
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.sceneMood {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: rgba(35, 44, 56, 0.62);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex: 0 0 auto;
+}
+
+.arrow {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 23, 23, 0.18);
+  background: rgba(255, 255, 255, 0.6);
+  color: #232c38;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.arrow:hover:not(:disabled) {
+  background: #fff;
+  border-color: rgba(37, 99, 235, 0.5);
+}
+
+.arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.index {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: rgba(35, 44, 56, 0.55);
+}
+
+/* the detail sheet: ordinary HTML, not painted into the 3D scene */
+.panel {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  width: min(430px, calc(100% - 1.2rem));
+  max-height: min(76%, 560px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 5;
+  padding: 1.1rem 1.2rem 1.4rem;
+  border-radius: 4px;
+  background: #faf7ef;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  box-shadow: 0 24px 54px rgba(23, 20, 14, 0.24);
+  animation: panelIn 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(23, 23, 23, 0.1);
+}
+
+.panelKicker {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(35, 44, 56, 0.6);
+}
+
+.panelClose {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(23, 23, 23, 0.16);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.panelClose:hover {
+  background: rgba(23, 23, 23, 0.05);
+}
+
+.panelTitle {
+  margin: 0 0 0.6rem;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.panelText {
+  margin: 0 0 0.9rem;
+  font-size: 0.98rem;
+  line-height: 1.8;
+  color: rgba(35, 44, 56, 0.86);
+}
+
+.panelQuote {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border-left: 3px solid #2563eb;
+  background: #eef3ff;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.panelFigure {
+  margin: 0 0 0.9rem;
+}
+
+.panelFigure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  box-shadow: 0 10px 22px rgba(23, 20, 14, 0.16);
+}
+
+.panelFigure figcaption {
+  margin-top: 0.45rem;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  color: rgba(35, 44, 56, 0.6);
+}
+
+.panelNote {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #2563eb;
+  font-style: italic;
+}
+
+.panelSign {
+  margin: 0.9rem 0 0;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: rgba(35, 44, 56, 0.6);
+}
+
+.panelNum {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 0.7rem;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: rgba(35, 44, 56, 0.35);
+}
+
+@media (max-width: 768px) {
+  .root {
+    min-height: 460px;
+  }
+
+  .footer {
+    padding-top: 0.6rem;
+  }
+
+  .spot {
+    width: 56px;
+    height: 56px;
+  }
+
+  .spot::after {
+    inset: 10px;
+  }
+
+  /* on a phone the page is a sheet that rises from the bottom */
+  .panel {
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-height: 64vh;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 0;
+    padding-bottom: 1.8rem;
+  }
+
+  @keyframes panelIn {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

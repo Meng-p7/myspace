@@ -1267,16 +1267,9 @@ button {
 
 /* =========================================================
    04. UNIFIED SINGLE JOURNAL STAGE
-   One real 3D notebook! As you scroll in, the desk tilts
-   top-down, project photo lands beside it, and the ONE real
-   hardcover opens directly into the interactive flipbook.
+   The journal stage: the 3D pop-up book mounts here, and the
+   same ten pages stay readable underneath as plain cards.
 ========================================================= */
-.journal-unified-stage {
-  position: relative;
-  height: 240vh;
-  background: linear-gradient(to bottom, var(--paper) 0%, var(--desk-wood) 28%, #eae2d2 78%, #d6cebe 100%);
-}
-
 .journal-sticky {
   position: sticky;
   top: 0;
@@ -1288,62 +1281,6 @@ button {
   align-items: center;
   justify-content: center;
   padding: 4.5rem clamp(1rem, 4vw, 3rem) 1.5rem;
-}
-
-/* Desk backdrop & props */
-.desk-backdrop {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.desk-prop-photo {
-  position: absolute;
-  background: #fdfcf8;
-  padding: 8px 8px 22px 8px;
-  border-radius: 2px;
-  border: 1px solid rgba(23, 23, 23, 0.1);
-  box-shadow: 0 16px 34px rgba(23, 23, 23, 0.14);
-  will-change: transform, opacity;
-}
-
-.desk-prop-photo img,
-.desk-prop-photo .desk-sketch {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  display: block;
-}
-
-.desk-prop-left {
-  width: clamp(135px, 14vw, 190px);
-  left: 3.5%;
-  top: 18%;
-}
-
-.desk-pencil {
-  position: absolute;
-  right: 4.5%;
-  bottom: 14%;
-  width: 140px;
-  height: 9px;
-  border-radius: 2px 5px 5px 2px;
-  background: linear-gradient(to bottom, #d9b779 0%, #c59b57 55%, #a77f3d 100%);
-  box-shadow: 0 6px 14px rgba(23, 23, 23, 0.16);
-  transform: rotate(24deg);
-  will-change: opacity;
-}
-
-.desk-pencil::before {
-  content: "";
-  position: absolute;
-  left: -13px;
-  top: 0;
-  border-top: 4.5px solid transparent;
-  border-bottom: 4.5px solid transparent;
-  border-right: 13px solid #e6cfa4;
 }
 
 .journal-header {
@@ -1365,304 +1302,6 @@ button {
   font-size: clamp(1.05rem, 1.5vw, 1.3rem);
   color: var(--ink-soft);
   margin-top: 0.25rem;
-}
-
-.journal-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-}
-
-.journal-page-counter {
-  font-family: var(--mono);
-  font-size: 0.84rem;
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  padding: 0.38rem 0.85rem;
-  border-radius: 999px;
-  background: rgba(250, 247, 239, 0.85);
-  border: 1px solid var(--hairline);
-}
-
-.journal-nav-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--hairline);
-  background: rgba(250, 247, 239, 0.92);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
-}
-
-.journal-nav-btn:hover:not(:disabled) {
-  background: var(--ink);
-  color: var(--paper);
-  transform: scale(1.05);
-}
-
-.journal-nav-btn:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-/* THE ONE REAL 3D HARDCOVER NOTEBOOK */
-.notebook-stage {
-  position: relative;
-  z-index: 6;
-  width: min(1000px, 90vw);
-  perspective: 3200px;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.notebook-book {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9.8;
-  max-height: 68vh;
-  border-radius: 10px;
-  padding: 11px 13px;
-  transform-style: preserve-3d;
-  will-change: transform;
-  user-select: none;
-}
-
-/* soft pool of shadow on the desk, wider once the book opens */
-.notebook-desk-shadow {
-  position: absolute;
-  top: 4%;
-  left: 50%;
-  width: 50%;
-  height: 94%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(20, 16, 10, 0.58) 0%,
-    rgba(20, 16, 10, 0.36) 34%,
-    rgba(20, 16, 10, 0.14) 60%,
-    rgba(20, 16, 10, 0) 80%
-  );
-  /* behind the page block: the pages sit at z=-2, a shadow at z=0 would be
-     painted over them. No filter here - a blur would flatten this element and
-     drop it out of the 3D context. */
-  transform: translateZ(-30px);
-  pointer-events: none;
-  will-change: width, left;
-}
-
-/* the hard boards the pages sit inside */
-.notebook-board {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  pointer-events: none;
-  transform: translateZ(-8px);
-  background: linear-gradient(135deg, #272b34 0%, #14171d 100%);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  will-change: opacity;
-}
-
-.notebook-board-right {
-  left: 50%;
-  border-radius: 2px 10px 10px 2px;
-}
-
-
-
-/* page-block thickness: fore-edge and bottom edge, so the shut book has depth */
-.notebook-block-edge {
-  position: absolute;
-  pointer-events: none;
-  z-index: 3;
-  will-change: opacity;
-}
-
-.notebook-block-right {
-  top: 8px;
-  bottom: 8px;
-  right: 0;
-  width: 9px;
-  transform-origin: right center;
-  transform: translateZ(-6px) rotateY(90deg);
-  background: repeating-linear-gradient(90deg, #e3d8c2 0 1.5px, #c8b99d 2px, #f0e9d9 3px);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
-}
-
-.notebook-block-bottom {
-  left: 50%;
-  bottom: 0;
-  width: 50%;
-  height: 9px;
-  transform-origin: bottom center;
-  transform: translateZ(-6px) rotateX(-90deg);
-  background: repeating-linear-gradient(0deg, #e0d4bd 0 1.5px, #c5b699 2px, #ece4d2 3px);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.26);
-}
-
-.notebook-ribbon {
-  position: absolute;
-  bottom: -22px;
-  left: 51%;
-  width: 15px;
-  height: 40px;
-  background: #2563eb;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
-  z-index: 2;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.22);
-}
-
-/* Shadow the lifting cover throws onto the page beneath */
-.notebook-cover-shadow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 50%;
-  z-index: 70;
-  pointer-events: none;
-  opacity: 0;
-  border-radius: 0 10px 10px 0;
-  background: linear-gradient(
-    to left,
-    rgba(20, 16, 10, 0) 46%,
-    rgba(20, 16, 10, 0.16) 78%,
-    rgba(20, 16, 10, 0.34) 100%
-  );
-  transform: translateZ(-1px);
-  will-change: opacity;
-}
-
-/* shading that sweeps across the leaf while it is standing up */
-.notebook-turn-shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  will-change: opacity;
-}
-
-.notebook-turn-shade-front {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 22%, rgba(12, 10, 8, 0.5) 100%);
-}
-
-.notebook-turn-shade-back {
-  background: linear-gradient(270deg, rgba(0, 0, 0, 0) 22%, rgba(12, 10, 8, 0.45) 100%);
-}
-
-/* The cover is a leaf with two faces: the hardcover outside and the first
-   page on its inside, so opening it reveals a real page, not a fade. */
-.notebook-front-cover {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 50%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  z-index: 90;
-  pointer-events: none;
-  will-change: transform;
-}
-
-.notebook-cover-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 0 10px 10px 0;
-  overflow: hidden;
-}
-
-.notebook-cover-front {
-  background: linear-gradient(135deg, #2a2e38 0%, #191c23 55%, #12151b 100%);
-  color: #f6f3eb;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 24px 50px rgba(0, 0, 0, 0.3),
-    inset 14px 0 22px -15px rgba(0, 0, 0, 0.95);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.notebook-cover-groove {
-  position: absolute;
-  top: 12px;
-  bottom: 12px;
-  left: 10px;
-  width: 1px;
-  background: rgba(255, 255, 255, 0.16);
-  box-shadow: 2px 0 0 rgba(0, 0, 0, 0.45);
-}
-
-.notebook-cover-back {
-  transform: rotateY(180deg);
-  padding: 11px 13px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: linear-gradient(135deg, #272b34 0%, #14171d 100%);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
-}
-
-/* backface-visibility is not inherited: without this the page printed on the
-   inside would show as a pale strip beside the hinge while the cover turns */
-.notebook-cover-back .journal-page {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-}
-
-.notebook-cover-label {
-  font-family: var(--serif);
-  font-size: clamp(2rem, 3.8vw, 2.8rem);
-  letter-spacing: 0.04em;
-}
-
-.notebook-cover-sub {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.65;
-  margin-top: 0.4rem;
-}
-
-.notebook-spread-shell {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  background: transparent;
-  transform-style: preserve-3d;
-  /* the page block sits a hair behind the cover: in a 3D context the plane
-     order is decided by depth, not by z-index, so every layer needs its own
-     translateZ or they fight over the same plane */
-  transform: translateZ(-2px);
-  overflow: visible;
-}
-
-.notebook-spine {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 38px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to right,
-    rgba(23, 20, 14, 0) 0%,
-    rgba(23, 20, 14, 0.08) 42%,
-    rgba(23, 20, 14, 0.16) 50%,
-    rgba(23, 20, 14, 0.08) 58%,
-    rgba(23, 20, 14, 0) 100%
-  );
-  z-index: 20;
-  pointer-events: none;
 }
 
 /* The leaf layer must keep its own 3D context, otherwise the sheets are
@@ -1711,69 +1350,6 @@ button {
 
 .journal-page-right {
   border-radius: 0 4px 4px 0;
-}
-
-.flip-sheet {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 50%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform 0.85s cubic-bezier(0.25, 0.8, 0.25, 1);
-  cursor: grab;
-}
-
-.flip-sheet.dragging {
-  transition: none;
-  cursor: grabbing;
-}
-
-.flip-face {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  overflow: hidden;
-  box-shadow: inset 12px 0 24px rgba(23, 20, 14, 0.05);
-}
-
-.flip-face-front {
-  border-radius: 0 4px 4px 0;
-}
-
-.flip-face-back {
-  transform: rotateY(180deg);
-  border-radius: 4px 0 0 4px;
-  box-shadow: inset -12px 0 24px rgba(23, 20, 14, 0.05);
-}
-
-.flip-shadow-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0) 35%);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.page-corner-cue {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, transparent 48%, rgba(23, 23, 23, 0.09) 50%, #ebe4d3 54%, #f9f6ee 100%);
-  pointer-events: none;
-  border-top-left-radius: 6px;
-  transition: width 0.25s ease, height 0.25s ease;
-}
-
-.flip-face-front:hover .page-corner-cue {
-  width: 44px;
-  height: 44px;
 }
 
 .j-meta-row {
@@ -1878,100 +1454,6 @@ button {
   color: var(--ink-muted);
   align-self: flex-end;
 }
-
-/* =========================================================
-   JOURNAL ON PHONES — the same hardcover, held in one hand.
-   Single-page mode: one leaf-wide book, spine on the left,
-   pages turn around it with real front/back faces.
-========================================================= */
-.notebook-book,
-.flip-sheet {
-  /* vertical scrolling stays native; horizontal gestures become page turns */
-  touch-action: pan-y;
-}
-
-.notebook-stage.is-single {
-  width: min(88vw, 400px, 44vh);
-}
-
-.notebook-book.is-single {
-  aspect-ratio: 18 / 25;
-  max-height: 60vh;
-  padding: 8px 9px;
-}
-.notebook-book.is-single .notebook-board-right {
-  left: 0;
-  width: 100%;
-  border-radius: 8px;
-}
-.notebook-book.is-single .notebook-block-bottom {
-  left: 0;
-  width: 100%;
-}
-.notebook-book.is-single .notebook-spine {
-  left: 0;
-  transform: none;
-  width: 22px;
-  background: linear-gradient(
-    to right,
-    rgba(23, 20, 14, 0.3) 0%,
-    rgba(23, 20, 14, 0.12) 46%,
-    rgba(23, 20, 14, 0) 100%
-  );
-}
-.notebook-book.is-single .notebook-front-cover {
-  left: 0;
-  width: 100%;
-}
-.notebook-book.is-single .notebook-cover-face {
-  border-radius: 4px 10px 10px 4px;
-}
-.notebook-book.is-single .notebook-cover-back {
-  padding: 8px 9px;
-}
-.notebook-book.is-single .notebook-cover-label {
-  font-size: clamp(2rem, 10vw, 2.6rem);
-}
-.notebook-book.is-single .spread-base-grid {
-  grid-template-columns: 1fr;
-}
-.notebook-book.is-single #baseLeftPage {
-  display: none;
-}
-.notebook-book.is-single .journal-page-right {
-  border-radius: 4px 8px 8px 4px;
-}
-.notebook-book.is-single .flip-sheet {
-  left: 0;
-  width: 100%;
-  /* slower lift than the spread leaves: on a one-page book the turn must
-     stay readable over the page before it sweeps past the spine */
-  transition: transform 0.95s cubic-bezier(0.33, 0, 0.2, 1);
-}
-.notebook-book.is-single .flip-face-front {
-  border-radius: 4px 8px 8px 4px;
-}
-.notebook-book.is-single .flip-face-back {
-  border-radius: 8px 4px 4px 8px;
-}
-.notebook-book.is-single .notebook-cover-shadow {
-  left: 0;
-  width: 100%;
-  border-radius: 8px;
-}
-.notebook-book.is-single .notebook-desk-shadow {
-  left: 0;
-  width: 100%;
-}
-
-/* cream endpaper + bookplate on the inside of the hard cover */
-.notebook-book.is-single #coverBackPage {
-  background-color: #efe7d6;
-  background-image: radial-gradient(rgba(120, 98, 60, 0.1) 1px, transparent 1px);
-  background-size: 14px 14px;
-  display: flex;
-  border-radius: 4px 8px 8px 4px;
-}
 .endpaper-plate {
   margin: auto;
   display: flex;
@@ -2039,17 +1521,6 @@ button {
     padding: 4.3rem 1rem 1.2rem;
     perspective: 1700px;
   }
-  .desk-prop-left {
-    width: 80px;
-    left: auto;
-    right: 3%;
-    top: 8.5%;
-  }
-  .desk-pencil {
-    width: 92px;
-    right: 3%;
-    bottom: 9%;
-  }
   .journal-header {
     width: 92vw;
     margin-bottom: 0.9rem;
@@ -2060,17 +1531,6 @@ button {
   }
   .journal-sub {
     font-size: 0.95rem;
-  }
-  .journal-nav-btn {
-    width: 34px;
-    height: 34px;
-  }
-  .journal-page-counter {
-    font-size: 0.76rem;
-    padding: 0.3rem 0.7rem;
-  }
-  .notebook-stage {
-    perspective: 2100px;
   }
   .journal-page {
     padding: 1rem 1rem 0.85rem;
@@ -2093,21 +1553,6 @@ button {
   }
   .journal-sub {
     display: none;
-  }
-  .journal-nav-btn {
-    width: 30px;
-    height: 30px;
-  }
-  .journal-page-counter {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.6rem;
-  }
-  .desk-prop-left,
-  .desk-pencil {
-    display: none;
-  }
-  .notebook-book {
-    max-height: 66vh;
   }
   .journal-page {
     padding: 0.8rem 0.9rem 0.7rem;
@@ -2144,27 +1589,6 @@ button {
     padding: 0.35rem;
     margin: 0.25rem 0;
   }
-}
-
-/* reduced motion: the complete journal as a calm static stack */
-.journal-unified-stage.is-static {
-  height: auto;
-  padding: 4rem 1rem;
-}
-.is-static .journal-sticky {
-  position: relative;
-  height: auto;
-}
-.is-static .notebook-front-cover,
-.is-static .notebook-desk-shadow,
-.is-static .notebook-block-edge,
-.is-static .notebook-board,
-.is-static .journal-controls {
-  display: none;
-}
-.is-static .notebook-book {
-  aspect-ratio: auto;
-  max-height: none;
 }
 .static-pages {
   position: static;
@@ -2315,10 +1739,92 @@ button {
   .reveal-sticky, .journal-sticky { position: relative; height: auto; }
   .home-layer { position: relative; height: 100vh; }
   .paper-sheet-wrap { position: relative; transform: none !important; pointer-events: auto; }
-  .paper-curl-lip, .paper-cast-shadow, .inplace-exhibition-layer, .desk-backdrop, .notebook-front-cover { display: none; }
   .gallery-scroll-zone { height: auto; }
   .gallery-sticky { position: relative; height: auto; }
   .gallery-track { transform: none !important; overflow-x: auto; }
-  .flip-sheet { transition: none; }
   .home-scroll-arrow, .ending-lamp-glow { animation: none; }
+}
+
+/* =========================================================
+   JOURNAL — the 3D pop-up book lives in its own module; the
+   page only provides the stage and the fallback pages.
+========================================================= */
+.journal-unified-stage {
+  position: relative;
+  height: 170vh;
+  background: linear-gradient(to bottom, var(--paper) 0%, var(--desk-wood) 26%, #eae2d2 76%, #d6cebe 100%);
+}
+
+.journal-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(4.5rem, 9vh, 7rem) clamp(1rem, 4vw, 3rem) clamp(1rem, 3vh, 2rem);
+}
+
+.journal-header {
+  flex: 0 0 auto;
+  margin-bottom: 0.6rem;
+}
+
+.journal3d-mount {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* the plain pages, shown while the 3D book loads or if WebGL is missing */
+.journal-fallback {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  gap: 1.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  padding: 0.4rem 0.2rem 2rem;
+}
+
+.journal-fallback-page {
+  position: relative;
+  background: #faf7ef;
+  border: 1px solid rgba(23, 23, 23, 0.1);
+  border-radius: 3px;
+  padding: 1.1rem 1.2rem 1.6rem;
+  box-shadow: 0 12px 26px rgba(23, 20, 14, 0.1);
+}
+
+.journal-fallback-page .j-page-num {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 0.7rem;
+}
+
+@media (max-width: 768px) {
+  .journal-unified-stage {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .journal-sticky {
+    position: relative;
+    height: auto;
+    min-height: 92vh;
+    padding-bottom: 3rem;
+  }
+
+  /* an explicit height: the sticky is auto on a phone, so the percentage
+     heights down to the canvas would otherwise collapse */
+  .journal3d-mount {
+    height: 60vh;
+    min-height: 420px;
+  }
+
+  .journal-fallback {
+    position: relative;
+    grid-template-columns: 1fr;
+  }
 }

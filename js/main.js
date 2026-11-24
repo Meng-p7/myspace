@@ -120,402 +120,136 @@ function renderProjects(data) {
 }
 
 /* =========================================================
-   JOURNAL 3D FLIPBOOK ENGINE (ONE SINGLE NOTEBOOK)
-   spread mode: two-page leaves on a centre spine (desktop /
-   landscape). single mode: one page per view, leaves turn on
-   the left spine exactly like a real book held in one hand.
+   JOURNAL — a 3D pop-up book, loaded on demand
+
+   The heavy part (React + three.js) is fetched the first time the reader
+   reaches the journal, so the front page stays fast. Until it arrives, and
+   if WebGL is not available at all, the same ten pages are readable as plain
+   cards below.
 ========================================================= */
-let currentSpread = 0;
-let currentPage = 0;
-let journalMode = "spread";
-let journalOpenK = 1;
-const spreadBaseGrid = document.getElementById("spreadBaseGrid");
-const flipSheetsLayer = document.getElementById("flipSheetsLayer");
-const journalCounter = document.getElementById("journalCounter");
-const journalPrevBtn = document.getElementById("journalPrevBtn");
-const journalNextBtn = document.getElementById("journalNextBtn");
-const flipSheets = [];
-let singleSheet = null;
-let singleBusy = false;
-let singleFlipShade = 0;
-let journalPages = [];
+const journalMount = document.getElementById("journal3dMount");
+const journalFallback = document.getElementById("journalFallback");
+const journalSub = document.getElementById("journalSub");
+let journal3d = null;
+let journal3dLoading = false;
 
-const ENDPLATE_HTML = `
-  <div class="endpaper-plate">
-    <span class="endpaper-rule"></span>
-    <span class="endpaper-title">Ex Libris</span>
-    <span class="endpaper-name">Moon</span>
-    <span class="endpaper-sub">Shanghai · MMXXVI</span>
-    <span class="endpaper-rule"></span>
-  </div>
-`;
-
-function detectJournalMode() {
-  if (prefersReducedMotion) return "static";
-  const vw = window.innerWidth, vh = window.innerHeight;
-  if (vw > 820) return "spread";
-  if (vw > vh && vw >= 560) return "spread"; // phone landscape: room for a spread
-  return "single";
-}
-
-function baseRightEl() {
-  return document.getElementById("baseRightPage");
-}
-
-function initJournalBook(spreads) {
-  const n = spreads.length;
-  journalPages = spreads.flatMap(s => [s.leftHtml, s.rightHtml]);
-  const mode = detectJournalMode();
-  const modeChanged = mode !== journalMode;
-  journalMode = mode;
-  notebookBook.classList.toggle("is-single", mode === "single");
-  notebookStage.classList.toggle("is-single", mode === "single");
-  journalStage.classList.toggle("is-static", mode === "static");
-  singleBusy = false;
-  singleFlipShade = 0;
-
-  if (mode === "spread") {
-    // The first left page lives on the inside of the cover: opening the book
-    // turns the cover over and that page is really there, so nothing has to fade
-    // or be clipped into place. The base left slot stays empty on purpose.
-    document.getElementById("coverBackPage").innerHTML = spreads[0].leftHtml;
-    spreadBaseGrid.innerHTML = `
-      <div class="journal-page journal-page-left" id="baseLeftPage"></div>
-      <div class="journal-page journal-page-right" id="baseRightPage">${spreads[n - 1].rightHtml}</div>
-    `;
-    flipSheetsLayer.innerHTML = "";
-    flipSheets.length = 0;
-    singleSheet = null;
-
-    for (let i = 0; i < n - 1; i++) {
-      const sheet = document.createElement("div");
-      sheet.className = "flip-sheet";
-      sheet.dataset.sheetIndex = String(i);
-      sheet.style.zIndex = String(n - i);
-      sheet.innerHTML = `
-        <div class="flip-face flip-face-front journal-page journal-page-right">
-          ${spreads[i].rightHtml}
-          <div class="page-corner-cue" aria-hidden="true"></div>
-          <div class="flip-shadow-overlay"></div>
-        </div>
-        <div class="flip-face flip-face-back journal-page journal-page-left">
-          ${spreads[i + 1].leftHtml}
-          <div class="flip-shadow-overlay"></div>
-        </div>
-      `;
-      attachSheetInteraction(sheet, i);
-      flipSheetsLayer.appendChild(sheet);
-      flipSheets.push(sheet);
-    }
-    if (modeChanged) currentSpread = clamp(Math.floor(currentPage / 2), 0, n - 1);
-  } else if (mode === "single") {
-    // Inside of the hard cover is a cream endpaper with a bookplate;
-    // page 01 waits underneath as real paper, revealed by the cover turn.
-    document.getElementById("coverBackPage").innerHTML = ENDPLATE_HTML;
-    spreadBaseGrid.innerHTML = `
-      <div class="journal-page journal-page-left" id="baseLeftPage"></div>
-      <div class="journal-page journal-page-right" id="baseRightPage"></div>
-    `;
-    flipSheetsLayer.innerHTML = "";
-    flipSheets.length = 0;
-    singleSheet = document.createElement("div");
-    singleSheet.className = "flip-sheet single-sheet";
-    singleSheet.style.visibility = "hidden";
-    singleSheet.innerHTML = `
-      <div class="flip-face flip-face-front journal-page journal-page-right"><div class="flip-shadow-overlay"></div></div>
-      <div class="flip-face flip-face-back journal-page journal-page-left"><div class="flip-shadow-overlay"></div></div>
-    `;
-    flipSheetsLayer.appendChild(singleSheet);
-    if (modeChanged) currentPage = clamp(currentSpread * 2, 0, journalPages.length - 1);
-    singleShow(currentPage);
-  } else {
-    // Reduced motion: every page as a calm static stack, still complete.
-    document.getElementById("coverBackPage").innerHTML = "";
-    spreadBaseGrid.innerHTML =
-      `<div class="static-pages">` +
-      journalPages.map(h => `<div class="journal-page">${h}</div>`).join("") +
-      `</div>`;
-    flipSheetsLayer.innerHTML = "";
-    flipSheets.length = 0;
-    singleSheet = null;
-  }
-  updateJournalUI();
-}
-
-/* How open the book is: 1 = lying open, 0 = shut. Used to pull the turned
-   leaves back to the right when the book is being closed. */
-let journalCloseK = 1;
-
-/* Depth of a leaf inside the book. Unturned leaves stack with the first
-   one on top; turned ones land on the left, each above the last. */
-function sheetDepth(idx, turned) {
-  const count = Math.max(1, flipSheets.length);
-  return turned ? 4 + idx * 1.6 : 4 + (count - 1 - idx) * 1.6;
-}
-
-/* Place every leaf. A leaf that is turned while the book is closing falls
-   back towards the right, the way real pages drop when you shut a book. */
-function applySheetTransforms() {
-  flipSheets.forEach((sheet, idx) => {
-    const turned = idx < currentSpread;
-    const frac = turned
-      ? Math.max(0, Math.min(1, (journalCloseK - idx * 0.06) / 0.34))
-      : 0;
-    const inFlight = frac > 0.02 && frac < 0.98;
-    const z = inFlight ? 16 : sheetDepth(idx, frac >= 0.5);
-    w(sheet, "transform", `translateZ(${z.toFixed(1)}px) rotateY(${(-180 * frac).toFixed(1)}deg)`);
-    w(sheet, "z-index", turned ? String(10 + idx) : String(30 - idx));
-    cls(sheet, "is-flipped", turned && frac > 0.5);
-  });
-}
-
-function updateJournalUI() {
-  if (journalMode === "single") {
-    const total = journalPages.length;
-    journalCounter.textContent = `${pad2(currentPage + 1)} / ${pad2(total)}`;
-    journalPrevBtn.disabled = currentPage === 0;
-    journalNextBtn.disabled = currentPage === total - 1;
-    return;
-  }
-  if (journalMode === "static") {
-    journalCounter.textContent = `${pad2(journalPages.length)} pages`;
-    journalPrevBtn.disabled = true;
-    journalNextBtn.disabled = true;
-    return;
-  }
-  const spreads = I18N[currentLang].journalSpreads;
-  const total = spreads.length;
-  journalCounter.textContent = `${pad2(currentSpread + 1)} / ${pad2(total)}`;
-  journalPrevBtn.disabled = currentSpread === 0;
-  journalNextBtn.disabled = currentSpread === total - 1;
-  applySheetTransforms();
-}
-
-/* ---------- single-page leaf mechanics ---------- */
-function singleFaces(frontHtml, backHtml) {
-  const front = singleSheet.children[0];
-  const back = singleSheet.children[1];
-  front.innerHTML = frontHtml +
-    `<div class="page-corner-cue" aria-hidden="true"></div><div class="flip-shadow-overlay"></div>`;
-  back.innerHTML = backHtml + `<div class="flip-shadow-overlay"></div>`;
-}
-function singleSetBase(k) {
-  const el = baseRightEl();
-  if (el) el.innerHTML = journalPages[k];
-}
-function singleShade(v) {
-  singleFlipShade = v;
-  if (!singleSheet) return;
-  const o = v.toFixed(3);
-  const fo = singleSheet.children[0].querySelector(".flip-shadow-overlay");
-  const bo = singleSheet.children[1].querySelector(".flip-shadow-overlay");
-  if (fo) fo.style.opacity = o;
-  if (bo) bo.style.opacity = o;
-}
-function singleShow(k) {
-  currentPage = clamp(k, 0, journalPages.length - 1);
-  singleSetBase(currentPage);
-  if (singleSheet) {
-    singleSheet.style.visibility = "hidden";
-    singleSheet.classList.remove("dragging");
-    singleSheet.style.transform = "translateZ(0px) rotateY(0deg)";
-  }
-  singleShade(0);
-  updateJournalUI();
-}
-/* Lift the leaf that is about to turn. dir +1 = forward. */
-function singleBegin(dir) {
-  const k = currentPage, t = k + dir;
-  if (t < 0 || t >= journalPages.length || !singleSheet) return false;
-  singleBusy = true;
-  singleFaces(dir > 0 ? journalPages[k] : journalPages[t],
-              dir > 0 ? journalPages[t] : journalPages[k]);
-  singleSetBase(dir > 0 ? t : k);
-  singleSheet.style.visibility = "visible";
-  singleSheet.style.zIndex = "60";
-  singleSheet.classList.add("dragging");
-  singleSheet.style.transform = `translateZ(14px) rotateY(${dir > 0 ? 0 : -180}deg)`;
-  return true;
-}
-/* Let the leaf fall to its destination (or spring back). */
-function singleFinish(dir, complete, crossed) {
-  if (!singleSheet) { singleBusy = false; return; }
-  const k = currentPage, t = k + dir;
-  singleSheet.classList.remove("dragging");
-  const endDeg = complete ? (dir > 0 ? -180 : 0) : (dir > 0 ? 0 : -180);
-  // Paper underneath: swap at the moment the leaf stands edge-on.
-  if (dir < 0 && complete && !crossed) setTimeout(() => { if (singleBusy) singleSetBase(t); }, 480);
-  if (!complete && crossed) setTimeout(() => { if (singleBusy) singleSetBase(k); }, 480);
-  if (!complete && !crossed && dir > 0) singleSetBase(k);
-  singleShade(0.42);
-  setTimeout(() => { if (singleBusy) singleShade(0); }, 500);
-  singleSheet.style.transform = `translateZ(14px) rotateY(${endDeg}deg)`;
-  let done = false;
-  const finalize = () => {
-    if (done) return;
-    done = true;
-    singleSheet.removeEventListener("transitionend", onEnd);
-    singleBusy = false;
-    currentPage = complete ? t : k;
-    singleSetBase(currentPage);
-    singleSheet.style.visibility = "hidden";
-    singleShade(0);
-    updateJournalUI();
-  };
-  const onEnd = (e) => { if (e.propertyName === "transform") finalize(); };
-  singleSheet.addEventListener("transitionend", onEnd);
-  setTimeout(finalize, 1100);
-}
-function singleTurn(dir) {
-  if (singleBusy || journalMode !== "single") return;
-  if (!singleBegin(dir)) return;
-  void singleSheet.offsetWidth; // commit the start pose before transitioning
-  singleFinish(dir, true, false);
-}
-
-/* ---------- spread leaf drag (axis-locked so vertical scroll stays native) ---------- */
-function attachSheetInteraction(sheet, idx) {
-  let startX = 0, startY = 0;
-  let isDragging = false;
-  let moved = false;
-  let decided = 0; // 0 undecided, 1 horizontal flip, 2 vertical scroll
-
-  sheet.addEventListener("pointerdown", (e) => {
-    if (e.target.closest("a")) return;
-    isDragging = true;
-    moved = false;
-    decided = 0;
-    startX = e.clientX;
-    startY = e.clientY;
-    sheet.setPointerCapture(e.pointerId);
-  });
-
-  sheet.addEventListener("pointermove", (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    if (!decided) {
-      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.15) decided = 1;
-      else if (Math.abs(dy) > 8) decided = 2;
-      else return;
-      if (decided === 1) {
-        sheet.classList.add("dragging");
-        w(sheet, "z-index", "50");
+const journalLabels = (lang) =>
+  lang === "zh"
+    ? {
+        open: "打开日记本",
+        close: "合上日记本",
+        hint: "点一下封面，翻开这本手账",
+        prev: "上一个场景",
+        next: "下一个场景",
+        panelClose: "关闭",
+        page: "页",
+        loading: "正在画纸…",
+        unsupported: "这台设备暂时无法显示 3D 内容，下面的日记依然可以读完。",
       }
-    }
-    if (decided !== 1) return;
-    if (Math.abs(dx) > 6) moved = true;
-    const width = Math.max(200, sheet.offsetWidth);
-    const isCurrentlyFlipped = idx < currentSpread;
-    let deg;
-    if (!isCurrentlyFlipped) {
-      const progress = Math.max(0, Math.min(1, -dx / width));
-      deg = -progress * 180;
-    } else {
-      const progress = Math.max(0, Math.min(1, dx / width));
-      deg = -180 + progress * 180;
-    }
-    w(sheet, "transform", `translateZ(14px) rotateY(${deg.toFixed(1)}deg)`);
-  });
+    : {
+        open: "Open the book",
+        close: "Close the book",
+        hint: "Tap the cover to open this notebook",
+        prev: "Previous scene",
+        next: "Next scene",
+        panelClose: "Close",
+        page: "Page",
+        loading: "Sharpening pencils…",
+        unsupported:
+          "This device cannot show the 3D book, but every page is still readable below.",
+      };
 
-  sheet.addEventListener("pointerup", (e) => {
-    if (!isDragging) return;
-    isDragging = false;
-    sheet.classList.remove("dragging");
-    const dx = e.clientX - startX;
-    const isCurrentlyFlipped = idx < currentSpread;
-
-    if (decided !== 1) {
-      if (decided === 0) goToSpread(isCurrentlyFlipped ? idx : idx + 1); // tap
-      else updateJournalUI(); // vertical scroll took over: restore pose
-      return;
-    }
-    if (!moved) {
-      goToSpread(isCurrentlyFlipped ? idx : idx + 1);
-      return;
-    }
-    const threshold = Math.max(60, sheet.offsetWidth * 0.25);
-    if (!isCurrentlyFlipped && dx < -threshold) goToSpread(idx + 1);
-    else if (isCurrentlyFlipped && dx > threshold) goToSpread(idx);
-    else updateJournalUI();
-  });
-
-  sheet.addEventListener("pointercancel", () => {
-    isDragging = false;
-    sheet.classList.remove("dragging");
-    updateJournalUI();
-  });
+function journalPages(lang) {
+  return (I18N[lang] && I18N[lang].journalPages) || [];
 }
 
-function goToSpread(idx) {
-  const spreads = I18N[currentLang].journalSpreads;
-  currentSpread = Math.max(0, Math.min(spreads.length - 1, idx));
-  updateJournalUI();
+/** The same ten pages as plain HTML: the fallback and the no-JS story. */
+function renderJournalFallback(lang) {
+  if (!journalFallback) return;
+  const pages = journalPages(lang);
+  journalFallback.innerHTML = pages
+    .map(
+      (p) => `
+      <article class="journal-fallback-page">
+        <div class="j-meta-row"><span>${p.kicker}</span><span>${p.kickerRight}</span></div>
+        ${p.title ? `<h3 class="j-title">${p.title}</h3>` : ""}
+        ${p.body ? `<p class="j-body">${p.body}</p>` : ""}
+        ${p.quote ? `<div class="j-sticky-note">${p.quote}</div>` : ""}
+        ${
+          p.image
+            ? `<figure class="j-polaroid">
+                 <img src="assets/${p.image.src}.webp"
+                      srcset="assets/${p.image.src}-sm.webp 560w, assets/${p.image.src}.webp 1000w"
+                      sizes="(max-width: 820px) 76vw, 320px"
+                      loading="lazy" decoding="async" alt="${p.image.alt}" />
+                 <figcaption class="j-polaroid-cap">${p.image.caption}</figcaption>
+               </figure>`
+            : ""
+        }
+        ${p.handnote ? `<p class="j-handnote">${p.handnote}</p>` : ""}
+        <div class="j-page-num">${pad2(p.pageNumber)}</div>
+      </article>`,
+    )
+    .join("");
 }
 
-journalPrevBtn.addEventListener("click", () => {
-  if (journalMode === "single") singleTurn(-1);
-  else goToSpread(currentSpread - 1);
-});
-journalNextBtn.addEventListener("click", () => {
-  if (journalMode === "single") singleTurn(1);
-  else goToSpread(currentSpread + 1);
-});
+function ensureJournalStyles() {
+  if (document.getElementById("journal3d-css")) return;
+  const link = document.createElement("link");
+  link.id = "journal3d-css";
+  link.rel = "stylesheet";
+  link.href = "journal3d/journal3d.css";
+  document.head.appendChild(link);
+}
 
-/* ---------- single-page touch drag on the book itself ----------
-   touch-action: pan-y keeps vertical scrolling native; only a
-   clearly horizontal gesture is captured as a page turn.
-   (Listeners are attached at boot, once DOM refs exist.) */
-let sd = null;
-function attachBookInteraction() {
-notebookBook.addEventListener("pointerdown", (e) => {
-  if (journalMode !== "single" || journalOpenK < 0.85 || singleBusy) return;
-  if (e.target.closest("a, button")) return;
-  sd = { x: e.clientX, y: e.clientY, decided: 0, dir: 0, crossed: false, W: notebookBook.clientWidth };
-});
-notebookBook.addEventListener("pointermove", (e) => {
-  if (!sd) return;
-  const dx = e.clientX - sd.x, dy = e.clientY - sd.y;
-  if (!sd.decided) {
-    if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.15) {
-      sd.dir = dx < 0 ? 1 : -1;
-      if (!singleBegin(sd.dir)) { sd = null; return; }
-      sd.decided = 1;
-      notebookBook.setPointerCapture(e.pointerId);
-    } else if (Math.abs(dy) > 10) {
-      sd.decided = 2;
-    } else return;
+function loadJournal3D() {
+  if (journal3d || journal3dLoading || !journalMount) return;
+  journal3dLoading = true;
+  ensureJournalStyles();
+  import("../journal3d/journal3d.js")
+    .then((mod) => {
+      journal3d = mod.mountJournal(journalMount, {
+        locale: currentLang,
+        assetBase: "assets/",
+        labels: journalLabels(currentLang),
+        pages: journalPages(currentLang),
+      });
+      if (journalFallback) journalFallback.style.display = "none";
+      journal3dLoading = false;
+    })
+    .catch((err) => {
+      console.warn("journal 3D could not start:", err);
+      journal3dLoading = false;
+      renderJournalFallback(currentLang);
+    });
+}
+
+/** Language change: the 3D scene keeps running, only the words change. */
+function updateJournalModule(lang) {
+  if (journalSub) {
+    journalSub.textContent =
+      lang === "zh" ? "手记、草图与一些小事。" : "Thoughts, sketches & little moments.";
   }
-  if (sd.decided !== 1) return;
-  const prog = sd.dir > 0 ? clamp(-dx / sd.W, 0, 1) : clamp(dx / sd.W, 0, 1);
-  const deg = sd.dir > 0 ? -180 * prog : -180 + 180 * prog;
-  singleSheet.style.transform = `translateZ(14px) rotateY(${deg.toFixed(1)}deg)`;
-  singleShade(Math.sin(prog * Math.PI) * 0.5);
-  if (sd.dir < 0 && prog > 0.5 && !sd.crossed) { sd.crossed = true; singleSetBase(currentPage - 1); }
-  if (sd.dir > 0 && prog < 0.5 && sd.crossed) { sd.crossed = false; singleSetBase(currentPage + 1); }
-});
-notebookBook.addEventListener("pointerup", (e) => {
-  if (!sd) return;
-  const s = sd;
-  sd = null;
-  if (s.decided !== 1) {
-    if (s.decided === 0 && journalOpenK > 0.85) {
-      const rect = notebookBook.getBoundingClientRect();
-      const rel = (e.clientX - rect.left) / Math.max(1, rect.width);
-      singleTurn(rel < 0.3 ? -1 : 1);
-    }
-    return;
+  if (journal3d) {
+    journal3d.setLocale(lang, journalPages(lang));
+  } else {
+    renderJournalFallback(lang);
   }
-  const dx = e.clientX - s.x;
-  const complete = s.dir > 0 ? dx < -s.W * 0.22 : dx > s.W * 0.22;
-  singleFinish(s.dir, complete, s.crossed);
-});
-notebookBook.addEventListener("pointercancel", () => {
-  if (!sd) return;
-  const s = sd;
-  sd = null;
-  if (s.decided === 1) singleFinish(s.dir, false, s.crossed);
-});
+}
+
+// fetch the book a little before the reader gets there
+if (journalMount && "IntersectionObserver" in window) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      loadJournal3D();
+    },
+    { rootMargin: "500px 0px" },
+  );
+  io.observe(journalMount);
+} else {
+  renderJournalFallback(currentLang);
 }
 
 function applyLanguage(lang) {
@@ -531,7 +265,7 @@ function applyLanguage(lang) {
   backToTopBtn.textContent = data.backToTop;
 
   renderProjects(data);
-  initJournalBook(data.journalSpreads);
+  updateJournalModule(lang);
   refreshMetrics();
 }
 
@@ -619,7 +353,7 @@ navToggle.addEventListener("click", () => {
 function sectionScrollTarget(key) {
   if (key === "about") return M.revealTop + M.revealSc * 0.58;
   if (key === "projects") return M.vw > 768 ? M.galleryTop + M.gallerySc * 0.12 : Math.max(0, M.galleryTop - 8);
-  if (key === "journal") return M.journalTop + M.journalSc * (journalMode === "static" ? 0 : 0.8);
+  if (key === "journal") return M.journalTop;
   return 0;
 }
 
@@ -668,10 +402,6 @@ const galleryTrack = document.getElementById("galleryTrack");
 const galleryProgressFill = document.getElementById("galleryProgressFill");
 
 const journalStage = document.getElementById("journalStage");
-const deskBackdrop = document.getElementById("deskBackdrop");
-const deskPropLeft = document.getElementById("deskPropLeft");
-const deskPencil = document.getElementById("deskPencil");
-const journalHeader = document.getElementById("journalHeader");
 const notebookStage = document.getElementById("notebookStage");
 const notebookBook = document.getElementById("notebookBook");
 const notebookFrontCover = document.getElementById("notebookFrontCover");
@@ -762,9 +492,6 @@ function scheduleMetricsRefresh() {
 }
 
 function refreshMetrics() {
-  const nextMode = detectJournalMode();
-  if (nextMode !== journalMode) initJournalBook(I18N[currentLang].journalSpreads);
-
   M.vw = window.innerWidth;
   M.vh = window.innerHeight;
   M.revealTop = pageTop(revealStage);
@@ -898,83 +625,6 @@ function updateScrollAnimations(sy) {
         });
       }
     }
-
-    // --- 3. UNIFIED SINGLE JOURNAL (a real hardcover that swings open) ---
-    const jp = clamp((sy - M.journalTop) / M.journalSc, 0, 1);
-    if (Math.abs(jp - lastP.journal) > 0.0004) {
-      lastP.journal = jp;
-      const openK = easeInOutCubic(clamp((jp - 0.28) / 0.44, 0, 1));
-      journalOpenK = openK;
-      const theta = openK * 180;
-      const turn = Math.sin((theta * Math.PI) / 180);
-
-      if (journalMode === "spread") {
-        // Shutting the book pulls the turned leaves back to the right.
-        journalCloseK = clamp((openK - 0.06) / 0.42, 0, 1);
-        if (journalCloseK <= 0.001 && currentSpread !== 0) {
-          currentSpread = 0;
-          updateJournalUI();
-        } else {
-          applySheetTransforms();
-        }
-
-        const pitch = 18 - openK * 11;
-        const yaw = -10 * (1 - openK);
-        const bookScale = (0.86 + openK * 0.14) * (1 - 0.12 * turn);
-        const camX = -25 * (1 - openK) + 7 * turn;
-        w(notebookStage, "transform",
-          `translateX(${camX.toFixed(2)}%) rotateX(${pitch.toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg) scale(${bookScale.toFixed(3)})`);
-
-        const thick = clamp(1 - openK / 0.32, 0, 1).toFixed(3);
-        w(notebookBlockRight, "opacity", thick);
-        w(notebookBlockBottom, "opacity", thick);
-
-        w(notebookDeskShadow, "left", `${(50 - 50 * openK).toFixed(2)}%`);
-        w(notebookDeskShadow, "width", `${(50 + 51 * openK).toFixed(2)}%`);
-
-        const land = easeInOutCubic(clamp((openK - 0.5) / 0.32, 0, 1));
-        const coverZ = 0.8 + 25.2 * (1 - land);
-        w(notebookFrontCover, "transform", `translateZ(${coverZ.toFixed(2)}px) rotateY(${(-180 * openK).toFixed(2)}deg)`);
-
-        w(notebookTurnShadeFront, "opacity", (turn * 0.6).toFixed(3));
-        w(notebookTurnShadeBack, "opacity", (turn * 0.5).toFixed(3));
-        const shade = theta < 90 ? 0.34 * Math.sin((theta * 2 * Math.PI) / 180) : 0;
-        w(notebookCoverShadow, "opacity", Math.max(0, shade).toFixed(3));
-      } else if (journalMode === "single") {
-        if (openK <= 0.001 && currentPage !== 0 && !singleBusy) singleShow(0);
-
-        // One-hand camera: tilted three-quarter while shut, flat to read.
-        const pitch = 16 - openK * 10;
-        const yaw = -9 * (1 - openK);
-        const bookScale = (0.9 + openK * 0.1) * (1 - 0.1 * turn);
-        const camX = 4 * openK - 1.5 * (1 - openK);
-        w(notebookStage, "transform",
-          `translateX(${camX.toFixed(2)}%) rotateX(${pitch.toFixed(2)}deg) rotateY(${yaw.toFixed(2)}deg) scale(${bookScale.toFixed(3)})`);
-
-        const thick = clamp(1 - openK / 0.32, 0, 1).toFixed(3);
-        w(notebookBlockRight, "opacity", thick);
-        w(notebookBlockBottom, "opacity", thick);
-
-        const land = easeInOutCubic(clamp((openK - 0.5) / 0.32, 0, 1));
-        const coverZ = 0.8 + 22 * (1 - land);
-        w(notebookFrontCover, "transform", `translateZ(${coverZ.toFixed(2)}px) rotateY(${(-180 * openK).toFixed(2)}deg)`);
-
-        w(notebookTurnShadeFront, "opacity", (turn * 0.6).toFixed(3));
-        w(notebookTurnShadeBack, "opacity", (turn * 0.5).toFixed(3));
-        const openShade = theta < 90 ? 0.3 * Math.sin((theta * 2 * Math.PI) / 180) : 0;
-        w(notebookCoverShadow, "opacity", Math.max(0, openShade, singleFlipShade * 0.8).toFixed(3));
-      }
-
-      // Desk props settle in (both modes)
-      const propP = easeOutCubic(clamp((jp - 0.1) / 0.45, 0, 1));
-      w(deskPropLeft, "opacity", propP.toFixed(3));
-      w(deskPropLeft, "transform", `rotate(${(-7 * propP).toFixed(1)}deg) translateY(${((1 - propP) * 28).toFixed(1)}px)`);
-      w(deskPencil, "opacity", propP.toFixed(3));
-
-      const headP = easeOutCubic(clamp((jp - 0.52) / 0.3, 0, 1));
-      w(journalHeader, "opacity", headP.toFixed(3));
-      w(journalHeader, "transform", `translate3d(0, ${((1 - headP) * 18).toFixed(1)}px, 0)`);
-    }
   }
 
   // --- 4. ADAPTIVE NAV THEME & ACTIVE LINK (cached tops, no rect reads) ---
@@ -1047,12 +697,15 @@ endingSection.addEventListener("pointermove", (e) => {
    page image into cache during idle time, after the first paint, so any leaf
    is instantly ready whichever direction the reader flips.
 ========================================================= */
-const journalImageUrls = [...new Set(
-  Object.values(I18N).flatMap(d => (d.journalSpreads || []).flatMap(s => [
-    ...(s.leftHtml.match(/assets\/journal-[\w-]+\.webp/g) || []),
-    ...(s.rightHtml.match(/assets\/journal-[\w-]+\.webp/g) || [])
-  ]))
-)];
+const journalImageUrls = [
+  ...new Set(
+    Object.values(I18N).flatMap((d) =>
+      (d.journalPages || [])
+        .map((p) => (p.image ? `assets/${p.image.src}.webp` : null))
+        .filter(Boolean),
+    ),
+  ),
+];
 function prewarmJournalImages() {
   journalImageUrls.forEach(src => {
     const im = new Image();
@@ -1071,7 +724,6 @@ function schedulePrewarm() {
 /* =========================================================
    BOOT
 ========================================================= */
-attachBookInteraction();
 applyLanguage("zh");
 window.addEventListener("load", () => { scheduleMetricsRefresh(); schedulePrewarm(); });
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleMetricsRefresh);

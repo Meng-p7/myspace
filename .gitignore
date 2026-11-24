@@ -1,0 +1,5 @@
+node_modules/
+dist/
+/journal3d/
+src/journal3d/.tmp/
+.workbuddy/

@@ -220,125 +220,23 @@
     </section>
 
     <!-- =========================================================
-         04. UNIFIED SINGLE JOURNAL (Desk Transition + One Real 3D Flipbook)
+         04. JOURNAL — a 3D pop-up book, loaded on demand
     ========================================================= -->
     <section class="journal-unified-stage" id="journalStage" aria-label="Journal">
       <div id="journal" style="position:absolute;top:110vh;left:0;width:1px;height:1px;" aria-hidden="true"></div>
 
       <div class="journal-sticky">
-        <!-- Warm Desk Props (visible around the ONE real notebook) -->
-        <div class="desk-backdrop" id="deskBackdrop" aria-hidden="true">
-          <div class="desk-prop-photo desk-prop-left" id="deskPropLeft" aria-hidden="true">
-            <svg class="desk-sketch" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-label="Sketch of a desk lamp lighting an open notebook">
-              <defs>
-                <linearGradient id="dsBeam" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#ffd98a" stop-opacity="0.5" />
-                  <stop offset="1" stop-color="#ffd98a" stop-opacity="0" />
-                </linearGradient>
-                <radialGradient id="dsGlow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0" stop-color="#ffe3a8" stop-opacity="0.8" />
-                  <stop offset="1" stop-color="#ffe3a8" stop-opacity="0" />
-                </radialGradient>
-              </defs>
-
-              <g transform="translate(-25 -18) scale(1.12)">
-              <path d="M214 110 L322 252 L142 252 Z" fill="url(#dsBeam)" />
-              <circle cx="228" cy="122" r="56" fill="url(#dsGlow)" />
-
-              <g fill="none" stroke="#26241f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <ellipse cx="100" cy="252" rx="24" ry="6" />
-                <path d="M76 252 h48" />
-                <path d="M100 246 V176" />
-                <circle cx="100" cy="176" r="3.6" fill="#26241f" />
-                <path d="M100 176 L170 126" />
-                <path d="M170 126 l24 12" />
-                <path d="M180 110 L228 106 L240 140 L194 144 Z" />
-                <path d="M214 142 l9 11" />
-              </g>
-
-              <g stroke="#26241f" stroke-width="2.6" fill="#fdfcf8" stroke-linejoin="round">
-                <path d="M126 252 C156 240 192 240 218 250 L218 212 C192 202 156 202 126 214 Z" />
-                <path d="M218 250 C246 240 282 240 310 252 L310 214 C282 202 246 202 218 212 Z" />
-              </g>
-              <g stroke="#26241f" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round">
-                <path d="M142 234 h56" />
-                <path d="M142 242 h44" />
-                <path d="M232 234 h60" />
-                <path d="M232 242 h42" />
-              </g>
-              <g stroke="#2f6fd0" stroke-width="2" fill="none" stroke-linecap="round">
-                <circle cx="162" cy="226" r="8" stroke-dasharray="3 3" />
-                <path d="M170 224 L190 218" />
-                <circle cx="190" cy="218" r="3" fill="#2f6fd0" stroke="none" />
-              </g>
-
-              <g transform="rotate(-14 344 246)">
-                <path d="M320 242 h56 v9 h-56 z" fill="#f3c969" stroke="#26241f" stroke-width="2" />
-                <path d="M320 242 l-15 4.5 l15 4.5 z" fill="#fdfcf8" stroke="#26241f" stroke-width="2" />
-                <path d="M305 246.5 h-7" stroke="#26241f" stroke-width="2" />
-              </g>
-
-              <g stroke="#26241f" stroke-width="1.8" fill="none" opacity="0.45" stroke-linecap="round">
-                <path d="M338 108 v18 M329 117 h18" />
-                <path d="M66 104 v13 M59.5 110.5 h13" />
-              </g>
-              </g>
-            </svg>
-          </div>
-          <div class="desk-pencil" id="deskPencil"></div>
-        </div>
-
         <div class="journal-header" id="journalHeader">
           <div class="journal-title-block">
             <h2 class="editorial-heading">Journal</h2>
-            <p class="journal-sub">Thoughts, sketches &amp; little moments.</p>
-          </div>
-
-          <div class="journal-controls">
-            <button type="button" class="journal-nav-btn" id="journalPrevBtn" aria-label="Previous spread">←</button>
-            <span class="journal-page-counter" id="journalCounter">01 / 04</span>
-            <button type="button" class="journal-nav-btn" id="journalNextBtn" aria-label="Next spread">→</button>
+            <p class="journal-sub" id="journalSub">Thoughts, sketches &amp; little moments.</p>
           </div>
         </div>
 
-        <!-- THE ONE REAL 3D NOTEBOOK -->
-        <div class="notebook-stage" id="notebookStage">
-          <!-- shadow pool on the desk, behind the book -->
-          <div class="notebook-desk-shadow" aria-hidden="true"></div>
-
-          <div class="notebook-book" id="notebookBook">
-
-            <!-- Hard board under the right-hand page block -->
-            <div class="notebook-board notebook-board-right" aria-hidden="true"></div>
-
-            <!-- Page block thickness, so the shut book has real depth -->
-            <div class="notebook-block-edge notebook-block-right" id="notebookBlockRight" aria-hidden="true"></div>
-            <div class="notebook-block-edge notebook-block-bottom" id="notebookBlockBottom" aria-hidden="true"></div>
-
-            <div class="notebook-spread-shell" id="notebookSpreadShell">
-              <div class="notebook-spine" aria-hidden="true"></div>
-              <div class="spread-base-grid" id="spreadBaseGrid"></div>
-              <div id="flipSheetsLayer"></div>
-            </div>
-
-            <div class="notebook-cover-shadow" id="notebookCoverShadow" aria-hidden="true"></div>
-
-            <!-- The cover is a leaf with two faces: the hardcover outside and
-                 the cream endpaper inside, so it keeps its look past 90deg. -->
-            <div class="notebook-front-cover" id="notebookFrontCover">
-              <div class="notebook-cover-face notebook-cover-front">
-                <div class="notebook-cover-groove" aria-hidden="true"></div>
-                <div class="notebook-cover-label">Journal</div>
-                <div class="notebook-cover-sub">Moon</div>
-                <div class="notebook-turn-shade notebook-turn-shade-front" aria-hidden="true"></div>
-              </div>
-              <div class="notebook-cover-face notebook-cover-back">
-                <div class="journal-page journal-page-left" id="coverBackPage"></div>
-                <div class="notebook-turn-shade notebook-turn-shade-back" aria-hidden="true"></div>
-              </div>
-            </div>
-          </div>
+        <!-- The 3D book mounts in here. Until it arrives, and if WebGL is not
+             available at all, the same ten pages are readable as plain cards. -->
+        <div class="journal3d-mount" id="journal3dMount">
+          <div class="journal-fallback" id="journalFallback"></div>
         </div>
       </div>
     </section>
