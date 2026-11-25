@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PiperSim — Moon</title>
+  <meta name="description" content="基于 ROS 2 的 AgileX Piper 六轴机械臂工作区：MoveIt 规划、MuJoCo 仿真、SocketCAN 真机控制与 Eye-to-Hand 标定。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f6f3eb'/%3E%3Ccircle cx='21' cy='13' r='9' fill='%23171717'/%3E%3Ccircle cx='24' cy='22' r='2.4' fill='%232563eb'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/work.css" />
+</head>
+<body>
+  <header class="case-nav">
+    <a href="../index.html#home" class="case-brand">Moon<span class="case-brand-dot" aria-hidden="true"></span></a>
+    <nav class="case-nav-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#journal">Journal</a>
+      <a href="../index.html#contact">Contact</a>
+      <button type="button" class="case-lang-btn" id="caseLangBtn" aria-label="Switch language">EN</button>
+    </nav>
+  </header>
+
+  <main class="case-body">
+    <article>
+      <header class="case-hero">
+        <p class="case-kicker">· 03 / <span class="lang-zh">工程与机器人</span><span class="lang-en">Engineering &amp; Robotics</span></p>
+        <h1 class="case-title">PiperSim</h1>
+        <p class="case-lede">
+          <span class="lang-zh">一台六轴机械臂的四种存在方式：假硬件、物理仿真、真机、以及边控制真机边在仿真里看着它动。</span>
+          <span class="lang-en">Four ways for one six-axis arm to exist: fake hardware, physics simulation, the real machine, and the real machine with a simulation running alongside it.</span>
+        </p>
+        <div class="case-meta">
+          <span>2026</span>
+          <span>ROS 2 · Open source</span>
+          <span>AgileX Piper</span>
+        </div>
+        <figure class="case-cover">
+          <img src="../assets/arm-simulation.webp" alt="A ROS 2 workspace view of the AgileX Piper arm" />
+        </figure>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">背景</span><span class="lang-en">Background</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            一台真实的六轴机械臂很难随时上手：真机占地方、动作慢、坏了要等配件。而一旦有了仿真，接口又和真机不一样——规划器说的是同一套关节角，驱动层却一边是话题、一边是 CAN 帧。绝大多数时间被花在这两种"看起来一样、其实不一样"的地方。
+          </p>
+          <p class="lang-en">
+            A real six-axis arm is hard to work with on demand: it takes up room, it moves slowly, and a broken part means waiting for a replacement. Add simulation and the interfaces stop matching — the planner speaks in joint angles either way, but the driver layer speaks in topics on one side and CAN frames on the other. Most of the time goes into places that look identical but are not.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">目标</span><span class="lang-en">Goal</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            让同一份配置在 <strong>mock / sim / real / twin</strong> 四种模式下都能跑起来：换模式的时候，上层的规划代码、启动脚本、甚至 RViz 里的操作方式都不需要改。
+          </p>
+          <p class="lang-en">
+            Make one configuration run under <strong>mock / sim / real / twin</strong>: when the mode changes, the planning code, the launch scripts and even the way you operate in RViz should not.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">我的贡献</span><span class="lang-en">My contribution</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            这个工作区是我自己维护的（<strong>Meng-p7/PiperSim</strong>）。从零搭起了包的划分与启动编排，把 MoveIt 配置、MuJoCo 后端、SocketCAN 真机接口、Eye-to-Hand 标定与数字孪生放进同一套约定里，并写了让新机器快速上手的诊断脚本。
+          </p>
+          <ul class="lang-zh">
+            <li>按"谁拥有什么"划分 <code>src/</code>：bringup、control、mujoco、calibration、description 各归其位，外部仓库用 vcstool 引入。</li>
+            <li>写了 MoveIt 配置与 bringup 组合，以及 mock / sim / real / twin 四种模式的启动入口。</li>
+            <li>接入了 <code>mujoco_ros2_control</code> 物理后端与 SocketCAN 真机驱动，并实现了两者的状态镜像。</li>
+            <li>实现 Eye-to-Hand 标定：固定外部相机，采样时不让机械臂运动。</li>
+            <li>写了 <code>doctor.sh</code> 环境诊断脚本与 Jazzy 容器的迁移配置。</li>
+          </ul>
+          <p class="lang-en">
+            I maintain this workspace myself (<strong>Meng-p7/PiperSim</strong>). It is where I set out the ownership-based package layout and the launch orchestration, and where MoveIt configuration, the MuJoCo backend, the SocketCAN hardware interface, Eye-to-Hand calibration and the digital twin are brought under one set of conventions — together with the diagnostics that make a new machine usable quickly.
+          </p>
+          <ul class="lang-en">
+            <li>Split <code>src/</code> by ownership: bringup, control, mujoco, calibration and description each own their piece, with external repositories imported through vcstool.</li>
+            <li>Wrote the MoveIt configuration, the bringup composition and the entry points for all four modes.</li>
+            <li>Integrated the <code>mujoco_ros2_control</code> backend and the SocketCAN hardware plugin, and mirrored state between them.</li>
+            <li>Implemented Eye-to-Hand calibration with a fixed external camera, sampling without moving the arm.</li>
+            <li>Wrote the <code>doctor.sh</code> environment check and the Jazzy container migration config.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">技术实现</span><span class="lang-en">Implementation</span></h2>
+        <div class="case-prose">
+          <pre class="case-code lang-zh">用户入口
+├── start_sim.sh / start_real.sh
+├── start_orbbec_camera.sh
+├── scripts/doctor.sh
+├── scripts/build_workspace.sh
+└── docker/run.sh
+        │
+        ▼
+MoveIt 与启动编排
+├── piper_moveit_config
+└── piper_bringup
+        │
+        ▼
+ros2_control / 功能后端
+├── piper_control       SocketCAN 真机接口
+├── piper_mujoco       MuJoCo 与 Twin 同步
+├── piper_calibration  Eye-to-Hand 标定与验证
+├── piper_description  URDF/Xacro、关节与硬件描述
+└── OrbbecSDK_ROS2     固定版本的相机驱动子模块</pre>
+          <div class="case-table-wrap">
+            <table class="case-table">
+              <thead>
+                <tr>
+                  <th><span class="lang-zh">模式</span><span class="lang-en">Mode</span></th>
+                  <th><span class="lang-zh">后端</span><span class="lang-en">Backend</span></th>
+                  <th><span class="lang-zh">控制真机</span><span class="lang-en">Drives hardware</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>mock</td><td class="lang-zh">ros2_control 假硬件</td><td class="lang-en">ros2_control fake hardware</td><td class="lang-zh">否</td><td class="lang-en">No</td></tr>
+                <tr><td>sim</td><td class="lang-zh">mujoco_ros2_control</td><td class="lang-en">mujoco_ros2_control</td><td class="lang-zh">否</td><td class="lang-en">No</td></tr>
+                <tr><td>real</td><td class="lang-zh">Piper SocketCAN 硬件插件</td><td class="lang-en">Piper SocketCAN hardware plugin</td><td class="lang-zh">是</td><td class="lang-en">Yes</td></tr>
+                <tr><td>twin</td><td class="lang-zh">真机控制 + MuJoCo Python 镜像</td><td class="lang-en">Real control + MuJoCo Python mirror</td><td class="lang-zh">是</td><td class="lang-en">Yes</td></tr>
+                <tr><td class="lang-zh">标定</td><td class="lang-en">calibration</td><td class="lang-zh">真机只读反馈 + Orbbec</td><td class="lang-en">Read-only + Orbbec</td><td class="lang-zh">采样不运动</td><td class="lang-en">No motion</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lang-zh">
+            需要特别说明的是：<strong>Twin 不是只读演示模式</strong>。它会启动真机控制器，RViz 里的执行操作会作用到真实机械臂；MuJoCo 只是镜像 <code>/joint_states</code>。这一点在 README 里写得很清楚，因为它最容易被人误用。
+          </p>
+          <p class="lang-en">
+            One thing worth stating plainly: <strong>Twin is not a read-only demo</strong>. It starts the real controller — executing in RViz acts on the physical arm, and MuJoCo only mirrors <code>/joint_states</code>. The README says so explicitly, because it is the easiest thing to misuse.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">成果</span><span class="lang-en">Status</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            到目前为止的状态是"工程就绪"，而不是"硬件验证完成"：核心包已在 Ubuntu 22.04 / ROS 2 Humble 上做过隔离构建；Ubuntu 24.04 / ROS 2 Jazzy 的 Docker 迁移配置已经整理好，但当前开发机既没有 Docker，也没有目标真机，因此 Jazzy 容器、GPU、Orbbec、CAN 与实体机械臂仍然需要按仓库里的 ROADMAP.md 在目标主机上验收。
+          </p>
+          <p class="lang-en">
+            Where it stands is "engineering ready", not "hardware verified": the core packages have been built in isolation on Ubuntu 22.04 / ROS 2 Humble, and the Ubuntu 24.04 / ROS 2 Jazzy Docker migration config is in place — but this machine has neither Docker nor a target robot, so the Jazzy container, GPU, Orbbec, CAN and the physical arm still have to be accepted on the target host, following the ROADMAP in the repository.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">反思</span><span class="lang-en">Reflection</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            这个仓库有一条自己给自己定的规矩：<strong>不把"配置已实现"写成"硬件已验证"</strong>。写 README 的时候最容易犯的错，是把这两件事混在一起说——读者会以为拧一下开关就能在真机上跑，其实中间还差一次验收。我宁可让文档显得保守一点。
+          </p>
+          <p class="lang-zh">
+            下一步是把目标主机上的验收记录补齐（尤其是 Twin 模式在真机运动时的时间对齐），并把 doctor.sh 的检查项扩到 Orbbec 与 CAN 总线这一层。
+          </p>
+          <p class="lang-en">
+            The repository holds one rule I set for myself: <strong>"the configuration is implemented" is never written as "the hardware is verified"</strong>. The easiest mistake in a README is to blur the two — the reader then assumes a switch needs flipping on the real machine, when an acceptance run still stands in between. I would rather the documentation look conservative.
+          </p>
+          <p class="lang-en">
+            Next: finish the acceptance record on the target host — especially the timing between the real arm and its mirror in Twin mode — and extend <code>doctor.sh</code> down to the Orbbec camera and the CAN bus.
+          </p>
+        </div>
+      </section>
+
+      <div class="case-links">
+        <a class="case-link" href="https://github.com/Meng-p7/PiperSim" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a>
+      </div>
+
+      <a class="case-next" href="../index.html#work">← <span class="lang-zh">回到 Selected Work</span><span class="lang-en">Back to Selected Work</span></a>
+    </article>
+  </main>
+
+  <footer class="case-foot">
+    <span>Moon · <span class="lang-zh">个人网站</span><span class="lang-en">personal site</span></span>
+    <span>2026</span>
+  </footer>
+
+  <script src="../js/case.js" defer></script>
+</body>
+</html>

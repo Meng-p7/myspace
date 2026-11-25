@@ -15,8 +15,9 @@ let currentLang = "zh";
 
 const I18N = {
   zh: {
-    nav: { home: "Home", about: "About", projects: "Projects", journal: "Journal" },
+    nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
     aboutBio: "你好，我是 Moon。对智能硬件、人工智能与富有叙事感的数字交互充满好奇，喜欢把脑海里的草图变成真实可触碰的作品。",
+    homeTagline: "机械工程 · 机器人 · 数字创作",
     labelIdentity: "Identity",
     labelAge: "Age",
     labelLocation: "Location",
@@ -24,11 +25,27 @@ const I18N = {
     aboutLocation: "中国 · 上海",
     copyBtn: "复制",
     copiedBtn: "已复制 ✓",
-    projectsTitle: "My Projects",
+    projectsTitle: "Selected Work",
+    paperIntroKicker: "Selected Work",
+    paperIntroText: "下面几件，是把想法真正做出来之后留下的东西。",
+    workTitle: "Selected Work",
+    workIntro:
+      "我做的项目大致分两类：一类是让机器人真的动起来的工程与研究，另一类是让日常更顺手的数字产品。每一条都写了背景、我做了什么、结果如何，以及没做好的地方。",
+    workGroups: [
+      { index: "A", title: "工程与机器人", count: "03 entries" },
+      { index: "B", title: "数字产品与创意实验", count: "01 entry" },
+    ],
+    contactTitle: "Let's talk",
+    contactLead:
+      "如果你也在做机器人、嵌入式或者带点叙事感的产品，欢迎写信给我。技术问题、项目合作，或者只是想聊聊，都行。",
     projects: [
       {
         num: "01",
         title: "Bimanual Folding",
+        group: "A",
+        span: "wide",
+        year: "2026 · Research",
+        caseStudy: "work/bimanual-folding.html",
         tone: "light",
         description: "暑期科研项目：双 Piper 机械臂协同折毛巾，基于 ACT 模仿学习与 physical_ai_runtime，自研细指夹爪并完成 150 次试验评估。",
         image: "assets/bimanual-folding.webp",
@@ -42,6 +59,10 @@ const I18N = {
       {
         num: "02",
         title: "ROBOCON Competition Robot",
+        group: "A",
+        span: "narrow",
+        year: "2026 · Competition",
+        caseStudy: "work/robocon.html",
         tone: "light",
         description: "竞赛项目：华东理工大学 ROBOCON2026 参赛机器人，集成麦轮底盘、同步带传动与气动执行机构。",
         image: "assets/robocon.webp",
@@ -52,6 +73,10 @@ const I18N = {
       {
         num: "03",
         title: "PiperSim",
+        group: "A",
+        span: "narrow",
+        year: "2026 · Open source",
+        caseStudy: "work/piper-sim.html",
         description: "基于 ROS 2 的 AgileX Piper 六轴机械臂工作区：MoveIt 运动规划、MuJoCo 仿真、SocketCAN 真机控制与手眼标定。",
         image: "assets/arm-simulation.webp",
         ar: "1200 / 896",
@@ -62,6 +87,10 @@ const I18N = {
       {
         num: "04",
         title: "LifeOS",
+        group: "B",
+        span: "wide",
+        year: "2025 — now · Personal",
+        caseStudy: "work/lifeos.html",
         tone: "light",
         description: "个人生活工作台：考试倒计时、任务管理、番茄钟与健身打卡。",
         image: "assets/lifeos.webp",
@@ -190,8 +219,9 @@ const I18N = {
     ],    backToTop: "↑ Back to top"
   },
   en: {
-    nav: { home: "Home", about: "About", projects: "Projects", journal: "Journal" },
+    nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
     aboutBio: "Hi, I'm Moon. Curious about intelligent hardware, artificial intelligence, and narrative-driven digital interaction—turning sketches in my mind into tangible creations.",
+    homeTagline: "Mechanical engineering · Robotics · Digital craft",
     labelIdentity: "Identity",
     labelAge: "Age",
     labelLocation: "Location",
@@ -199,7 +229,19 @@ const I18N = {
     aboutLocation: "Shanghai, China",
     copyBtn: "Copy",
     copiedBtn: "Copied ✓",
-    projectsTitle: "My Projects",
+    projectsTitle: "Selected Work",
+    paperIntroKicker: "Selected Work",
+    paperIntroText: "What follows is what was left behind after the ideas were actually built.",
+    workTitle: "Selected Work",
+    workIntro:
+      "My work splits roughly in two: the engineering and research that makes robots actually move, and the digital products that make an ordinary day run smoother. Each entry covers the background, what I did, how it turned out, and what I would do differently.",
+    workGroups: [
+      { index: "A", title: "Engineering & Robotics", count: "03 entries" },
+      { index: "B", title: "Digital Products & Creative Experiments", count: "01 entry" },
+    ],
+    contactTitle: "Let's talk",
+    contactLead:
+      "If you are working on robots, embedded systems, or products that try to tell a story, write to me. Technical questions, collaboration, or just a conversation — all welcome.",
     projects: [
       {
         num: "01",

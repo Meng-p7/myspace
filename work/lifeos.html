@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>LifeOS — Moon</title>
+  <meta name="description" content="LifeOS：一个把考研学习、健身增重、日程管理与复盘统计放在一起的个人生活操作系统。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f6f3eb'/%3E%3Ccircle cx='21' cy='13' r='9' fill='%23171717'/%3E%3Ccircle cx='24' cy='22' r='2.4' fill='%232563eb'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/work.css" />
+</head>
+<body>
+  <header class="case-nav">
+    <a href="../index.html#home" class="case-brand">Moon<span class="case-brand-dot" aria-hidden="true"></span></a>
+    <nav class="case-nav-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#journal">Journal</a>
+      <a href="../index.html#contact">Contact</a>
+      <button type="button" class="case-lang-btn" id="caseLangBtn" aria-label="Switch language">EN</button>
+    </nav>
+  </header>
+
+  <main class="case-body">
+    <article>
+      <header class="case-hero">
+        <p class="case-kicker">· 04 / <span class="lang-zh">数字产品与创意实验</span><span class="lang-en">Digital Products &amp; Creative Experiments</span></p>
+        <h1 class="case-title">LifeOS</h1>
+        <p class="case-lede">
+          <span class="lang-zh">我的倒计时、任务、番茄钟和健身记录以前散在四个地方，复盘一次要重新拼一遍。这个项目把它们收到一个页面里，并且不假装任何数字。</span>
+          <span class="lang-en">My countdown, tasks, pomodoro sessions and training log used to live in four different places, and every review meant stitching them back together. This puts them on one page — and it does not pretend any of the numbers.</span>
+        </p>
+        <div class="case-meta">
+          <span>2025 — now</span>
+          <span><span class="lang-zh">个人产品</span><span class="lang-en">Personal product</span></span>
+          <span>Web App · Local-first</span>
+        </div>
+        <figure class="case-cover">
+          <img src="../assets/lifeos.webp" alt="The LifeOS dashboard" />
+        </figure>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">背景</span><span class="lang-en">Background</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            准备考研的那段时间，我的计划散在几个地方：倒计时在手机壁纸，任务在聊天记录里，番茄钟用一个网页小工具，训练和体重记在表格中。每次想复盘"这周到底做得怎么样"，都得先花十分钟把数据从四个地方搬到一起。
+          </p>
+          <p class="lang-zh">
+            问题不在于缺工具，而在于没有一个地方能回答那个真正的问题：<strong>今天最重要的是什么，下一步做什么，离长期目标还有多远。</strong>
+          </p>
+          <p class="lang-en">
+            While preparing for the postgraduate exam, my planning lived in pieces: the countdown on my phone wallpaper, tasks inside chat logs, a small web widget for the pomodoro timer, training and weight in a spreadsheet. Every time I wanted to review "how did this week actually go", I spent ten minutes moving data between four places first.
+          </p>
+          <p class="lang-en">
+            The problem was not a shortage of tools — it was that nothing answered the question that actually mattered: <strong>what matters most today, what to do next, and how far I am from the long-term goal.</strong>
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">目标</span><span class="lang-en">Goal</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            打开 LifeOS，就知道今天最重要的事是什么、下一步做什么、离长期目标还有多远。所有统计都必须来自真实记录，<strong>不内置演示数据，也不假装同步成功</strong>。
+          </p>
+          <p class="lang-en">
+            Open LifeOS and you should know what matters most today, what to do next and how far you are from the long-term goal. Every statistic has to come from a real record — <strong>no demo data, no pretending that a sync succeeded</strong>.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">我的贡献</span><span class="lang-en">My contribution</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            这是我一个人从头做起来的产品，从信息架构、界面、数据模型到部署都是我自己的决定。它没有后端：数据默认存在浏览器 localStorage，同步是可选的 Supabase，代码已就绪，按文档建表并填入项目地址与 Publishable Key 即可启用。
+          </p>
+          <ul class="lang-zh">
+            <li>设计了整个信息架构：今日（行动中心）、任务、学习（番茄钟）、健身与增重、复盘、设置。</li>
+            <li>写了「下一步」卡片与今日时间轴——按正在计时 → 逾期 → 今天到期 → 优先级排序，直接给出行动。</li>
+            <li>实现了任务计时与番茄钟的联动：开始专注会自动建立同名学习事项，结束后时长累计回任务。</li>
+            <li>做了体重曲线的 7 日平均、训练连续天数与 RPE 记录，以及每日 / 每周复盘的草稿生成。</li>
+            <li>用墓碑机制实现软删除，防止已删记录被其他设备同步回来；并做了数据导出 / 导入与 v1 旧数据自动迁移。</li>
+          </ul>
+          <p class="lang-en">
+            This one I built alone, from the information architecture and interface down to the data model and the deployment. There is no backend: data lives in the browser's localStorage by default, and syncing is an optional Supabase — the code is ready, and it turns on by creating the tables and filling in the project URL and publishable key.
+          </p>
+          <ul class="lang-en">
+            <li>Designed the whole information architecture: Today (an action centre), Tasks, Study (pomodoro), Fitness &amp; bulking, Review, Settings.</li>
+            <li>Built the "next step" card and today's timeline, ordered by timing → overdue → due today → priority, so it hands you an action rather than a list.</li>
+            <li>Connected the task timer to the pomodoro: starting a focus session creates a matching study item, and its duration flows back into the task when it ends.</li>
+            <li>Added the 7-day average weight curve, training streaks and RPE logging, plus draft generation for daily and weekly reviews.</li>
+            <li>Implemented soft deletes with tombstones, so a deleted record cannot be resurrected by another device's sync — and added export/import plus automatic migration from the v1 schema.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">技术实现</span><span class="lang-en">Implementation</span></h2>
+        <div class="case-prose">
+          <ul class="lang-zh">
+            <li><strong>纯前端，无后端：</strong>下载 index.html 双击就能打开，不需要安装、不需要联网。</li>
+            <li><strong>本地优先：</strong>数据默认存 localStorage；顶栏的同步芯片真实反映"本地模式 / 同步中 / 已同步 / 离线 / 失败"五种状态。</li>
+            <li><strong>可选云同步：</strong>按 docs/SUPABASE_SETUP.md 建表后填写项目地址与 Publishable Key；首次登录会合并本地与云端数据，不会被空云端覆盖。</li>
+            <li><strong>响应式：</strong>手机浏览器布局已适配，使用底部导航。</li>
+            <li><strong>没有内置 AI：</strong>所有统计数字均来自真实记录，不含任何演示数据。</li>
+          </ul>
+          <ul class="lang-en">
+            <li><strong>Front-end only, no backend:</strong> download index.html, open it, no install and no network needed.</li>
+            <li><strong>Local-first:</strong> data lives in localStorage by default, and the sync chip in the header reports the real state — local, syncing, synced, offline or failed.</li>
+            <li><strong>Optional cloud sync:</strong> create the tables per docs/SUPABASE_SETUP.md and fill in the project URL and publishable key; the first login merges local and cloud data rather than letting an empty cloud overwrite it.</li>
+            <li><strong>Responsive:</strong> the mobile layout is adapted, with bottom navigation.</li>
+            <li><strong>No built-in AI:</strong> every number comes from a real record — there is no demo data anywhere in it.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">成果</span><span class="lang-en">Outcome</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            它现在是我每天真正在用的东西：考试倒计时、科目任务、番茄钟、增重训练与体重、每日与每周复盘都在同一个页面里。线上版在 GitHub Pages 上，手机端用底部导航；本地版是一个可以直接双击打开的 HTML 文件。
+          </p>
+          <p class="lang-zh">
+            对我来说最有用的不是任何一个图表，而是"下一步"那张卡片——它把"我该做什么"从需要思考的问题，变成了打开页面就能看到的一行字。
+          </p>
+          <p class="lang-en">
+            It is now something I actually use every day: the exam countdown, subject tasks, pomodoro sessions, bulking training and weight, and both daily and weekly reviews live on one page. The online version runs on GitHub Pages with bottom navigation on mobile; the local version is a single HTML file you can open by double-clicking it.
+          </p>
+          <p class="lang-en">
+            The most useful part is not any single chart — it is the "next step" card. It turns "what should I be doing" from a question I have to think about into a line I can see the moment the page opens.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">反思</span><span class="lang-en">Reflection</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            我做这个项目时给自己定了一条底线：<strong>界面上的数字必须是真的</strong>。热量是手动估算就标成估算，同步失败就显示失败。这让界面看起来没那么"饱满"，但它是一个记录工具，而不是一个用来展示的仪表盘。
+          </p>
+          <p class="lang-zh">
+            还没做好的地方：周视图里的"计划与实际"对比仍然需要我自己手写，复盘草稿的措辞也偏模板。下一步想让复盘能自动把"这周的实际"和"上周我以为的"放在一起看——那才是复盘真正有用的地方。
+          </p>
+          <p class="lang-en">
+            I set one rule for myself while building it: <strong>the numbers on screen have to be true</strong>. Calories are estimates, so they are labelled as estimates; a failed sync says it failed. It makes the interface less tidy, but this is a recording tool, not a dashboard for display.
+          </p>
+          <p class="lang-en">
+            What is not finished: the plan-versus-actual comparison in the weekly view is still written by hand, and the review drafts read too much like a template. The next step is to have the review put "what actually happened this week" next to "what I thought would happen" — that is where a review becomes useful.
+          </p>
+        </div>
+      </section>
+
+      <div class="case-links">
+        <a class="case-link" href="https://meng-p7.github.io/LifeOs/" target="_blank" rel="noopener noreferrer">Online <span>↗</span></a>
+        <a class="case-link" href="https://github.com/Meng-p7/LifeOs" target="_blank" rel="noopener noreferrer">GitHub <span>↗</span></a>
+      </div>
+
+      <a class="case-next" href="../index.html#work">← <span class="lang-zh">回到 Selected Work</span><span class="lang-en">Back to Selected Work</span></a>
+    </article>
+  </main>
+
+  <footer class="case-foot">
+    <span>Moon · <span class="lang-zh">个人网站</span><span class="lang-en">personal site</span></span>
+    <span>2026</span>
+  </footer>
+
+  <script src="../js/case.js" defer></script>
+</body>
+</html>

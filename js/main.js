@@ -44,9 +44,17 @@ function cls(el, name, on) {
    RENDER & COPY EMAIL
 ========================================================= */
 const langToggleBtn = document.getElementById("langToggleBtn");
-const aboutBioEl = document.getElementById("aboutBio");
-const aboutIdentityEl = document.getElementById("aboutIdentity");
-const aboutLocationEl = document.getElementById("aboutLocation");
+const homeTaglineEl = document.getElementById("homeTagline");
+const aboutBioEl = document.getElementById("homeBio");
+const aboutIdentityEl = document.getElementById("homeIdentity");
+const aboutLocationEl = document.getElementById("homeLocation");
+const contactLocationEl = document.getElementById("contactLocation");
+const paperIntroKickerEl = document.getElementById("paperIntroKicker");
+const paperIntroTextEl = document.getElementById("paperIntroText");
+const workTitleEl = document.getElementById("workTitle");
+const workIntroEl = document.getElementById("workIntro");
+const contactTitleEl = document.getElementById("contactTitle");
+const contactLeadEl = document.getElementById("contactLead");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
 const inplaceProjectsTitle = document.getElementById("inplaceProjectsTitle");
 const backToTopBtn = document.getElementById("backToTopBtn");
@@ -83,40 +91,58 @@ copyEmailBtn.addEventListener("click", () => {
   }
 });
 
-function renderProjects(data) {
-  const track = document.getElementById("galleryTrack");
-  track.innerHTML = data.projects.map((p, idx) => `
-    <article class="project-card${p.tone === "light" ? " is-light" : ""}" data-index="${idx}">
-      <img src="${p.image}"
-           srcset="${p.imageSm} 600w, ${p.image} 1200w"
-           sizes="(max-width: 768px) 84vw, 52vw"
-           style="--ar: ${p.ar || "4 / 3"}"
-           loading="lazy" decoding="async"
-           alt="${p.title}" class="project-card-img" />
-      <div class="project-card-content">
-        <div class="project-card-top">
-          <span class="project-num">PROJECT // ${p.num}</span>
+function renderWork(data) {
+  const host = document.getElementById("workGroups");
+  if (!host) return;
+  const groups = data.workGroups || [];
+  const projects = data.projects || [];
+
+  host.innerHTML = groups
+    .map((group) => {
+      const items = projects.filter((p) => p.group === group.index);
+      if (!items.length) return "";
+      return `
+      <section class="work-group">
+        <div class="work-group-head">
+          <span class="work-group-index">${group.index}</span>
+          <h3 class="work-group-title">${group.title}</h3>
+          <span class="work-group-count">${group.count}</span>
         </div>
-        <div class="project-card-bottom">
-          <h4 class="project-title">${p.title}</h4>
-          <p class="project-desc">${p.description}</p>
-          <div class="project-footer-row">
-            <div class="project-tags">
-              ${p.tags.map(t => `<span class="project-tag">${t}</span>`).join("")}
-            </div>
-            <div class="project-btn-group">
-              ${p.projectUrl ? `<a href="${p.projectUrl}" target="_blank" rel="noopener noreferrer" class="project-github-btn">${p.projectLabel}</a>` : ""}
-              ${p.github ? `<a href="${p.github}" target="_blank" rel="noopener noreferrer" class="project-github-btn">GitHub ↗</a>` : ""}
-            </div>
-          </div>
+        <div class="work-grid">
+          ${items
+            .map(
+              (p) => `
+            <article class="work-card work-card--${p.span || "narrow"}">
+              <a class="work-card-cover" href="${p.caseStudy || "#work"}" style="--ar: ${p.ar || "16 / 10"}">
+                <img src="${p.image}"
+                     srcset="${p.imageSm} 600w, ${p.image} 1200w"
+                     sizes="(max-width: 900px) 92vw, 46vw"
+                     loading="lazy" decoding="async"
+                     alt="${p.title}" />
+                <span class="work-card-num">· ${p.num}</span>
+              </a>
+              <div class="work-card-head">
+                <h4 class="work-card-title"><a href="${p.caseStudy || "#work"}">${p.title}</a></h4>
+                <span class="work-card-year">${p.year || ""}</span>
+              </div>
+              <p class="work-card-desc">${p.description}</p>
+              <div class="work-card-foot">
+                <div class="work-card-tags">
+                  ${p.tags.map((t) => `<span class="work-tag">${t}</span>`).join("")}
+                </div>
+                ${
+                  p.caseStudy
+                    ? `<a class="work-card-cta" href="${p.caseStudy}">Case study <span>→</span></a>`
+                    : ""
+                }
+              </div>
+            </article>`,
+            )
+            .join("")}
         </div>
-      </div>
-    </article>
-  `).join("");
-  // Natural-ratio mobile images change the track height once decoded.
-  track.querySelectorAll("img").forEach(img => {
-    if (!img.complete) img.addEventListener("load", scheduleMetricsRefresh, { once: true });
-  });
+      </section>`;
+    })
+    .join("");
 }
 
 /* =========================================================
@@ -260,11 +286,19 @@ function applyLanguage(lang) {
   aboutBioEl.textContent = data.aboutBio;
   aboutIdentityEl.textContent = data.aboutIdentity;
   aboutLocationEl.textContent = data.aboutLocation;
+  homeTaglineEl.textContent = data.homeTagline;
+  contactLocationEl.textContent = data.aboutLocation;
+  paperIntroKickerEl.textContent = data.paperIntroKicker;
+  paperIntroTextEl.textContent = data.paperIntroText;
+  workTitleEl.textContent = data.workTitle;
+  workIntroEl.textContent = data.workIntro;
+  contactTitleEl.textContent = data.contactTitle;
+  contactLeadEl.textContent = data.contactLead;
   copyEmailBtn.textContent = data.copyBtn;
   inplaceProjectsTitle.textContent = data.projectsTitle;
   backToTopBtn.textContent = data.backToTop;
 
-  renderProjects(data);
+  renderWork(data);
   updateJournalModule(lang);
   refreshMetrics();
 }
@@ -351,9 +385,9 @@ navToggle.addEventListener("click", () => {
 });
 
 function sectionScrollTarget(key) {
-  if (key === "about") return M.revealTop + M.revealSc * 0.58;
-  if (key === "projects") return M.vw > 768 ? M.galleryTop + M.gallerySc * 0.12 : Math.max(0, M.galleryTop - 8);
+  if (key === "work") return Math.max(0, M.workTop - 8);
   if (key === "journal") return M.journalTop;
+  if (key === "contact") return Math.max(0, M.contactTop - 8);
   return 0;
 }
 
@@ -367,8 +401,8 @@ navItems.forEach(link => {
   });
 });
 
-document.getElementById("scrollToAboutBtn").addEventListener("click", () => {
-  window.scrollTo({ top: sectionScrollTarget("about"), behavior: "smooth" });
+document.getElementById("scrollToWorkBtn").addEventListener("click", () => {
+  window.scrollTo({ top: sectionScrollTarget("work"), behavior: "smooth" });
 });
 
 backToTopBtn.addEventListener("click", (e) => {
@@ -386,9 +420,7 @@ const paperCurlLip = document.getElementById("paperCurlLip");
 const paperCastShadow = document.getElementById("paperCastShadow");
 const paperSketchDecor = document.getElementById("paperSketchDecor");
 const paperFiberLayer = document.querySelector(".paper-fiber-layer");
-const aboutContainer = document.getElementById("aboutContainer");
-const aboutLeft = document.getElementById("aboutLeft");
-const aboutRight = document.getElementById("aboutRight");
+const paperIntro = document.getElementById("paperIntro");
 
 const inplaceExhibitionLayer = document.getElementById("inplaceExhibitionLayer");
 const exhLineTop = document.getElementById("exhLineTop");
@@ -397,32 +429,22 @@ const exhFrame1 = document.getElementById("exhFrame1");
 const exhFrame2 = document.getElementById("exhFrame2");
 const exhFrame3 = document.getElementById("exhFrame3");
 
-const galleryScrollZone = document.getElementById("projects");
-const galleryTrack = document.getElementById("galleryTrack");
-const galleryProgressFill = document.getElementById("galleryProgressFill");
+const workSection = document.getElementById("work");
+const contactSection = document.getElementById("contact");
 
 const journalStage = document.getElementById("journalStage");
-const notebookStage = document.getElementById("notebookStage");
-const notebookBook = document.getElementById("notebookBook");
-const notebookFrontCover = document.getElementById("notebookFrontCover");
-const notebookCoverShadow = document.getElementById("notebookCoverShadow");
-const notebookBlockRight = document.getElementById("notebookBlockRight");
-const notebookBlockBottom = document.getElementById("notebookBlockBottom");
-const notebookDeskShadow = document.querySelector(".notebook-desk-shadow");
-const notebookTurnShadeFront = document.querySelector(".notebook-turn-shade-front");
-const notebookTurnShadeBack = document.querySelector(".notebook-turn-shade-back");
 const endingSection = document.getElementById("ending");
 
 /* ---- cached geometry: measured on layout changes only ---- */
 const M = {
   vw: 0, vh: 0,
   revealTop: 0, revealSc: 1,
-  galleryTop: 0, gallerySc: 1, galleryMax: 0,
+  workTop: 0,
   journalTop: 0, journalSc: 1,
-  endingTop: 0,
-  cards: []
+  contactTop: 0,
+  endingTop: 0
 };
-const lastP = { reveal: -1, gallery: -1, journal: -1 };
+const lastP = { reveal: -1, journal: -1 };
 let lastTheme = "";
 let lastActive = "";
 
@@ -496,53 +518,17 @@ function refreshMetrics() {
   M.vh = window.innerHeight;
   M.revealTop = pageTop(revealStage);
   M.revealSc = Math.max(1, revealStage.offsetHeight - M.vh);
-  M.galleryTop = pageTop(galleryScrollZone);
-  M.gallerySc = Math.max(1, galleryScrollZone.offsetHeight - M.vh);
+  M.workTop = pageTop(workSection);
   M.journalTop = pageTop(journalStage);
   M.journalSc = Math.max(1, journalStage.offsetHeight - M.vh);
+  M.contactTop = pageTop(contactSection);
   M.endingTop = pageTop(endingSection);
-  M.cards = Array.from(galleryTrack.children).map(c => ({
-    el: c,
-    left: c.offsetLeft - galleryTrack.offsetLeft,
-    width: c.offsetWidth
-  }));
-  M.galleryMax = Math.max(0, galleryTrack.scrollWidth - M.vw + M.vw * 0.08);
 
   applyFiberMode();
-  lastP.reveal = lastP.gallery = lastP.journal = -1;
+  lastP.reveal = lastP.journal = -1;
 
-  if (M.vw <= 768) {
-    w(galleryTrack, "transform", "");
-    M.cards.forEach(c => { w(c.el, "transform", ""); w(c.el, "opacity", ""); });
-    updateMobileGallery();
-  }
   updateScrollAnimations(window.scrollY);
 }
-
-/* ---- mobile projects: 3D driven by the track's own horizontal scroll ---- */
-let mobileGalleryRaf = 0;
-function updateMobileGallery() {
-  const sl = galleryTrack.scrollLeft;
-  const vw = M.vw || window.innerWidth;
-  const max = Math.max(1, galleryTrack.scrollWidth - galleryTrack.clientWidth);
-  w(galleryProgressFill, "width", `${(clamp(sl / max, 0, 1) * 100).toFixed(1)}%`);
-  M.cards.forEach(c => {
-    const center = c.left + c.width / 2 - sl;
-    const norm = clamp((center - vw / 2) / (vw * 0.62), -1.15, 1.15);
-    const rotY = -norm * 12;
-    const scale = 1 - Math.abs(norm) * 0.06;
-    const tz = -Math.abs(norm) * 70;
-    w(c.el, "transform", `perspective(1100px) translateZ(${tz.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`);
-    w(c.el, "opacity", (1 - Math.abs(norm) * 0.12).toFixed(3));
-  });
-}
-galleryTrack.addEventListener("scroll", () => {
-  if (mobileGalleryRaf) return;
-  mobileGalleryRaf = requestAnimationFrame(() => {
-    mobileGalleryRaf = 0;
-    if (window.innerWidth <= 768) updateMobileGallery();
-  });
-}, { passive: true });
 
 /* ---- the one scroll frame: reads scrollY, writes cached values ---- */
 function updateScrollAnimations(sy) {
@@ -569,16 +555,13 @@ function updateScrollAnimations(sy) {
       w(paperCastShadow, "opacity", clamp(curlIntensity * 1.15, 0, 1).toFixed(3));
       w(paperCastShadow, "transform", `scaleY(${(0.8 + curlIntensity * 0.5).toFixed(3)})`);
 
-      // About Me fades in (0.40..0.58), holds (0.58..0.72), fades out IN PLACE (0.72..0.85)
-      const fadeInLeft = easeOutCubic(clamp((p - 0.40) / 0.18, 0, 1));
-      const fadeInRight = easeOutCubic(clamp((p - 0.44) / 0.18, 0, 1));
+      // the handover line fades in on the paper (0.40..0.58), holds, and
+      // fades out IN PLACE (0.72..0.85) as the exhibition takes over
+      const fadeInPaper = easeOutCubic(clamp((p - 0.40) / 0.18, 0, 1));
       const fadeOutP = clamp((p - 0.72) / 0.14, 0, 1);
 
-      w(aboutLeft, "opacity", (fadeInLeft * (1 - fadeOutP)).toFixed(3));
-      w(aboutLeft, "transform", `translate3d(0, ${((1 - fadeInLeft) * 26 - fadeOutP * 18).toFixed(1)}px, 0)`);
-      w(aboutRight, "opacity", (fadeInRight * (1 - fadeOutP)).toFixed(3));
-      w(aboutRight, "transform", `translate3d(0, ${((1 - fadeInRight) * 28 - fadeOutP * 14).toFixed(1)}px, 0)`);
-      w(aboutContainer, "pointer-events", fadeOutP > 0.6 ? "none" : "auto");
+      w(paperIntro, "opacity", (fadeInPaper * (1 - fadeOutP)).toFixed(3));
+      w(paperIntro, "transform", `translate3d(0, ${((1 - fadeInPaper) * 26 - fadeOutP * 16).toFixed(1)}px, 0)`);
       w(paperSketchDecor, "opacity", (0.48 * (1 - fadeOutP)).toFixed(3));
 
       // In-place "My Projects" 3D Exhibition Frames (0.76..1.00)
@@ -597,40 +580,12 @@ function updateScrollAnimations(sy) {
       ensureSpotLoop();
     }
 
-    // --- 2. PROJECTS HORIZONTAL SCROLLING 3D GALLERY ---
-    if (vw > 768) {
-      const gp = clamp((sy - M.galleryTop) / M.gallerySc, 0, 1);
-      if (Math.abs(gp - lastP.gallery) > 0.0004) {
-        lastP.gallery = gp;
-        const shiftX = -gp * M.galleryMax;
-        w(galleryTrack, "transform", `translate3d(${shiftX.toFixed(1)}px, 0, 0)`);
-        w(galleryProgressFill, "width", `${(gp * 100).toFixed(1)}%`);
-
-        const lastIdx = M.cards.length - 1;
-        M.cards.forEach((c, idx) => {
-          // card centre from cached layout + track shift: no rect reads
-          const cardCenter = c.left + c.width / 2 + shiftX;
-          const norm = clamp((cardCenter - vw / 2) / (vw * 0.65), -1.2, 1.2);
-          const rotY = -norm * 10;
-          const scale = 1 - Math.abs(norm) * 0.07;
-          let tz = -Math.abs(norm) * 55;
-          let opacity = 1;
-          if (gp > 0.84 && idx < lastIdx) {
-            const recede = clamp((gp - 0.84) / 0.16, 0, 1);
-            tz -= recede * 180;
-            opacity = 1 - recede * 0.65;
-          }
-          w(c.el, "opacity", opacity.toFixed(3));
-          w(c.el, "transform", `perspective(1200px) translateZ(${tz.toFixed(1)}px) rotateY(${rotY.toFixed(2)}deg) scale(${scale.toFixed(3)})`);
-        });
-      }
-    }
   }
 
   // --- 4. ADAPTIVE NAV THEME & ACTIVE LINK (cached tops, no rect reads) ---
   let theme;
   if (M.endingTop - sy <= 90) theme = "on-night";
-  else if (lastP.reveal >= 0.44 || M.galleryTop - sy <= 90) theme = "on-paper";
+  else if (lastP.reveal >= 0.44 || M.workTop - sy <= 90) theme = "on-paper";
   else theme = "on-home";
   if (theme !== lastTheme) {
     lastTheme = theme;
@@ -639,9 +594,9 @@ function updateScrollAnimations(sy) {
   }
 
   let activeKey = "home";
-  if (M.journalTop - sy <= vh * 0.45) activeKey = "journal";
-  else if (M.galleryTop - sy <= vh * 0.45) activeKey = "projects";
-  else if (lastP.reveal >= 0.4) activeKey = "about";
+  if (M.contactTop - sy <= vh * 0.45) activeKey = "contact";
+  else if (M.journalTop - sy <= vh * 0.45) activeKey = "journal";
+  else if (M.workTop - sy <= vh * 0.45 || lastP.reveal >= 0.62) activeKey = "work";
   if (activeKey !== lastActive) {
     lastActive = activeKey;
     navItems.forEach(item => {
@@ -662,20 +617,6 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 window.addEventListener("resize", scheduleMetricsRefresh);
 window.addEventListener("orientationchange", scheduleMetricsRefresh);
-
-/* =========================================================
-   GALLERY PREV / NEXT BUTTONS
-========================================================= */
-function scrollGalleryByStep(direction) {
-  if (window.innerWidth <= 768) {
-    galleryTrack.scrollBy({ left: direction * window.innerWidth * 0.78, behavior: "smooth" });
-    return;
-  }
-  const currentP = clamp((window.scrollY - M.galleryTop) / M.gallerySc, 0, 1);
-  const step = 1 / Math.max(1, I18N[currentLang].projects.length - 1);
-  const targetP = clamp(currentP + direction * step * 0.85, 0, 1);
-  window.scrollTo({ top: M.galleryTop + targetP * M.gallerySc, behavior: "smooth" });
-}
 
 /* =========================================================
    ENDING SUBTLE MOUSE PARALLAX
