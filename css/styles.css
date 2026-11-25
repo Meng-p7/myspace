@@ -269,6 +269,7 @@ button {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   z-index: 1;
   overflow: hidden;
   background: #e6e3dc;
@@ -867,20 +868,16 @@ button {
   .paper-cast-shadow {
     filter: none;
   }
+  .work-handover {
+    height: 130vh;
+  }
+  .handover-artifacts {
+    flex-direction: column;
+    gap: 0.9rem;
+  }
 }
 
 @media (max-width: 820px) and (orientation: portrait) {
-  .journal-unified-stage {
-    height: 220vh;
-    padding: 0;
-  }
-  .journal-sticky {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    padding: 4.3rem 1rem 1.2rem;
-    perspective: 1700px;
-  }
   .journal-header {
     width: 92vw;
     margin-bottom: 0.9rem;
@@ -1338,12 +1335,12 @@ button {
 }
 
 /* =========================================================
-   THE HANDOVER — the work exhibition assembles and becomes
-   the 3D journal that follows it.
+   THE HANDOVER — a parallax chapter: leave the gallery and
+   return to the messy wooden desk.
 ========================================================= */
 .work-handover {
   position: relative;
-  height: 200vh;
+  height: 155vh;
   background: linear-gradient(
     to bottom,
     var(--paper) 0%,
@@ -1357,60 +1354,114 @@ button {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#exhLineTop {
-  top: 14%;
-}
-
-#exhLineBottom {
-  bottom: 14%;
-  top: auto;
-}
-
-.exh-line-h {
+.handover-wm {
   position: absolute;
-  left: 50%;
-  width: 92%;
-  height: 1px;
-  background: rgba(23, 23, 23, 0.28);
-  transform: translateX(-50%) scaleX(0.1304);
-  transform-origin: center;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: clamp(4rem, 10.5vw, 8.5rem);
+  font-weight: 600;
+  font-style: italic;
+  color: rgba(23, 23, 23, 0.055);
+  letter-spacing: -0.03em;
+  pointer-events: none;
+  user-select: none;
   will-change: transform;
 }
+.handover-wm-top { top: 16%; }
+.handover-wm-bottom { bottom: 14%; }
 
-.exh-frame {
-  position: absolute;
-  border: 1px solid rgba(23, 23, 23, 0.22);
-  background: rgba(252, 250, 245, 0.42);
-  box-shadow: 0 24px 55px rgba(23, 23, 23, 0.08);
-  transform-style: preserve-3d;
+.handover-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 1.5rem;
   will-change: transform, opacity;
 }
 
-.exh-frame-1 {
-  width: min(440px, 44vw);
-  height: min(300px, 38vh);
-  left: 7%;
-  top: 18%;
+.handover-kicker {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin-bottom: 0.65rem;
 }
 
-.exh-frame-2 {
-  width: min(500px, 48vw);
-  height: min(320px, 40vh);
-  right: 7%;
-  bottom: 16%;
-  border-color: rgba(37, 99, 235, 0.28);
+.handover-title {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 3.8vw, 3rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.handover-title em {
+  font-style: italic;
+  color: var(--ink-soft);
 }
 
-.exh-frame-3 {
-  width: min(360px, 38vw);
-  height: min(230px, 30vh);
-  left: 30%;
-  top: 28%;
-  border-style: dashed;
+.handover-sub {
+  margin-top: 0.75rem;
+  font-size: 0.94rem;
+  color: var(--ink-soft);
+  max-width: 44ch;
+}
+
+.handover-artifacts {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-top: 2rem;
+}
+
+.handover-polaroid {
+  width: 148px;
+  background: #ffffff;
+  padding: 8px 8px 22px 8px;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  box-shadow: 0 14px 30px rgba(23, 23, 23, 0.12);
+  will-change: transform;
+}
+
+.handover-polaroid-img {
+  height: 88px;
+  background: linear-gradient(135deg, #d7d0c0, #b8af9a);
+  display: grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--ink-soft);
+}
+
+.handover-polaroid-cap {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  color: var(--ink-soft);
+}
+
+.handover-note {
+  width: 170px;
+  background: #f9efc6;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(23, 23, 23, 0.08);
+  box-shadow: 0 10px 22px rgba(23, 23, 23, 0.1);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  text-align: left;
+  color: #3b3729;
+  will-change: transform;
 }
 
 /* =========================================================

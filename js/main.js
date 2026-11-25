@@ -410,11 +410,11 @@ const paperFiberLayer = document.querySelector(".paper-fiber-layer");
 
 const workSection = document.getElementById("work");
 const workHandover = document.getElementById("workHandover");
-const exhLineTop = document.getElementById("exhLineTop");
-const exhLineBottom = document.getElementById("exhLineBottom");
-const exhFrame1 = document.getElementById("exhFrame1");
-const exhFrame2 = document.getElementById("exhFrame2");
-const exhFrame3 = document.getElementById("exhFrame3");
+const handoverWmTop = document.getElementById("handoverWmTop");
+const handoverWmBottom = document.getElementById("handoverWmBottom");
+const handoverCenter = document.getElementById("handoverCenter");
+const handoverPolaroid = document.getElementById("handoverPolaroid");
+const handoverNote = document.getElementById("handoverNote");
 
 const journalStage = document.getElementById("journalStage");
 const endingSection = document.getElementById("ending");
@@ -552,24 +552,23 @@ function updateScrollAnimations(sy) {
     }
   }
 
-  // --- 3. THE HANDOVER: the work exhibition assembles, then the journal ---
+  // --- 3. THE HANDOVER: parallax chapter + workbench artifacts ---
   if (!prefersReducedMotion) {
     const hp = clamp((sy - M.handoverTop) / M.handoverSc, 0, 1);
     if (Math.abs(hp - lastP.handover) > 0.0004) {
       lastP.handover = hp;
-      // the frames come together in the first half of the zone and hold
-      const e = easeOutCubic(clamp(hp / 0.55, 0, 1));
 
-      const lineScale = (12 + e * 80) / 92;
-      w(exhLineTop, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
-      w(exhLineBottom, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
+      const shift = (hp - 0.5) * 200;
+      w(handoverWmTop, "transform", `translate3d(${(-shift).toFixed(1)}px, 0, 0)`);
+      w(handoverWmBottom, "transform", `translate3d(${shift.toFixed(1)}px, 0, 0)`);
 
-      w(exhFrame1, "opacity", e.toFixed(3));
-      w(exhFrame1, "transform", `translate3d(${((1 - e) * -70).toFixed(1)}px, 0, ${(e * 60).toFixed(1)}px) rotateY(${(14 - e * 6).toFixed(1)}deg)`);
-      w(exhFrame2, "opacity", e.toFixed(3));
-      w(exhFrame2, "transform", `translate3d(${((1 - e) * 70).toFixed(1)}px, 0, ${(e * 35).toFixed(1)}px) rotateY(${(-14 + e * 6).toFixed(1)}deg)`);
-      w(exhFrame3, "opacity", e.toFixed(3));
-      w(exhFrame3, "transform", `translate3d(0, ${((1 - e) * 35).toFixed(1)}px, ${(-35 + e * 35).toFixed(1)}px)`);
+      const vis = easeOutCubic(clamp(hp / 0.35, 0, 1));
+      w(handoverCenter, "opacity", vis.toFixed(3));
+      w(handoverCenter, "transform", `translate3d(0, ${((1 - vis) * 32).toFixed(1)}px, 0)`);
+
+      const floatP = clamp((hp - 0.12) / 0.72, 0, 1);
+      w(handoverPolaroid, "transform", `translate3d(0, ${((1 - floatP) * 42).toFixed(1)}px, 0) rotate(${(-6 + floatP * 3).toFixed(2)}deg)`);
+      w(handoverNote, "transform", `translate3d(0, ${((1 - floatP) * 60).toFixed(1)}px, 0) rotate(${(5 - floatP * 3).toFixed(2)}deg)`);
     }
   }
 
