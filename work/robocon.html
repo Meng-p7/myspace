@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>ROBOCON Competition Robot — Moon</title>
-  <meta name="description" content="华东理工大学 ROBOCON2026 参赛机器人：麦轮底盘、同步带传动与气动执行机构的结构设计。" />
+  <title>ROBOCON Robotic Arm Control — Moon</title>
+  <meta name="description" content="华东理工大学 ROBOCON2026 参赛机器人的机械臂电控：STM32F407 + FreeRTOS，CAN 电机、DBUS 遥控与气动执行的状态机控制。" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f6f3eb'/%3E%3Ccircle cx='21' cy='13' r='9' fill='%23171717'/%3E%3Ccircle cx='24' cy='22' r='2.4' fill='%232563eb'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,15 +26,15 @@
     <article>
       <header class="case-hero">
         <p class="case-kicker">· 02 / <span class="lang-zh">工程与机器人</span><span class="lang-en">Engineering &amp; Robotics</span></p>
-        <h1 class="case-title">ROBOCON Competition Robot</h1>
+        <h1 class="case-title">ROBOCON Robotic Arm Control</h1>
         <p class="case-lede">
-          <span class="lang-zh">华东理工大学 ROBOCON2026 的参赛机器人。一台在尺寸和重量都被限死的前提下，还要在赛场上把动作做准的机器。</span>
-          <span class="lang-en">ECUST's ROBOCON2026 entry: a machine that has to be precise in a competition, under a size and weight limit that leaves no room to be approximate.</span>
+          <span class="lang-zh">华东理工大学 ROBOCON2026 参赛机器人的机械臂电控：在 STM32F407 上用 FreeRTOS 安排动作时序，把遥控器的一次拨杆变成一套可重复执行的取放流程。</span>
+          <span class="lang-en">The arm controller for ECUST's ROBOCON2026 robot: FreeRTOS on an STM32F407 turns a single flick of the remote into a repeatable pick-and-place routine.</span>
         </p>
         <div class="case-meta">
           <span>2026</span>
-          <span><span class="lang-zh">竞赛项目</span><span class="lang-en">Competition</span></span>
-          <span>East China University of Science and Technology</span>
+          <span><span class="lang-zh">嵌入式控制</span><span class="lang-en">Embedded control</span></span>
+          <span>STM32F407 · FreeRTOS</span>
         </div>
         <figure class="case-cover">
           <img src="../assets/robocon.webp" alt="The ROBOCON2026 competition robot on a studio background" />
@@ -45,62 +45,125 @@
         <h2 class="case-h2"><span class="lang-zh">背景</span><span class="lang-en">Background</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            ROBOCON 的题目往往要求机器在很小的场地里完成大范围的动作：既要移动灵活，又要在远端把操作做到位。这两个诉求在机械上常常互相打架——底盘越灵活，结构越占地方；执行机构越靠前，整机的重心越难压住。
+            这一台机器人要完成的是方块吸取、存放、取回，以及用夹持机构拿放道具。机构负责"能动"，电控负责"按什么顺序动、什么时候算到位"。我在这个项目里做的是后者：让一套动作能够靠遥控器触发，并且一步步稳定走完。
           </p>
           <p class="lang-en">
-            ROBOCON tasks usually ask a robot to do large motions in a small arena: it has to be agile in translation and still precise at the far end of its reach. Mechanically those two pull against each other — the more agile the chassis, the more room the structure takes; the further the effector reaches out, the harder it is to keep the centre of mass where you want it.
+            The robot has to pick up blocks, store and retrieve them, and grip a prop. The mechanism makes motion possible; the controller decides in what order it happens and when a step counts as finished. My part was the latter — making a routine triggerable from the remote and able to run through its steps reliably.
           </p>
         </div>
       </section>
 
       <section class="case-section">
-        <h2 class="case-h2"><span class="lang-zh">目标</span><span class="lang-en">Goal</span></h2>
+        <h2 class="case-h2"><span class="lang-zh">系统构成</span><span class="lang-en">System</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            在竞赛限定的尺寸与重量内，做出一台既能灵活移动、又能把末端动作做准的机器人，并且让它在赛场上稳定地跑完，而不是偶尔成功一次。
+            控制器是 STM32F407，跑 FreeRTOS；电机走 CAN 总线，用的是达妙电机和大疆电机；操作端是大疆遥控器，走 DBUS 协议；末端靠气泵吸取，夹持由电磁阀控制气缸完成。
           </p>
+          <div class="case-table-wrap">
+            <table class="case-table">
+              <thead>
+                <tr>
+                  <th><span class="lang-zh">层</span><span class="lang-en">Layer</span></th>
+                  <th><span class="lang-zh">选型</span><span class="lang-en">Choice</span></th>
+                  <th><span class="lang-zh">在程序里的角色</span><span class="lang-en">Role in firmware</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>MCU / OS</td>
+                  <td>STM32F407 · FreeRTOS</td>
+                  <td><span class="lang-zh">任务调度与动作时序</span><span class="lang-en">task scheduling and action timing</span></td>
+                </tr>
+                <tr>
+                  <td><span class="lang-zh">驱动</span><span class="lang-en">Drives</span></td>
+                  <td>DM Motor · DJI Motor</td>
+                  <td><span class="lang-zh">CAN 总线上的位置/速度控制与反馈</span><span class="lang-en">position / velocity control and feedback over CAN</span></td>
+                </tr>
+                <tr>
+                  <td><span class="lang-zh">输入</span><span class="lang-en">Input</span></td>
+                  <td>DBUS <span class="lang-zh">遥控器</span><span class="lang-en">remote</span></td>
+                  <td><span class="lang-zh">通道切换任务与吸取高度</span><span class="lang-en">task switching and pickup height</span></td>
+                </tr>
+                <tr>
+                  <td><span class="lang-zh">执行</span><span class="lang-en">End effectors</span></td>
+                  <td><span class="lang-zh">气泵 · 电磁阀气缸</span><span class="lang-en">pump · solenoid cylinder</span></td>
+                  <td><span class="lang-zh">吸取与道具夹持开合</span><span class="lang-en">suction and prop grip</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <p class="lang-en">
-            Within the competition's size and weight limits, build a robot that is both agile in translation and accurate at the effector — and that does so reliably in a match, rather than occasionally.
+            The controller is an STM32F407 running FreeRTOS. The motors sit on a CAN bus (DM and DJI); the operator uses a DJI remote over DBUS; suction comes from a pump and the prop is gripped by a solenoid-driven cylinder.
           </p>
         </div>
       </section>
 
       <section class="case-section">
-        <h2 class="case-h2"><span class="lang-zh">我的贡献</span><span class="lang-en">My contribution</span></h2>
+        <h2 class="case-h2"><span class="lang-zh">状态机</span><span class="lang-en">State machine</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            我参与了整机机构与驱动方案的设计与出图，负责的主要部分是三块：
+            整套任务用一个有限状态机调度：<strong>INIT → TASK1（取方块）→ TASK2（放方块）</strong>，另有 <strong>TASK3 / TASK4</strong> 控制道具张开与闭合，以及一个 <strong>SLEEP</strong> 状态负责待机。遥控器拨杆实时切换状态，每个任务内部再拆成若干 phase，各阶段自己管时序。
           </p>
-          <ul class="lang-zh">
-            <li><strong>底盘：</strong>麦轮方案，让机器人能在小场地里做全向移动与快速换向。</li>
-            <li><strong>传动：</strong>同步带传动，用在需要把电机放到结构内部、又要把扭矩送到远处的场合。</li>
-            <li><strong>执行机构：</strong>气动方案，用于需要快速、大行程动作的末端环节。</li>
-          </ul>
+          <p class="lang-zh">
+            ch6 决定取还是放；ch7 / ch8 / ch9 在选择方块时对应三种吸取高度（115 / 95 / 75），在放置时对应三种放置高度（115 / 145 / 175）。ch10 用来直接触发夹持机构。
+          </p>
+          <div class="case-code">INIT ──(ch7/8/9)──&gt; TASK1(取方块) ──(拨回)──&gt; SLEEP
+  │                        │
+  │                    store_count++
+  │                        │
+  └──(ch6 + ch7/8/9)──&lt;── TASK2(放方块) ──(store_count--)──&gt; SLEEP
+
+ch10 ──&gt; TASK3(张开) ──(松开)──&gt; TASK4(闭合)</div>
           <p class="lang-en">
-            I worked on the machine's mechanism and drive design, and on the drawings for it. Three parts were mostly mine:
+            A finite state machine schedules the whole routine: <strong>INIT → TASK1 (pick) → TASK2 (place)</strong>, with <strong>TASK3 / TASK4</strong> for opening and closing the prop gripper and a <strong>SLEEP</strong> state for standby. The operator switches states with the sticks; each task is split into phases that own their own timing.
           </p>
-          <ul class="lang-en">
-            <li><strong>Chassis:</strong> the mecanum-wheel solution, giving omnidirectional movement and fast direction changes in a small arena.</li>
-            <li><strong>Transmission:</strong> timing belts, used where a motor has to sit inside the structure and its torque still has to arrive somewhere else.</li>
-            <li><strong>Actuation:</strong> the pneumatic solution for the end-effector stage, where the motion needs to be fast and long.</li>
-          </ul>
+          <p class="lang-en">
+            ch6 selects pick or place. ch7 / ch8 / ch9 map to three pickup heights (115 / 95 / 75), or, when placing, three drop heights (115 / 145 / 175). ch10 drives the gripper directly.
+          </p>
         </div>
       </section>
 
       <section class="case-section">
-        <h2 class="case-h2"><span class="lang-zh">技术实现</span><span class="lang-en">Implementation</span></h2>
+        <h2 class="case-h2"><span class="lang-zh">关键逻辑</span><span class="lang-en">Key logic</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            从成品可以看到整机是分层搭起来的：底部是带轮系的底盘，机身用铝型材搭出竖直框架，框架中间横向装了一组直线导轨与同步带，把动力从结构内部送到前端的执行位置；左侧是黄色的木质拨片与气动缸，顶端是末端执行机构与整机的线束。
+            一个阶段什么时候算完成，不能靠固定延时猜。程序用<strong>延时加速度反馈</strong>双重判断：电机进入阶段后先等一段时间，再读 CAN 回来的速度，速度低于阈值才认为到位。这样既避开启动瞬间速度为零的假到位，也不必按最慢的一次去设死等待时间。
+          </p>
+          <div class="case-code">if ((currentTime - phaseEntertime) &gt; pdMS_TO_TICKS(2000)
+    &amp;&amp; fabsf(vel) &lt; 0.05f) {
+    task1_phase = 1;   // 到位，进入下一阶段
+}</div>
+          <p class="lang-zh">
+            <strong>计数</strong>负责把多轮动作串起来：<code>store_count</code> 记录车上已有几个方块，第一个存 300 位置，第二个存 400，第三个只吸取不存放；放的时候按计数走不同路径，放完自动减一。车满时停在 phase1 并保持气泵开启，防止方块脱落；回到 SLEEP 后再拨一次就能继续下一轮。
           </p>
           <p class="lang-zh">
-            结构用铝型材而不是整体 CNC，好处是可以在比赛前反复改尺寸；代价是刚度和重复装配精度都要靠设计去保证。
+            上电时还要<strong>找零位</strong>：让电机缓慢顶向限位，检测力矩突变后把当前位置存成零点。这一步决定了后面所有位置指令的基准。
           </p>
           <p class="lang-en">
-            The finished machine reads as layers: a wheeled chassis at the bottom, a vertical frame in aluminium extrusion, a horizontal linear rail with a timing belt across the middle carrying drive from inside the structure out to the working end, the yellow wooden paddle and its pneumatic cylinder on the left, and the end effector with the wiring loom at the top.
+            A phase is not declared finished by a fixed delay. The firmware uses a <strong>delay plus velocity feedback</strong>: wait a little, then read the speed coming back over CAN and accept the step only when it drops below a threshold. That avoids the false arrival at the instant a motor starts from zero, without setting every wait to the slowest case.
           </p>
           <p class="lang-en">
-            Aluminium extrusion rather than a fully machined body means the dimensions could still be changed before the competition — at the cost of stiffness and repeatability, which then have to be bought back in the design.
+            A <strong>counter</strong> stitches repeated rounds together: <code>store_count</code> tracks how many blocks are on board; the first goes to position 300, the second to 400, and a third is picked but not stored. Placement follows a different path for each count and decrements it when done. When full, the routine holds at phase1 with the pump on so nothing drops; flicking the stick again from SLEEP starts the next round.
+          </p>
+          <p class="lang-en">
+            At power-up the arm <strong>finds its zero</strong>: motors press gently into their limit, a torque jump marks contact, and that position is saved as the origin. Every later position command is measured from it.
+          </p>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2"><span class="lang-zh">代码结构</span><span class="lang-en">Code structure</span></h2>
+        <div class="case-prose">
+          <p class="lang-zh">
+            2026 年 5 月做了一次拆分：<code>test_task.c</code> 只保留状态机主循环，负责读遥控器通道和调度；动作函数、共享变量、宏和枚举移到 <code>arm_task.c / .h</code>。这样"什么时候做"和"怎么做"分到两个文件里，改一个任务的时序不会翻到另一堆动作代码里。
+          </p>
+          <div class="case-code">application/
+├── arm_task.c / .h   # 动作函数、共享变量、宏与状态枚举
+├── test_task.c / .h  # 状态机主循环：遥控器信号 → 状态调度
+├── INS_task.c / .h   # IMU 任务
+└── led_flow_task.c   # 状态灯</div>
+          <p class="lang-en">
+            In May 2026 I split the module: <code>test_task.c</code> kept only the state-machine loop — read the remote, dispatch the state — while the action functions, shared variables, macros and enums moved into <code>arm_task.c / .h</code>. "When to act" and "how to act" then lived in separate files, so changing a task's timing no longer meant digging through action code.
           </p>
         </div>
       </section>
@@ -109,10 +172,10 @@
         <h2 class="case-h2"><span class="lang-zh">成果</span><span class="lang-en">Outcome</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            这一台目前是竞赛项目，公开材料有限——没有开放仓库，也没有可公开的完整赛事记录。所以这一页只写我能有把握的部分：整机做出来了，机构方案定下来了。<strong>比赛结果我不在这里下结论</strong>，因为公开渠道拿不到可靠的逐场数据。
+            代码已公开在 <a href="https://github.com/Meng-p7/R2_kfs2026" target="_blank" rel="noopener noreferrer">Meng-p7/R2_kfs2026</a>，仓库里能看到完整工程、状态机实现和遥控器操作说明。这一页写的是程序做了什么；<strong>比赛结果我不在这里下结论</strong>，因为公开渠道拿不到可靠的逐场数据。
           </p>
           <p class="lang-en">
-            This one is a competition entry with limited public material — no open repository, and no match-by-match record I can point to. So this page covers only what I can stand behind: the machine was built and the mechanism was settled. <strong>I am not going to state a competition result here</strong>, because there is no reliable public data for it.
+            The firmware is public at <a href="https://github.com/Meng-p7/R2_kfs2026" target="_blank" rel="noopener noreferrer">Meng-p7/R2_kfs2026</a>, with the full project, the state machine and the remote-control notes. This page describes what the program does; <strong>I am not stating a competition result here</strong>, because there is no reliable public match data.
           </p>
         </div>
       </section>
@@ -121,24 +184,22 @@
         <h2 class="case-h2"><span class="lang-zh">反思</span><span class="lang-en">Reflection</span></h2>
         <div class="case-prose">
           <p class="lang-zh">
-            竞赛机器人教会我的一件事是：<strong>机构设计的成败往往不在最精妙的那一处，而在所有零件都能在比赛前一晚被换掉</strong>。比赛前的时间永远比想象中少，所以每一个"只有我能装的"零件都是风险。
+            做电控最直接的教训是：<strong>到位判断比动作本身更难</strong>。电机动起来只是开始，真正要处理的是启动瞬间的零速、限位没有明确信号、以及同一个动作在不同负载下花的时间不一样。把"延时 + 反馈"和"阶段进入时间"统一管起来之后，任务才从偶尔成功变成可以重复。
           </p>
           <p class="lang-zh">
-            如果还有下一次，我会在设计阶段就把"可维护性"当成一条硬指标：哪些零件会被磨、会被撞、需要现场更换，它们就该能被最快地拆下来。
+            如果再来做一次，我会把高度、位置和等待阈值收成一张参数表，让调试时改一处就能生效，而不是散在动作函数里。
           </p>
           <p class="lang-en">
-            Competition robots teach one thing above others: <strong>the mechanism succeeds or fails not at the cleverest joint, but at whether every part can still be swapped the night before the match.</strong> There is never as much time before a competition as you imagine, so every "only I can assemble this" fitting is a risk.
+            The clearest lesson from the control side: <strong>knowing when an action has finished is harder than making it move</strong>. Motion is the easy part; the real work is the zero speed at startup, the lack of a clean limit signal, and the same move taking different amounts of time under different loads. Once delays, feedback and phase-entry times were handled consistently, the routine stopped succeeding only sometimes.
           </p>
           <p class="lang-en">
-            If there is a next one, I would treat serviceability as a hard constraint from the first sketch: the parts that will wear, get hit and need replacing on the day should be the ones that come off fastest.
+            If I did it again, I would pull heights, positions and wait thresholds into one parameter table, so a tuning change lands in one place instead of being scattered through the action functions.
           </p>
         </div>
       </section>
 
       <div class="case-links">
-        <span class="case-link" style="color: var(--ink-muted); border-bottom-color: var(--hairline);">
-          <span class="lang-zh">竞赛项目 · 暂无公开仓库</span><span class="lang-en">Competition entry · no public repository</span>
-        </span>
+        <a class="case-link" href="https://github.com/Meng-p7/R2_kfs2026" target="_blank" rel="noopener noreferrer">GitHub — R2_kfs2026 <span>↗</span></a>
       </div>
 
       <a class="case-next" href="../index.html#work">← <span class="lang-zh">回到 Selected Work</span><span class="lang-en">Back to Selected Work</span></a>

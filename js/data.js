@@ -57,11 +57,11 @@ const I18N = {
         year: "2026 · Competition",
         caseStudy: "work/robocon.html",
         tone: "light",
-        description: "竞赛项目：华东理工大学 ROBOCON2026 参赛机器人，集成麦轮底盘、同步带传动与气动执行机构。",
+        description: "竞赛项目：华东理工大学 ROBOCON2026 参赛机器人的机械臂电控。STM32F407 + FreeRTOS，CAN 电机、DBUS 遥控与气动执行的状态机控制。",
         image: "assets/robocon.webp",
         ar: "1168 / 880",
         imageSm: "assets/robocon-sm.webp",
-        tags: ["ROBOCON", "Mechatronics", "CAD"]
+        tags: ["ROBOCON", "Embedded", "FreeRTOS", "CAN"]
       },
       {
         num: "03",
@@ -246,11 +246,11 @@ const I18N = {
         num: "02",
         title: "ROBOCON Competition Robot",
         tone: "light",
-        description: "Custom-built ECUST ROBOCON2026 robot integrating omni-wheel drive, belt transmissions, and pneumatic actuators.",
+        description: "Arm controller for ECUST's ROBOCON2026 robot: STM32F407 + FreeRTOS, CAN motors, DBUS remote and pneumatic actuation driven by a state machine.",
         image: "assets/robocon.webp",
         ar: "1168 / 880",
         imageSm: "assets/robocon-sm.webp",
-        tags: ["ROBOCON", "Mechatronics", "CAD"]
+        tags: ["ROBOCON", "Embedded", "FreeRTOS", "CAN"]
       },
       {
         num: "03",
