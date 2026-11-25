@@ -73,6 +73,7 @@ export default function TurnLayer({
   const nextRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    if (!open) return;
     let raf = 0;
     const tick = () => {
       const z = zonesRef.current;
@@ -85,13 +86,14 @@ export default function TurnLayer({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [zonesRef, enabled, canPrev, canNext]);
+  }, [open, zonesRef, enabled, canPrev, canNext]);
 
   return (
     <div className={styles.turnLayer}>
       {open ? (
         <>
           <button
+            key="turn-prev"
             type="button"
             ref={prevRef}
             className={`${styles.turnZone} ${styles.turnZonePrev}`}
@@ -102,6 +104,7 @@ export default function TurnLayer({
             <span className={styles.turnCue} aria-hidden="true" />
           </button>
           <button
+            key="turn-next"
             type="button"
             ref={nextRef}
             className={`${styles.turnZone} ${styles.turnZoneNext}`}
@@ -114,6 +117,7 @@ export default function TurnLayer({
         </>
       ) : (
         <button
+          key="open-zone"
           type="button"
           className={styles.openZone}
           data-journal3d="open"
