@@ -372,7 +372,8 @@ navToggle.addEventListener("click", () => {
 });
 
 function sectionScrollTarget(key) {
-  if (key === "work") return Math.max(0, M.workTop - 8);
+  // land on the heading, clear of the fixed navigation bar
+  if (key === "work") return Math.max(0, M.workTitleTop - 104);
   if (key === "journal") return M.journalTop;
   if (key === "contact") return Math.max(0, M.endingTop - 8);
   return 0;
@@ -423,7 +424,7 @@ const endingSection = document.getElementById("ending");
 const M = {
   vw: 0, vh: 0,
   revealTop: 0, revealSc: 1,
-  workTop: 0,
+  workTop: 0, workTitleTop: 0,
   handoverTop: 0, handoverSc: 1,
   journalTop: 0, journalSc: 1,
   endingTop: 0
@@ -503,6 +504,7 @@ function refreshMetrics() {
   M.revealTop = pageTop(revealStage);
   M.revealSc = Math.max(1, revealStage.offsetHeight - M.vh);
   M.workTop = pageTop(workSection);
+  M.workTitleTop = pageTop(workTitleEl);
   M.handoverTop = pageTop(workHandover);
   M.handoverSc = Math.max(1, workHandover.offsetHeight - M.vh);
   M.journalTop = pageTop(journalStage);
@@ -525,7 +527,7 @@ function updateScrollAnimations(sy) {
     if (Math.abs(p - lastP.reveal) > 0.0004) {
       lastP.reveal = p;
 
-      const riseProgress = clamp((p - 0.02) / 0.42, 0, 1);
+      const riseProgress = clamp((p - 0.02) / 0.55, 0, 1);
       const easedRise = easeOutCubic(riseProgress);
       const translateY = (1 - easedRise) * 104;
 

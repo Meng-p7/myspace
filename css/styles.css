@@ -268,7 +268,7 @@ button {
   position: relative;
   /* the sheet rises and the work page slides over it: the reader does not
      have to scroll through a long, empty stretch of paper */
-  height: 180vh;
+  height: 125vh;
   background: #ece8df;
 }
 
@@ -525,7 +525,7 @@ button {
 /* the phone raises the sheet over a shorter stretch of scroll */
 @media (max-width: 860px) {
   .reveal-stage {
-    height: 160vh;
+    height: 112vh;
   }
   .editorial-heading {
     font-size: clamp(2.1rem, 9vw, 2.7rem);
@@ -558,8 +558,10 @@ button {
   position: relative;
   /* the work page slides over the raised sheet instead of waiting behind it */
   z-index: 6;
-  margin-top: -35vh;
-  padding: clamp(4.5rem, 11vh, 9rem) 0 clamp(5rem, 12vh, 10rem);
+  margin-top: -11vh;
+  /* almost no air above the heading: it comes up right behind the edge of
+     the sheet, so the sheet is never alone on the screen */
+  padding: 1rem 0 clamp(5rem, 12vh, 10rem);
   background:
     radial-gradient(120% 80% at 80% 0%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 60%),
     linear-gradient(to bottom, var(--paper-warm) 0%, var(--paper) 18%, var(--paper) 82%, var(--paper-warm) 100%);
@@ -642,7 +644,7 @@ button {
 @media (max-width: 900px) {
   /* the phone needs a slightly smaller overlap */
   .work-section {
-    margin-top: -25vh;
+    margin-top: -5vh;
   }
   .work-header {
     grid-template-columns: 1fr;
