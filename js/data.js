@@ -16,8 +16,11 @@ let currentLang = "zh";
 const I18N = {
   zh: {
     nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
-    homeIntro:
-      "我是 Moon，目前在华东理工大学学习机械工程与机器人方向。我对智能硬件、人工智能和富有叙事感的数字交互充满好奇，喜欢把脑海里的草图变成真实可触碰的作品——这个网站就是那些实验、记录，以及还没想明白的问题。",
+    homeIntro: [
+      "我是 Moon，华东理工大学机械设计制造及其自动化专业学生，现居上海。",
+      "我的兴趣横跨机器人、智能硬件与人工智能。我喜欢探索物理世界与数字世界的交界处——搭建机器人系统、尝试新的想法，把概念变成现实。",
+      "这里收纳着我做过的东西、走过的路，以及那些仍在点燃我好奇心的时刻。"
+    ],
     homeTagline: "机械工程 · 机器人 · 数字创作",
     copyBtn: "复制",
     copiedBtn: "已复制 ✓",
@@ -210,8 +213,11 @@ const I18N = {
   },
   en: {
     nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
-    homeIntro:
-      "I'm Moon, studying mechanical engineering and robotics at ECUST. I'm curious about intelligent hardware, artificial intelligence and narrative-driven digital interaction, and I like turning the sketches in my head into things you can actually touch — this site is where those experiments, notes and still-open questions live.",
+    homeIntro: [
+      "I'm Moon, a Mechanical Design, Manufacturing and Automation student at East China University of Science and Technology, based in Shanghai.",
+      "My interests span robotics, intelligent hardware, and artificial intelligence. I'm drawn to exploring the intersection of the physical and digital worlds — building robotic systems, experimenting with new ideas, and bringing concepts to life.",
+      "This is a space for the things I've created, the paths I've explored, and the moments that continue to spark my curiosity."
+    ],
     homeTagline: "Mechanical engineering · Robotics · Digital craft",
     copyBtn: "Copy",
     copiedBtn: "Copied ✓",

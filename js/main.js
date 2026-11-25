@@ -45,7 +45,7 @@ function cls(el, name, on) {
 ========================================================= */
 const langToggleBtn = document.getElementById("langToggleBtn");
 const homeTaglineEl = document.getElementById("homeTagline");
-const homeBioEl = document.getElementById("homeBio");
+const homeIntroEl = document.getElementById("homeIntroText");
 const workTitleEl = document.getElementById("workTitle");
 const workIntroEl = document.getElementById("workIntro");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
@@ -260,12 +260,25 @@ if (journalMount && "IntersectionObserver" in window) {
   renderJournalFallback(currentLang);
 }
 
+/** The introduction is written as paragraphs, not as a list of fields. */
+function renderHomeIntro(data) {
+  if (!homeIntroEl) return;
+  const paras = Array.isArray(data.homeIntro) ? data.homeIntro : [data.homeIntro];
+  homeIntroEl.textContent = "";
+  for (const text of paras) {
+    const p = document.createElement("p");
+    p.className = "home-intro-bio";
+    p.textContent = text;
+    homeIntroEl.appendChild(p);
+  }
+}
+
 function applyLanguage(lang) {
   currentLang = lang;
   const data = I18N[lang];
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   langToggleBtn.textContent = lang === "zh" ? "EN" : "中";
-  homeBioEl.textContent = data.homeIntro;
+  renderHomeIntro(data);
   homeTaglineEl.textContent = data.homeTagline;
   workTitleEl.textContent = data.workTitle;
   workIntroEl.textContent = data.workIntro;
@@ -320,7 +333,7 @@ homeLayer.addEventListener("touchmove", (e) => {
 }, { passive: false });
 
 function spotLoopAllowed() {
-  return isCoarsePointer && !prefersReducedMotion && lastP.reveal < 0.62;
+  return isCoarsePointer && !prefersReducedMotion && lastP.reveal < 0.5;
 }
 function spotTick(t) {
   spotRaf = 0;
@@ -512,7 +525,7 @@ function updateScrollAnimations(sy) {
     if (Math.abs(p - lastP.reveal) > 0.0004) {
       lastP.reveal = p;
 
-      const riseProgress = clamp((p - 0.03) / 0.45, 0, 1);
+      const riseProgress = clamp((p - 0.02) / 0.42, 0, 1);
       const easedRise = easeOutCubic(riseProgress);
       const translateY = (1 - easedRise) * 104;
 
@@ -527,8 +540,8 @@ function updateScrollAnimations(sy) {
       w(paperCastShadow, "opacity", clamp(curlIntensity * 1.15, 0, 1).toFixed(3));
       w(paperCastShadow, "transform", `scaleY(${(0.8 + curlIntensity * 0.5).toFixed(3)})`);
 
-      // the sketch on the paper fades in as the sheet settles (0.40..0.58)
-      const fadeInPaper = easeOutCubic(clamp((p - 0.40) / 0.18, 0, 1));
+      // the sketch on the paper fades in while the sheet comes up (0.16..0.38)
+      const fadeInPaper = easeOutCubic(clamp((p - 0.16) / 0.22, 0, 1));
 
       w(paperSketchDecor, "opacity", (0.48 * fadeInPaper).toFixed(3));
       ensureSpotLoop();
@@ -571,7 +584,7 @@ function updateScrollAnimations(sy) {
   let activeKey = "home";
   if (M.endingTop - sy <= vh * 0.45) activeKey = "contact";
   else if (M.journalTop - sy <= vh * 0.45) activeKey = "journal";
-  else if (M.workTop - sy <= vh * 0.45 || lastP.reveal >= 0.62) activeKey = "work";
+  else if (M.workTop - sy <= vh * 0.45 || lastP.reveal >= 0.55) activeKey = "work";
   if (activeKey !== lastActive) {
     lastActive = activeKey;
     navItems.forEach(item => {

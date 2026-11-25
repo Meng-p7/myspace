@@ -266,7 +266,9 @@ button {
 ========================================================= */
 .reveal-stage {
   position: relative;
-  height: 300vh;
+  /* the sheet rises and the work page slides over it: the reader does not
+     have to scroll through a long, empty stretch of paper */
+  height: 180vh;
   background: #ece8df;
 }
 
@@ -520,10 +522,10 @@ button {
   border-color: var(--accent-blue);
 }
 
-/* the line that hands the paper over to the work section */
+/* the phone raises the sheet over a shorter stretch of scroll */
 @media (max-width: 860px) {
   .reveal-stage {
-    height: 230vh;
+    height: 160vh;
   }
   .editorial-heading {
     font-size: clamp(2.1rem, 9vw, 2.7rem);
@@ -554,6 +556,9 @@ button {
 ========================================================= */
 .work-section {
   position: relative;
+  /* the work page slides over the raised sheet instead of waiting behind it */
+  z-index: 6;
+  margin-top: -35vh;
   padding: clamp(4.5rem, 11vh, 9rem) 0 clamp(5rem, 12vh, 10rem);
   background:
     radial-gradient(120% 80% at 80% 0%, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 60%),
@@ -635,6 +640,10 @@ button {
 }
 
 @media (max-width: 900px) {
+  /* the phone needs a slightly smaller overlap */
+  .work-section {
+    margin-top: -25vh;
+  }
   .work-header {
     grid-template-columns: 1fr;
     align-items: start;
@@ -1237,11 +1246,19 @@ button {
   object-fit: cover;
 }
 
+.home-intro-text {
+  min-width: 0;
+}
+
 .home-intro-bio {
-  font-size: 1rem;
-  line-height: 1.8;
+  font-size: 0.98rem;
+  line-height: 1.82;
   color: var(--ink-soft);
-  max-width: 44ch;
+  max-width: 46ch;
+}
+
+.home-intro-bio + .home-intro-bio {
+  margin-top: 0.62rem;
 }
 
 /* =========================================================
@@ -1565,9 +1582,12 @@ button {
     margin: 0.15rem 0.85rem 0.6rem 0;
   }
   .home-intro-bio {
-    font-size: 0.9rem;
-    line-height: 1.75;
+    font-size: 0.84rem;
+    line-height: 1.78;
     max-width: none;
+  }
+  .home-intro-bio + .home-intro-bio {
+    margin-top: 0.5rem;
   }
   .home-scroll-arrow {
     grid-column: 1;
