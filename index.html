@@ -55,89 +55,86 @@
   <div id="home"></div>
 
   <!-- =========================================================
-       STAGE 1 & 2: HOME (identity + portrait) -> 3D PAPER REVEAL -> SELECTED WORK
+       01. HOME — sticky 100vh. The paper flow below rises over it
+       from the very first pixel of scroll, so Work never waits.
   ========================================================= -->
-  <section class="reveal-stage" id="revealStage" aria-label="Home">
-    <div class="reveal-sticky">
-      <!-- 01. HOME -->
-      <div class="home-layer" id="homeLayer">
-        <picture class="home-bg-media">
-          <source media="(max-width: 820px) and (orientation: portrait)" srcset="assets/home-sketch-m.webp" />
+  <div class="home-layer" id="homeLayer">
+    <picture class="home-bg-media">
+      <source media="(max-width: 820px) and (orientation: portrait)" srcset="assets/home-sketch-m.webp" />
+      <img
+        src="assets/home-sketch.webp"
+        srcset="assets/home-sketch-sm.webp 900w, assets/home-sketch.webp 1672w"
+        sizes="100vw"
+        alt="Moon studio pencil sketch"
+        class="home-bg-base"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+    <picture class="home-bg-media">
+      <source media="(max-width: 820px) and (orientation: portrait)" srcset="assets/home-color-m.webp" />
+      <img
+        src="assets/home-color.webp"
+        srcset="assets/home-color-sm.webp 900w, assets/home-color.webp 1672w"
+        sizes="100vw"
+        alt=""
+        aria-hidden="true"
+        class="home-bg-color"
+        id="homeSpotlightImg"
+        decoding="async"
+      />
+    </picture>
+    <div class="home-text-scrim"></div>
+
+    <div class="home-overlay-content">
+      <h1 class="visually-hidden">Moon — <span id="homeTagline"></span></h1>
+
+      <!-- The portrait, the identity and the story, straight on the
+           drawing: no card, no frame, no shadow. -->
+      <aside class="home-intro" id="homeIntro">
+        <figure class="home-intro-avatar">
           <img
-            src="assets/home-sketch.webp"
-            srcset="assets/home-sketch-sm.webp 900w, assets/home-sketch.webp 1672w"
-            sizes="100vw"
-            alt="Moon studio pencil sketch"
-            class="home-bg-base"
-            fetchpriority="high"
+            src="assets/avatar.webp"
+            loading="lazy"
             decoding="async"
+            alt="Moon portrait illustration"
           />
-        </picture>
-        <picture class="home-bg-media">
-          <source media="(max-width: 820px) and (orientation: portrait)" srcset="assets/home-color-m.webp" />
-          <img
-            src="assets/home-color.webp"
-            srcset="assets/home-color-sm.webp 900w, assets/home-color.webp 1672w"
-            sizes="100vw"
-            alt=""
-            aria-hidden="true"
-            class="home-bg-color"
-            id="homeSpotlightImg"
-            decoding="async"
-          />
-        </picture>
-        <div class="home-text-scrim"></div>
+        </figure>
+        <div class="home-intro-text" id="homeIntroText"></div>
+      </aside>
 
-        <div class="home-overlay-content">
-          <h1 class="visually-hidden">Moon — <span id="homeTagline"></span></h1>
-
-          <!-- The portrait, the identity and the story, straight on the
-               drawing: no card, no frame, no shadow. -->
-          <aside class="home-intro" id="homeIntro">
-            <figure class="home-intro-avatar">
-              <img
-                src="assets/avatar.webp"
-                loading="lazy"
-                decoding="async"
-                alt="Moon portrait illustration"
-              />
-            </figure>
-            <div class="home-intro-text" id="homeIntroText"></div>
-          </aside>
-
-          <button type="button" class="home-scroll-arrow" id="scrollToWorkBtn" aria-label="Scroll down">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 5v14"/>
-              <path d="m18 13-6 6-6-6"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- 02. 3D PAPER REVEAL: the sheet rises and the work exhibition appears -->
-      <div class="paper-sheet-wrap" id="paperSheet">
-        <div class="paper-cast-shadow" id="paperCastShadow"></div>
-        <div class="paper-curl-lip" id="paperCurlLip"></div>
-
-        <div class="paper-surface">
-          <div class="paper-fiber-layer" aria-hidden="true"></div>
-
-          <svg class="paper-sketch-decor" id="paperSketchDecor" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <circle cx="1360" cy="430" r="240" stroke="#171717" stroke-width="0.6" stroke-dasharray="4 6" />
-            <ellipse cx="1310" cy="420" rx="340" ry="120" transform="rotate(-18 1310 420)" stroke="#171717" stroke-width="0.55" />
-            <circle cx="1210" cy="235" r="9" fill="#d9d3c4" stroke="#171717" stroke-width="0.7" />
-            <line x1="940" y1="235" x2="1200" y2="235" stroke="#171717" stroke-width="0.6" />
-            <line x1="80" y1="820" x2="420" y2="820" stroke="#171717" stroke-width="0.5" stroke-dasharray="3 5" />
-          </svg>
-        </div>
-      </div>
+      <button type="button" class="home-scroll-arrow" id="scrollToWorkBtn" aria-label="Scroll down">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14"/>
+          <path d="m18 13-6 6-6-6"/>
+        </svg>
+      </button>
     </div>
-  </section>
+  </div>
+
+  <!-- On phones the sheet waits through a short runway before rising, so a
+       light flick no longer flips the page; desktop has zero-height runway. -->
+  <div class="home-runway" id="homeRunway" aria-hidden="true"></div>
 
   <!-- =========================================================
-       CONTINUOUS PAPER FLOW
+       CONTINUOUS PAPER FLOW — the sheet itself. Its top edge carries
+       the curl and the cast shadow; Selected Work is printed directly
+       on the paper and rises together with it.
   ========================================================= -->
   <main class="paper-flow">
+    <div class="paper-surface" aria-hidden="true">
+      <div class="paper-cast-shadow" id="paperCastShadow"></div>
+      <div class="paper-curl-lip" id="paperCurlLip"></div>
+      <div class="paper-fiber-layer"></div>
+
+      <svg class="paper-sketch-decor" id="paperSketchDecor" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <circle cx="1360" cy="430" r="240" stroke="#171717" stroke-width="0.6" stroke-dasharray="4 6" />
+        <ellipse cx="1310" cy="420" rx="340" ry="120" transform="rotate(-18 1310 420)" stroke="#171717" stroke-width="0.55" />
+        <circle cx="1210" cy="235" r="9" fill="#d9d3c4" stroke="#171717" stroke-width="0.7" />
+        <line x1="940" y1="235" x2="1200" y2="235" stroke="#171717" stroke-width="0.6" />
+        <line x1="80" y1="820" x2="420" y2="820" stroke="#171717" stroke-width="0.5" stroke-dasharray="3 5" />
+      </svg>
+    </div>
     <!-- =========================================================
          02. SELECTED WORK — an editorial, asymmetric grid
     ========================================================= -->

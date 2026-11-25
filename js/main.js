@@ -402,8 +402,7 @@ backToTopBtn.addEventListener("click", (e) => {
    SCROLL-DRIVEN ANIMATIONS & 3D TRANSITIONS
 ========================================================= */
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const revealStage = document.getElementById("revealStage");
-const paperSheet = document.getElementById("paperSheet");
+const homeRunway = document.getElementById("homeRunway");
 const paperCurlLip = document.getElementById("paperCurlLip");
 const paperCastShadow = document.getElementById("paperCastShadow");
 const paperSketchDecor = document.getElementById("paperSketchDecor");
@@ -422,14 +421,14 @@ const endingSection = document.getElementById("ending");
 
 /* ---- cached geometry: measured on layout changes only ---- */
 const M = {
-  vw: 0, vh: 0,
-  revealTop: 0, revealSc: 1,
+  vw: 0, vh: 0, runway: 0,
   workTop: 0, workTitleTop: 0,
   handoverTop: 0, handoverSc: 1,
   journalTop: 0, journalSc: 1,
   endingTop: 0
 };
 const lastP = { reveal: -1, handover: -1, journal: -1 };
+let lastSy = -1;
 let lastTheme = "";
 let lastActive = "";
 
@@ -501,8 +500,7 @@ function scheduleMetricsRefresh() {
 function refreshMetrics() {
   M.vw = window.innerWidth;
   M.vh = window.innerHeight;
-  M.revealTop = pageTop(revealStage);
-  M.revealSc = Math.max(1, revealStage.offsetHeight - M.vh);
+  M.runway = homeRunway.offsetHeight;
   M.workTop = pageTop(workSection);
   M.workTitleTop = pageTop(workTitleEl);
   M.handoverTop = pageTop(workHandover);
@@ -513,6 +511,7 @@ function refreshMetrics() {
 
   applyFiberMode();
   lastP.reveal = lastP.handover = lastP.journal = -1;
+  lastSy = -1;
 
   updateScrollAnimations(window.scrollY);
 }
@@ -521,34 +520,36 @@ function refreshMetrics() {
 function updateScrollAnimations(sy) {
   const vh = M.vh, vw = M.vw;
 
+  // cover = how far the sheet has physically entered the viewport. The sheet
+  // is a normal-flow element, so it rises 1:1 with scroll once the runway is
+  // passed; every flourish is driven by this same number to stay glued to
+  // the paper edge. Desktop runway is 0, phone adds extra scroll before it.
+  const cover = clamp((sy - M.runway) / Math.max(1, vh), 0, 1);
+
   if (!prefersReducedMotion) {
-    // --- 1. HOME -> 3D PAPER -> ABOUT -> IN-PLACE "MY PROJECTS" ---
-    const p = clamp((sy - M.revealTop) / M.revealSc, 0, 1);
-    if (Math.abs(p - lastP.reveal) > 0.0004) {
-      lastP.reveal = p;
+    // --- 1. HOME -> THE RISING SHEET ---
+    if (Math.abs(sy - lastSy) > 0.3) {
+      lastSy = sy;
+      lastP.reveal = cover;
 
-      const riseProgress = clamp((p - 0.02) / 0.55, 0, 1);
-      const easedRise = easeOutCubic(riseProgress);
-      const translateY = (1 - easedRise) * 104;
-
+      // Home starts easing back during the phone runway, so the first scroll
+      // already has feedback even though the sheet has not entered yet.
+      const homeProgress = clamp(sy / Math.max(1, vh + M.runway), 0, 1);
+      const easedRise = easeOutCubic(homeProgress);
       w(homeLayer, "transform", `scale(${(1 - easedRise * 0.035).toFixed(4)})`);
-      w(paperSheet, "transform", `translate3d(0, ${translateY.toFixed(3)}%, 0)`);
-      cls(paperSheet, "is-settled", p >= 0.45);
 
-      const curlIntensity = Math.sin(riseProgress * Math.PI);
+      const curlIntensity = Math.sin(cover * Math.PI);
       w(paperCurlLip, "transform", `perspective(900px) rotateX(${(-38 * curlIntensity).toFixed(2)}deg) scaleY(${(0.65 + 0.55 * curlIntensity).toFixed(3)})`);
-      w(paperCurlLip, "opacity", riseProgress > 0.01 && riseProgress < 0.99 ? "1" : "0");
+      w(paperCurlLip, "opacity", cover > 0.01 && cover < 0.99 ? "1" : "0");
 
       w(paperCastShadow, "opacity", clamp(curlIntensity * 1.15, 0, 1).toFixed(3));
       w(paperCastShadow, "transform", `scaleY(${(0.8 + curlIntensity * 0.5).toFixed(3)})`);
 
-      // the sketch on the paper fades in while the sheet comes up (0.16..0.38)
-      const fadeInPaper = easeOutCubic(clamp((p - 0.16) / 0.22, 0, 1));
-
+      // pencil decor fades in while the sheet covers Home (0.16..0.38)
+      const fadeInPaper = easeOutCubic(clamp((cover - 0.16) / 0.22, 0, 1));
       w(paperSketchDecor, "opacity", (0.48 * fadeInPaper).toFixed(3));
       ensureSpotLoop();
     }
-
   }
 
   // --- 3. THE HANDOVER: the work exhibition assembles, then the journal ---
@@ -575,7 +576,7 @@ function updateScrollAnimations(sy) {
   // --- 4. ADAPTIVE NAV THEME & ACTIVE LINK (cached tops, no rect reads) ---
   let theme;
   if (M.endingTop - sy <= 90) theme = "on-night";
-  else if (lastP.reveal >= 0.44 || M.workTop - sy <= 90) theme = "on-paper";
+  else if (cover >= 0.44 || M.workTop - sy <= 90) theme = "on-paper";
   else theme = "on-home";
   if (theme !== lastTheme) {
     lastTheme = theme;
@@ -586,7 +587,7 @@ function updateScrollAnimations(sy) {
   let activeKey = "home";
   if (M.endingTop - sy <= vh * 0.45) activeKey = "contact";
   else if (M.journalTop - sy <= vh * 0.45) activeKey = "journal";
-  else if (M.workTop - sy <= vh * 0.45 || lastP.reveal >= 0.55) activeKey = "work";
+  else if (M.workTop - sy <= vh * 0.45 || cover >= 0.55) activeKey = "work";
   if (activeKey !== lastActive) {
     lastActive = activeKey;
     navItems.forEach(item => {
