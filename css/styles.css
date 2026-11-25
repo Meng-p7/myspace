@@ -521,24 +521,6 @@ button {
 }
 
 /* the line that hands the paper over to the work section */
-.paper-intro {
-  position: absolute;
-  left: clamp(1.5rem, 6vw, 6rem);
-  top: 38%;
-  width: min(620px, 78%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.paper-intro-text {
-  font-family: var(--serif);
-  font-size: clamp(1.5rem, 3.1vw, 2.5rem);
-  font-weight: 500;
-  line-height: 1.28;
-  letter-spacing: -0.012em;
-  color: var(--ink);
-}
-
 @media (max-width: 860px) {
   .reveal-stage {
     height: 230vh;
@@ -692,14 +674,6 @@ button {
   justify-content: space-between;
   gap: 1rem;
   will-change: opacity, transform;
-}
-
-.journal-sub {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-  color: var(--ink-soft);
-  margin-top: 0.25rem;
 }
 
 /* The leaf layer must keep its own 3D context, otherwise the sheets are
@@ -927,9 +901,6 @@ button {
   .journal-header .editorial-heading {
     font-size: clamp(1.9rem, 8vw, 2.4rem);
   }
-  .journal-sub {
-    font-size: 0.95rem;
-  }
   .journal-page {
     padding: 1rem 1rem 0.85rem;
   }
@@ -948,9 +919,6 @@ button {
   }
   .journal-header .editorial-heading {
     font-size: 1.3rem;
-  }
-  .journal-sub {
-    display: none;
   }
   .journal-page {
     padding: 0.8rem 0.9rem 0.7rem;
@@ -1250,18 +1218,15 @@ button {
   align-self: start;
   margin-top: clamp(1rem, 7vh, 4.5rem);
   pointer-events: auto;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: 0.9rem 1.15rem;
+  /* the portrait floats and the text runs around it: one voice, not a list */
+  display: flow-root;
   color: var(--ink);
 }
 
 .home-intro-avatar {
-  grid-column: 1;
-  grid-row: 1;
+  float: left;
   width: 88px;
-  margin: 0;
+  margin: 0.15rem 1.15rem 0.75rem 0;
   transform: rotate(-2.2deg);
 }
 
@@ -1272,34 +1237,11 @@ button {
   object-fit: cover;
 }
 
-.home-intro-copy {
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 0;
-}
-
-.home-intro-role {
-  font-size: 0.98rem;
-  line-height: 1.45;
-  color: var(--ink);
-  margin-bottom: 0.22rem;
-}
-
-.home-intro-place {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-}
-
 .home-intro-bio {
-  grid-column: 1 / -1;
-  margin-top: 0.35rem;
   font-size: 1rem;
-  line-height: 1.76;
+  line-height: 1.8;
   color: var(--ink-soft);
-  max-width: 40ch;
+  max-width: 44ch;
 }
 
 /* =========================================================
@@ -1472,22 +1414,6 @@ button {
   border-style: dashed;
 }
 
-.exh-title {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  z-index: 5;
-  font-family: var(--serif);
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  text-align: center;
-  transform: translateY(-50%);
-  will-change: transform, opacity;
-}
-
 /* =========================================================
    THE ENDING — the closing lines and the contact sheet, one
    region, at the very bottom of the page.
@@ -1546,11 +1472,6 @@ button {
 .contact-value:hover {
   color: #ffffff;
   border-color: #7ea3ff;
-}
-
-.contact-value--plain {
-  border-bottom: none;
-  color: rgba(243, 241, 234, 0.78);
 }
 
 .contact-item .copy-email-btn {
@@ -1638,23 +1559,14 @@ button {
     grid-row: 1;
     align-self: start;
     margin-top: 0;
-    grid-template-columns: 56px minmax(0, 1fr);
-    gap: 0.7rem 0.85rem;
   }
   .home-intro-avatar {
-    width: 56px;
-  }
-  .home-intro-role {
-    font-size: 0.88rem;
-    line-height: 1.4;
-  }
-  .home-intro-place {
-    font-size: 0.63rem;
+    width: 54px;
+    margin: 0.15rem 0.85rem 0.6rem 0;
   }
   .home-intro-bio {
-    margin-top: 0.15rem;
     font-size: 0.9rem;
-    line-height: 1.7;
+    line-height: 1.75;
     max-width: none;
   }
   .home-scroll-arrow {

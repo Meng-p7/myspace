@@ -16,16 +16,11 @@ let currentLang = "zh";
 const I18N = {
   zh: {
     nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
-    aboutBio: "你好，我是 Moon。对智能硬件、人工智能与富有叙事感的数字交互充满好奇，喜欢把脑海里的草图变成真实可触碰的作品。",
+    homeIntro:
+      "我是 Moon，目前在华东理工大学学习机械工程与机器人方向。我对智能硬件、人工智能和富有叙事感的数字交互充满好奇，喜欢把脑海里的草图变成真实可触碰的作品——这个网站就是那些实验、记录，以及还没想明白的问题。",
     homeTagline: "机械工程 · 机器人 · 数字创作",
-    labelIdentity: "Identity",
-    labelAge: "Age",
-    labelLocation: "Location",
-    aboutIdentity: "机械设计制造及其自动化 · 华东理工大学",
-    aboutLocation: "中国 · 上海",
     copyBtn: "复制",
     copiedBtn: "已复制 ✓",
-    paperIntroText: "下面几件，是把想法真正做出来之后留下的东西。",
     workTitle: "Selected Work",
     workIntro:
       "我做的项目大致分两类：一类是让机器人真的动起来的工程与研究，另一类是让日常更顺手的数字产品。每一条都写了背景、我做了什么、结果如何，以及没做好的地方。",
@@ -215,16 +210,11 @@ const I18N = {
   },
   en: {
     nav: { home: "Home", work: "Work", journal: "Journal", contact: "Contact" },
-    aboutBio: "Hi, I'm Moon. Curious about intelligent hardware, artificial intelligence, and narrative-driven digital interaction—turning sketches in my mind into tangible creations.",
+    homeIntro:
+      "I'm Moon, studying mechanical engineering and robotics at ECUST. I'm curious about intelligent hardware, artificial intelligence and narrative-driven digital interaction, and I like turning the sketches in my head into things you can actually touch — this site is where those experiments, notes and still-open questions live.",
     homeTagline: "Mechanical engineering · Robotics · Digital craft",
-    labelIdentity: "Identity",
-    labelAge: "Age",
-    labelLocation: "Location",
-    aboutIdentity: "Mechanical Engineering · B.S. Candidate, ECUST",
-    aboutLocation: "Shanghai, China",
     copyBtn: "Copy",
     copiedBtn: "Copied ✓",
-    paperIntroText: "What follows is what was left behind after the ideas were actually built.",
     workTitle: "Selected Work",
     workIntro:
       "My work splits roughly in two: the engineering and research that makes robots actually move, and the digital products that make an ordinary day run smoother. Each entry covers the background, what I did, how it turned out, and what I would do differently.",

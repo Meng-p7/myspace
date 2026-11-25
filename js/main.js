@@ -45,11 +45,7 @@ function cls(el, name, on) {
 ========================================================= */
 const langToggleBtn = document.getElementById("langToggleBtn");
 const homeTaglineEl = document.getElementById("homeTagline");
-const aboutBioEl = document.getElementById("homeBio");
-const aboutIdentityEl = document.getElementById("homeIdentity");
-const aboutLocationEl = document.getElementById("homeLocation");
-const contactLocationEl = document.getElementById("contactLocation");
-const paperIntroTextEl = document.getElementById("paperIntroText");
+const homeBioEl = document.getElementById("homeBio");
 const workTitleEl = document.getElementById("workTitle");
 const workIntroEl = document.getElementById("workIntro");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
@@ -144,7 +140,6 @@ function renderWork(data) {
 ========================================================= */
 const journalMount = document.getElementById("journal3dMount");
 const journalFallback = document.getElementById("journalFallback");
-const journalSub = document.getElementById("journalSub");
 let journal3d = null;
 let journal3dLoading = false;
 
@@ -153,6 +148,7 @@ const journalLabels = (lang) =>
     ? {
         open: "打开日记本",
         close: "合上日记本",
+        shut: "封面已经合上",
         hint: "点一下封面，翻开这本手账",
         prev: "上一个场景",
         next: "下一个场景",
@@ -164,6 +160,7 @@ const journalLabels = (lang) =>
     : {
         open: "Open the book",
         close: "Close the book",
+        shut: "The cover is closed",
         hint: "Tap the cover to open this notebook",
         prev: "Previous scene",
         next: "Next scene",
@@ -241,10 +238,6 @@ function loadJournal3D() {
 
 /** Language change: the 3D scene keeps running, only the words change. */
 function updateJournalModule(lang) {
-  if (journalSub) {
-    journalSub.textContent =
-      lang === "zh" ? "手记、草图与一些小事。" : "Thoughts, sketches & little moments.";
-  }
   if (journal3d) {
     journal3d.setLocale(lang, journalPages(lang));
   } else {
@@ -272,12 +265,8 @@ function applyLanguage(lang) {
   const data = I18N[lang];
   document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
   langToggleBtn.textContent = lang === "zh" ? "EN" : "中";
-  aboutBioEl.textContent = data.aboutBio;
-  aboutIdentityEl.textContent = data.aboutIdentity;
-  aboutLocationEl.textContent = data.aboutLocation;
+  homeBioEl.textContent = data.homeIntro;
   homeTaglineEl.textContent = data.homeTagline;
-  contactLocationEl.textContent = data.aboutLocation;
-  paperIntroTextEl.textContent = data.paperIntroText;
   workTitleEl.textContent = data.workTitle;
   workIntroEl.textContent = data.workIntro;
   copyEmailBtn.textContent = data.copyBtn;
@@ -405,7 +394,6 @@ const paperCurlLip = document.getElementById("paperCurlLip");
 const paperCastShadow = document.getElementById("paperCastShadow");
 const paperSketchDecor = document.getElementById("paperSketchDecor");
 const paperFiberLayer = document.querySelector(".paper-fiber-layer");
-const paperIntro = document.getElementById("paperIntro");
 
 const workSection = document.getElementById("work");
 const workHandover = document.getElementById("workHandover");
@@ -414,7 +402,6 @@ const exhLineBottom = document.getElementById("exhLineBottom");
 const exhFrame1 = document.getElementById("exhFrame1");
 const exhFrame2 = document.getElementById("exhFrame2");
 const exhFrame3 = document.getElementById("exhFrame3");
-const exhTitle = document.getElementById("exhTitle");
 
 const journalStage = document.getElementById("journalStage");
 const endingSection = document.getElementById("ending");
@@ -540,12 +527,9 @@ function updateScrollAnimations(sy) {
       w(paperCastShadow, "opacity", clamp(curlIntensity * 1.15, 0, 1).toFixed(3));
       w(paperCastShadow, "transform", `scaleY(${(0.8 + curlIntensity * 0.5).toFixed(3)})`);
 
-      // the handover line fades in on the paper (0.40..0.58) and stays there
-      // until the work section takes over
+      // the sketch on the paper fades in as the sheet settles (0.40..0.58)
       const fadeInPaper = easeOutCubic(clamp((p - 0.40) / 0.18, 0, 1));
 
-      w(paperIntro, "opacity", fadeInPaper.toFixed(3));
-      w(paperIntro, "transform", `translate3d(0, ${((1 - fadeInPaper) * 26).toFixed(1)}px, 0)`);
       w(paperSketchDecor, "opacity", (0.48 * fadeInPaper).toFixed(3));
       ensureSpotLoop();
     }
@@ -570,8 +554,6 @@ function updateScrollAnimations(sy) {
       w(exhFrame2, "transform", `translate3d(${((1 - e) * 70).toFixed(1)}px, 0, ${(e * 35).toFixed(1)}px) rotateY(${(-14 + e * 6).toFixed(1)}deg)`);
       w(exhFrame3, "opacity", e.toFixed(3));
       w(exhFrame3, "transform", `translate3d(0, ${((1 - e) * 35).toFixed(1)}px, ${(-35 + e * 35).toFixed(1)}px)`);
-      w(exhTitle, "opacity", e.toFixed(3));
-      w(exhTitle, "transform", `translateY(-50%) translate3d(0, ${((1 - e) * 24).toFixed(1)}px, 0) scale(${(0.94 + e * 0.06).toFixed(3)})`);
     }
   }
 

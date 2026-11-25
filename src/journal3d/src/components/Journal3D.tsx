@@ -22,6 +22,8 @@ import styles from "./Journal3D.module.css";
 export type JournalLabels = {
   open: string;
   close: string;
+  /** the cover is shut: there is nothing before it */
+  shut: string;
   hint: string;
   prev: string;
   next: string;
@@ -93,6 +95,7 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
   // a turn may not be queued while the book is still moving
   const busyRef = useRef(false);
   const settleRaf = useRef(0);
+  const watchdogRef = useRef(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -215,6 +218,88 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
     book.zoomTarget = 0;
   }, []);
 
+  // ---- turning the book --------------------------------------------------
+  // The book turns by being clicked: the band on the right of the focused
+  // room goes forward, the band on its left goes back. The same function
+  // serves the arrow buttons, so both ways behave the same.
+  //
+  // The cover and the pages are two distinct states. Once the cover is shut
+  // there is nothing behind it, so it can no longer be turned back: the left
+  // arrow goes dead instead of reopening the book, which used to make the
+  // cover and the first page flip over and over.
+  const watchSettle = useCallback(() => {
+    cancelAnimationFrame(settleRaf.current);
+    window.clearTimeout(watchdogRef.current);
+    const release = () => {
+      busyRef.current = false;
+      window.clearTimeout(watchdogRef.current);
+    };
+    const tick = () => {
+      // the visible part of a turn is over well before the damping settles,
+      // so the lock is released on the visible motion
+      const settled =
+        Math.abs(book.openTarget - book.open) < 0.01 &&
+        Math.abs(book.focusTarget - book.focus) < 0.01;
+      if (settled) {
+        release();
+        return;
+      }
+      settleRaf.current = requestAnimationFrame(tick);
+    };
+    settleRaf.current = requestAnimationFrame(tick);
+    // a safety net: an interrupted animation must never leave the book
+    // refusing to respond
+    watchdogRef.current = window.setTimeout(release, 1400);
+  }, []);
+
+  /** Run one command on the book. Only one runs at a time. */
+  const command = useCallback(
+    (fn: () => void, interrupt = false) => {
+      if (busyRef.current && !interrupt) return;
+      busyRef.current = true;
+      fn();
+      watchSettle();
+    },
+    [watchSettle],
+  );
+
+  /** Open the book. A click on the cover may interrupt a close that is still
+   *  running, so the book never feels stuck shut. */
+  const openBook = useCallback(() => {
+    const reversing = book.openTarget === 0;
+    command(() => setBookOpen(true), reversing);
+  }, [command, setBookOpen]);
+
+  /** Shut the book again. */
+  const closeBook = useCallback(() => {
+    command(() => setBookOpen(false));
+  }, [command, setBookOpen]);
+
+  const handleTurn = useCallback(
+    (dir: -1 | 1) => {
+      const z = zonesRef.current;
+      if (!z || z.moving) return;
+      if (dir > 0) {
+        // the last page is the end of the book
+        if (room >= SCENES.length - 1) return;
+        command(() => goToRoom(room + 1));
+      } else {
+        // before the first page the book closes again
+        if (room === 0) command(() => setBookOpen(false));
+        else command(() => goToRoom(room - 1));
+      }
+    },
+    [room, command, goToRoom, setBookOpen],
+  );
+
+  useEffect(
+    () => () => {
+      cancelAnimationFrame(settleRaf.current);
+      window.clearTimeout(watchdogRef.current);
+    },
+    [],
+  );
+
   // ---- keyboard -----------------------------------------------------------
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -224,78 +309,32 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
       }
       if (e.key === "ArrowRight") {
         e.preventDefault();
-        if (!open) setBookOpen(true);
-        else if (room < SCENES.length - 1) goToRoom(room + 1);
+        if (!open) openBook();
+        else handleTurn(1);
       } else if (e.key === "ArrowLeft") {
         e.preventDefault();
-        if (open) {
-          if (room === 0) setBookOpen(false);
-          else goToRoom(room - 1);
-        }
+        // the cover is shut: nothing comes before it, so the key does nothing
+        if (open) handleTurn(-1);
       } else if (e.key === "Enter" || e.key === " ") {
         if (!open) {
           e.preventDefault();
-          setBookOpen(true);
+          openBook();
         }
       } else if (e.key === "Escape") {
-        setBookOpen(false);
+        if (open) closeBook();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, room, panelPageId, setBookOpen, goToRoom, closePanel]);
+  }, [open, panelPageId, openBook, closeBook, handleTurn]);
+
 
   // the page can ask the book to open itself
   useEffect(() => {
-    const onOpen = () => setBookOpen(true);
+    const onOpen = () => openBook();
     window.addEventListener("journal3d:open", onOpen);
     return () => window.removeEventListener("journal3d:open", onOpen);
-  }, [setBookOpen]);
-
-  // ---- turning the book --------------------------------------------------
-  // The book turns by being clicked: the band on the right of the focused
-  // room goes forward, the band on its left goes back. The same function
-  // serves the arrow buttons, so both ways behave the same.
-  const watchSettle = useCallback(() => {
-    cancelAnimationFrame(settleRaf.current);
-    const tick = () => {
-      // the visible part of a turn is over well before the damping settles,
-      // so the lock is released on the visible motion
-      const still =
-        Math.abs(book.focusTarget - book.focus) < 0.008 &&
-        Math.abs(book.openTarget - book.open) < 0.008 &&
-        Math.abs(book.zoomTarget - book.zoom) < 0.008;
-      if (still) {
-        busyRef.current = false;
-        return;
-      }
-      settleRaf.current = requestAnimationFrame(tick);
-    };
-    settleRaf.current = requestAnimationFrame(tick);
-  }, []);
-
-  const handleTurn = useCallback(
-    (dir: -1 | 1) => {
-      if (busyRef.current) return;
-      const z = zonesRef.current;
-      if (!z || z.moving) return;
-      if (dir > 0) {
-        // the last page is the end of the book
-        if (room >= SCENES.length - 1) return;
-        busyRef.current = true;
-        goToRoom(room + 1);
-      } else {
-        busyRef.current = true;
-        // before the first page the book closes again
-        if (room === 0) setBookOpen(false);
-        else goToRoom(room - 1);
-      }
-      watchSettle();
-    },
-    [room, goToRoom, setBookOpen, watchSettle],
-  );
-
-  useEffect(() => () => cancelAnimationFrame(settleRaf.current), []);
+  }, [openBook]);
 
   const spotLabels = useMemo(() => {
     const map: Record<string, string> = {};
@@ -348,7 +387,7 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
               canNext={room < SCENES.length - 1}
               canPrev
               onTurn={handleTurn}
-              onOpen={() => setBookOpen(true)}
+              onOpen={openBook}
             />
             <HotspotLayer spotsRef={spotsRef} labels={spotLabels} onPick={openPage} />
           </>
@@ -373,18 +412,23 @@ export default function Journal3D({ locale, assetBase, labels, pages }: JournalO
           <button
             type="button"
             className={styles.arrow}
-            onClick={() => (open ? handleTurn(-1) : setBookOpen(true))}
-            aria-label={open ? (room > 0 ? labels.prev : labels.close) : labels.open}
+            onClick={() => {
+              if (open) handleTurn(-1);
+            }}
+            aria-label={open ? (room > 0 ? labels.prev : labels.close) : labels.shut}
+            disabled={!open}
           >
             ←
           </button>
           <span className={styles.index}>
-            {String(room + 1).padStart(2, "0")} / {String(SCENES.length).padStart(2, "0")}
+            {open
+              ? `${String(room + 1).padStart(2, "0")} / ${String(SCENES.length).padStart(2, "0")}`
+              : "—"}
           </span>
           <button
             type="button"
             className={styles.arrow}
-            onClick={() => (open ? handleTurn(1) : setBookOpen(true))}
+            onClick={() => (open ? handleTurn(1) : openBook())}
             aria-label={open ? labels.next : labels.open}
             disabled={open && room >= SCENES.length - 1}
           >

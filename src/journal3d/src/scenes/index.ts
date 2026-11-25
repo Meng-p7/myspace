@@ -86,9 +86,9 @@ export function drawFrontCover(k: Sketch) {
   ];
   k.stroke(inner, { w: 0.9, closed: true, alpha: 0.22 });
 
-  // title, stamped in foil so it reads against the dark board
-  k.foil("Journal", 0.5, 0.44, 0.16);
-  k.foil("MOON", 0.5, 0.6, 0.05, "#cbb894", true);
+  // the owner's mark, stamped in foil so it reads against the dark board
+  k.foil("MOON", 0.5, 0.44, 0.15);
+  k.foil("2026", 0.5, 0.6, 0.05, "#cbb894", true);
 
   // a small constellation
   const dots: [number, number][] = [
@@ -122,7 +122,6 @@ export function drawFrontCover(k: Sketch) {
 /** The inside of the back cover. */
 export function drawBackCover(k: Sketch) {
   k.washAll("#efe9dc", 0.5);
-  k.label("notes, sketches & little moments", 0.5, 0.5, 0.042, { alpha: 0.4 });
   k.stroke(
     [
       [0.18, 0.56],
