@@ -1208,13 +1208,13 @@ button {
   pointer-events: auto;
   /* the portrait floats and the text runs around it: one voice, not a list */
   display: flow-root;
-  color: var(--ink);
+  color: #000000;
 }
 
 .home-intro-avatar {
   float: left;
-  width: 88px;
-  margin: 0.15rem 1.15rem 0.75rem 0;
+  width: 112px;
+  margin: 0.2rem 1.35rem 0.9rem 0;
   transform: rotate(-2.2deg);
 }
 
@@ -1230,9 +1230,9 @@ button {
 }
 
 .home-intro-bio {
-  font-size: 0.98rem;
-  line-height: 1.82;
-  color: var(--ink-soft);
+  font-size: 1.12rem;
+  line-height: 1.8;
+  color: #000000;
   max-width: 46ch;
 }
 
@@ -1611,12 +1611,12 @@ button {
     margin-top: 0;
   }
   .home-intro-avatar {
-    width: 54px;
-    margin: 0.15rem 0.85rem 0.6rem 0;
+    width: 68px;
+    margin: 0.2rem 1rem 0.7rem 0;
   }
   .home-intro-bio {
-    font-size: 0.84rem;
-    line-height: 1.78;
+    font-size: 0.98rem;
+    line-height: 1.76;
     max-width: none;
   }
   .home-intro-bio + .home-intro-bio {
