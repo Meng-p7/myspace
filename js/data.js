@@ -25,8 +25,6 @@ const I18N = {
     aboutLocation: "中国 · 上海",
     copyBtn: "复制",
     copiedBtn: "已复制 ✓",
-    projectsTitle: "Selected Work",
-    paperIntroKicker: "Selected Work",
     paperIntroText: "下面几件，是把想法真正做出来之后留下的东西。",
     workTitle: "Selected Work",
     workIntro:
@@ -35,9 +33,6 @@ const I18N = {
       { index: "A", title: "工程与机器人", count: "03 entries" },
       { index: "B", title: "数字产品与创意实验", count: "01 entry" },
     ],
-    contactTitle: "Let's talk",
-    contactLead:
-      "如果你也在做机器人、嵌入式或者带点叙事感的产品，欢迎写信给我。技术问题、项目合作，或者只是想聊聊，都行。",
     projects: [
       {
         num: "01",
@@ -229,8 +224,6 @@ const I18N = {
     aboutLocation: "Shanghai, China",
     copyBtn: "Copy",
     copiedBtn: "Copied ✓",
-    projectsTitle: "Selected Work",
-    paperIntroKicker: "Selected Work",
     paperIntroText: "What follows is what was left behind after the ideas were actually built.",
     workTitle: "Selected Work",
     workIntro:
@@ -239,9 +232,6 @@ const I18N = {
       { index: "A", title: "Engineering & Robotics", count: "03 entries" },
       { index: "B", title: "Digital Products & Creative Experiments", count: "01 entry" },
     ],
-    contactTitle: "Let's talk",
-    contactLead:
-      "If you are working on robots, embedded systems, or products that try to tell a story, write to me. Technical questions, collaboration, or just a conversation — all welcome.",
     projects: [
       {
         num: "01",

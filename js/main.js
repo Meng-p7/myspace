@@ -49,14 +49,10 @@ const aboutBioEl = document.getElementById("homeBio");
 const aboutIdentityEl = document.getElementById("homeIdentity");
 const aboutLocationEl = document.getElementById("homeLocation");
 const contactLocationEl = document.getElementById("contactLocation");
-const paperIntroKickerEl = document.getElementById("paperIntroKicker");
 const paperIntroTextEl = document.getElementById("paperIntroText");
 const workTitleEl = document.getElementById("workTitle");
 const workIntroEl = document.getElementById("workIntro");
-const contactTitleEl = document.getElementById("contactTitle");
-const contactLeadEl = document.getElementById("contactLead");
 const copyEmailBtn = document.getElementById("copyEmailBtn");
-const inplaceProjectsTitle = document.getElementById("inplaceProjectsTitle");
 const backToTopBtn = document.getElementById("backToTopBtn");
 
 copyEmailBtn.addEventListener("click", () => {
@@ -108,31 +104,24 @@ function renderWork(data) {
           <h3 class="work-group-title">${group.title}</h3>
           <span class="work-group-count">${group.count}</span>
         </div>
-        <div class="work-grid">
+        <div class="work-list">
           ${items
             .map(
               (p) => `
-            <article class="work-card work-card--${p.span || "narrow"}">
-              <a class="work-card-cover" href="${p.caseStudy || "#work"}" style="--ar: ${p.ar || "16 / 10"}">
-                <img src="${p.image}"
-                     srcset="${p.imageSm} 600w, ${p.image} 1200w"
-                     sizes="(max-width: 900px) 92vw, 46vw"
-                     loading="lazy" decoding="async"
-                     alt="${p.title}" />
-                <span class="work-card-num">· ${p.num}</span>
-              </a>
-              <div class="work-card-head">
-                <h4 class="work-card-title"><a href="${p.caseStudy || "#work"}">${p.title}</a></h4>
-                <span class="work-card-year">${p.year || ""}</span>
-              </div>
-              <p class="work-card-desc">${p.description}</p>
-              <div class="work-card-foot">
-                <div class="work-card-tags">
+            <article class="work-entry">
+              <span class="work-entry-num">· ${p.num}</span>
+              <div class="work-entry-main">
+                <h4 class="work-entry-title"><a href="${p.caseStudy || "#work"}">${p.title}</a></h4>
+                <p class="work-entry-desc">${p.description}</p>
+                <div class="work-entry-tags">
                   ${p.tags.map((t) => `<span class="work-tag">${t}</span>`).join("")}
                 </div>
+              </div>
+              <div class="work-entry-side">
+                <span class="work-entry-year">${p.year || ""}</span>
                 ${
                   p.caseStudy
-                    ? `<a class="work-card-cta" href="${p.caseStudy}">Case study <span>→</span></a>`
+                    ? `<a class="work-entry-cta" href="${p.caseStudy}">Case study <span>→</span></a>`
                     : ""
                 }
               </div>
@@ -288,14 +277,10 @@ function applyLanguage(lang) {
   aboutLocationEl.textContent = data.aboutLocation;
   homeTaglineEl.textContent = data.homeTagline;
   contactLocationEl.textContent = data.aboutLocation;
-  paperIntroKickerEl.textContent = data.paperIntroKicker;
   paperIntroTextEl.textContent = data.paperIntroText;
   workTitleEl.textContent = data.workTitle;
   workIntroEl.textContent = data.workIntro;
-  contactTitleEl.textContent = data.contactTitle;
-  contactLeadEl.textContent = data.contactLead;
   copyEmailBtn.textContent = data.copyBtn;
-  inplaceProjectsTitle.textContent = data.projectsTitle;
   backToTopBtn.textContent = data.backToTop;
 
   renderWork(data);
@@ -387,7 +372,7 @@ navToggle.addEventListener("click", () => {
 function sectionScrollTarget(key) {
   if (key === "work") return Math.max(0, M.workTop - 8);
   if (key === "journal") return M.journalTop;
-  if (key === "contact") return Math.max(0, M.contactTop - 8);
+  if (key === "contact") return Math.max(0, M.endingTop - 8);
   return 0;
 }
 
@@ -422,15 +407,14 @@ const paperSketchDecor = document.getElementById("paperSketchDecor");
 const paperFiberLayer = document.querySelector(".paper-fiber-layer");
 const paperIntro = document.getElementById("paperIntro");
 
-const inplaceExhibitionLayer = document.getElementById("inplaceExhibitionLayer");
+const workSection = document.getElementById("work");
+const workHandover = document.getElementById("workHandover");
 const exhLineTop = document.getElementById("exhLineTop");
 const exhLineBottom = document.getElementById("exhLineBottom");
 const exhFrame1 = document.getElementById("exhFrame1");
 const exhFrame2 = document.getElementById("exhFrame2");
 const exhFrame3 = document.getElementById("exhFrame3");
-
-const workSection = document.getElementById("work");
-const contactSection = document.getElementById("contact");
+const exhTitle = document.getElementById("exhTitle");
 
 const journalStage = document.getElementById("journalStage");
 const endingSection = document.getElementById("ending");
@@ -440,11 +424,11 @@ const M = {
   vw: 0, vh: 0,
   revealTop: 0, revealSc: 1,
   workTop: 0,
+  handoverTop: 0, handoverSc: 1,
   journalTop: 0, journalSc: 1,
-  contactTop: 0,
   endingTop: 0
 };
-const lastP = { reveal: -1, journal: -1 };
+const lastP = { reveal: -1, handover: -1, journal: -1 };
 let lastTheme = "";
 let lastActive = "";
 
@@ -519,13 +503,14 @@ function refreshMetrics() {
   M.revealTop = pageTop(revealStage);
   M.revealSc = Math.max(1, revealStage.offsetHeight - M.vh);
   M.workTop = pageTop(workSection);
+  M.handoverTop = pageTop(workHandover);
+  M.handoverSc = Math.max(1, workHandover.offsetHeight - M.vh);
   M.journalTop = pageTop(journalStage);
   M.journalSc = Math.max(1, journalStage.offsetHeight - M.vh);
-  M.contactTop = pageTop(contactSection);
   M.endingTop = pageTop(endingSection);
 
   applyFiberMode();
-  lastP.reveal = lastP.journal = -1;
+  lastP.reveal = lastP.handover = lastP.journal = -1;
 
   updateScrollAnimations(window.scrollY);
 }
@@ -555,31 +540,39 @@ function updateScrollAnimations(sy) {
       w(paperCastShadow, "opacity", clamp(curlIntensity * 1.15, 0, 1).toFixed(3));
       w(paperCastShadow, "transform", `scaleY(${(0.8 + curlIntensity * 0.5).toFixed(3)})`);
 
-      // the handover line fades in on the paper (0.40..0.58), holds, and
-      // fades out IN PLACE (0.72..0.85) as the exhibition takes over
+      // the handover line fades in on the paper (0.40..0.58) and stays there
+      // until the work section takes over
       const fadeInPaper = easeOutCubic(clamp((p - 0.40) / 0.18, 0, 1));
-      const fadeOutP = clamp((p - 0.72) / 0.14, 0, 1);
 
-      w(paperIntro, "opacity", (fadeInPaper * (1 - fadeOutP)).toFixed(3));
-      w(paperIntro, "transform", `translate3d(0, ${((1 - fadeInPaper) * 26 - fadeOutP * 16).toFixed(1)}px, 0)`);
-      w(paperSketchDecor, "opacity", (0.48 * (1 - fadeOutP)).toFixed(3));
-
-      // In-place "My Projects" 3D Exhibition Frames (0.76..1.00)
-      const exhP = clamp((p - 0.76) / 0.22, 0, 1);
-      const eExh = easeOutCubic(exhP);
-      w(inplaceExhibitionLayer, "opacity", eExh.toFixed(3));
-
-      const lineScale = (12 + eExh * 80) / 92;
-      w(exhLineTop, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
-      w(exhLineBottom, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
-
-      w(exhFrame1, "transform", `translate3d(${((1 - eExh) * -70).toFixed(1)}px, 0, ${(eExh * 60).toFixed(1)}px) rotateY(${(14 - eExh * 6).toFixed(1)}deg)`);
-      w(exhFrame2, "transform", `translate3d(${((1 - eExh) * 70).toFixed(1)}px, 0, ${(eExh * 35).toFixed(1)}px) rotateY(${(-14 + eExh * 6).toFixed(1)}deg)`);
-      w(exhFrame3, "transform", `translate3d(0, ${((1 - eExh) * 35).toFixed(1)}px, ${(-35 + eExh * 35).toFixed(1)}px)`);
-      w(inplaceProjectsTitle, "transform", `translate3d(0, ${((1 - eExh) * 24).toFixed(1)}px, 0) scale(${(0.94 + eExh * 0.06).toFixed(3)})`);
+      w(paperIntro, "opacity", fadeInPaper.toFixed(3));
+      w(paperIntro, "transform", `translate3d(0, ${((1 - fadeInPaper) * 26).toFixed(1)}px, 0)`);
+      w(paperSketchDecor, "opacity", (0.48 * fadeInPaper).toFixed(3));
       ensureSpotLoop();
     }
 
+  }
+
+  // --- 3. THE HANDOVER: the work exhibition assembles, then the journal ---
+  if (!prefersReducedMotion) {
+    const hp = clamp((sy - M.handoverTop) / M.handoverSc, 0, 1);
+    if (Math.abs(hp - lastP.handover) > 0.0004) {
+      lastP.handover = hp;
+      // the frames come together in the first half of the zone and hold
+      const e = easeOutCubic(clamp(hp / 0.55, 0, 1));
+
+      const lineScale = (12 + e * 80) / 92;
+      w(exhLineTop, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
+      w(exhLineBottom, "transform", `translateX(-50%) scaleX(${lineScale.toFixed(4)})`);
+
+      w(exhFrame1, "opacity", e.toFixed(3));
+      w(exhFrame1, "transform", `translate3d(${((1 - e) * -70).toFixed(1)}px, 0, ${(e * 60).toFixed(1)}px) rotateY(${(14 - e * 6).toFixed(1)}deg)`);
+      w(exhFrame2, "opacity", e.toFixed(3));
+      w(exhFrame2, "transform", `translate3d(${((1 - e) * 70).toFixed(1)}px, 0, ${(e * 35).toFixed(1)}px) rotateY(${(-14 + e * 6).toFixed(1)}deg)`);
+      w(exhFrame3, "opacity", e.toFixed(3));
+      w(exhFrame3, "transform", `translate3d(0, ${((1 - e) * 35).toFixed(1)}px, ${(-35 + e * 35).toFixed(1)}px)`);
+      w(exhTitle, "opacity", e.toFixed(3));
+      w(exhTitle, "transform", `translateY(-50%) translate3d(0, ${((1 - e) * 24).toFixed(1)}px, 0) scale(${(0.94 + e * 0.06).toFixed(3)})`);
+    }
   }
 
   // --- 4. ADAPTIVE NAV THEME & ACTIVE LINK (cached tops, no rect reads) ---
@@ -594,7 +587,7 @@ function updateScrollAnimations(sy) {
   }
 
   let activeKey = "home";
-  if (M.contactTop - sy <= vh * 0.45) activeKey = "contact";
+  if (M.endingTop - sy <= vh * 0.45) activeKey = "contact";
   else if (M.journalTop - sy <= vh * 0.45) activeKey = "journal";
   else if (M.workTop - sy <= vh * 0.45 || lastP.reveal >= 0.62) activeKey = "work";
   if (activeKey !== lastActive) {

@@ -89,13 +89,10 @@
         <div class="home-text-scrim"></div>
 
         <div class="home-overlay-content">
-          <div class="home-hero-copy">
-            <h1 class="home-title">Moon</h1>
-            <p class="home-tagline" id="homeTagline"></p>
-          </div>
+          <h1 class="visually-hidden">Moon — <span id="homeTagline"></span></h1>
 
-          <!-- The About page, folded into the home screen: portrait, a line of
-               identity, and the story behind the drawings. -->
+          <!-- The portrait, the identity and the story, straight on the
+               drawing: no card, no frame, no shadow. -->
           <aside class="home-intro" id="homeIntro">
             <figure class="home-intro-avatar">
               <img
@@ -103,18 +100,12 @@
                 loading="lazy"
                 decoding="async"
                 alt="Moon portrait illustration"
-                class="polaroid-img"
               />
             </figure>
-            <div class="home-intro-facts">
-              <span class="home-intro-role" id="homeIdentity"></span>
-              <span class="home-intro-place" id="homeLocation"></span>
-            </div>
-            <p class="home-intro-bio" id="homeBio"></p>
-            <div class="home-intro-links">
-              <a href="mailto:dreamxiang4413@gmail.com" class="home-intro-link">Email</a>
-              <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer" class="home-intro-link">GitHub</a>
-              <a href="https://x.com/Dreammko" target="_blank" rel="noopener noreferrer" class="home-intro-link">X</a>
+            <div class="home-intro-copy">
+              <p class="home-intro-role" id="homeIdentity"></p>
+              <p class="home-intro-place" id="homeLocation"></p>
+              <p class="home-intro-bio" id="homeBio"></p>
             </div>
           </aside>
 
@@ -145,18 +136,7 @@
 
           <!-- The line that hands the paper over to the work section -->
           <div class="paper-intro" id="paperIntro">
-            <p class="paper-intro-kicker" id="paperIntroKicker"></p>
             <p class="paper-intro-text" id="paperIntroText"></p>
-          </div>
-
-          <!-- In-place "Selected Work" 3D Exhibition Frames Reveal -->
-          <div class="inplace-exhibition-layer" id="inplaceExhibitionLayer" aria-hidden="true">
-            <div class="exh-line-h" id="exhLineTop" style="top:14%;"></div>
-            <div class="exh-line-h" id="exhLineBottom" style="bottom:14%;"></div>
-            <div class="exh-frame exh-frame-1" id="exhFrame1"></div>
-            <div class="exh-frame exh-frame-2" id="exhFrame2"></div>
-            <div class="exh-frame exh-frame-3" id="exhFrame3"></div>
-            <h2 class="inplace-projects-title" id="inplaceProjectsTitle">Selected Work</h2>
           </div>
         </div>
       </div>
@@ -174,12 +154,24 @@
       <div class="work-inner">
         <header class="work-header">
           <div class="work-header-main">
-            <p class="section-kicker">02 / Selected Work</p>
             <h2 class="editorial-heading" id="workTitle">Selected Work</h2>
           </div>
           <p class="work-intro" id="workIntro"></p>
         </header>
         <div id="workGroups"></div>
+      </div>
+
+      <!-- The handover: the work exhibition assembles here and becomes the
+           3D journal that follows. -->
+      <div class="work-handover" id="workHandover">
+        <div class="work-handover-sticky">
+          <div class="exh-line-h" id="exhLineTop"></div>
+          <div class="exh-line-h" id="exhLineBottom"></div>
+          <div class="exh-frame exh-frame-1" id="exhFrame1"></div>
+          <div class="exh-frame exh-frame-2" id="exhFrame2"></div>
+          <div class="exh-frame exh-frame-3" id="exhFrame3"></div>
+          <h2 class="exh-title" id="exhTitle">Journal</h2>
+        </div>
       </div>
     </section>
 
@@ -192,7 +184,6 @@
       <div class="journal-sticky">
         <div class="journal-header" id="journalHeader">
           <div class="journal-title-block">
-            <p class="section-kicker">03 / Journal</p>
             <h2 class="editorial-heading">Journal</h2>
             <p class="journal-sub" id="journalSub">Thoughts, sketches &amp; little moments.</p>
           </div>
@@ -206,38 +197,6 @@
       </div>
     </section>
 
-    <!-- =========================================================
-         04. CONTACT — the desk before the lights go out
-    ========================================================= -->
-    <section id="contact" class="contact-section" aria-label="Contact">
-      <div class="contact-inner">
-        <div class="contact-head">
-          <p class="section-kicker">04 / Contact</p>
-          <h2 class="editorial-heading" id="contactTitle">Let's talk</h2>
-          <p class="contact-lead" id="contactLead"></p>
-        </div>
-
-        <ul class="contact-list">
-          <li class="contact-item">
-            <span class="contact-label">Email</span>
-            <a href="mailto:dreamxiang4413@gmail.com" class="contact-value">dreamxiang4413@gmail.com</a>
-            <button type="button" class="copy-email-btn" id="copyEmailBtn">复制</button>
-          </li>
-          <li class="contact-item">
-            <span class="contact-label">GitHub</span>
-            <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer" class="contact-value">github.com/Meng-p7</a>
-          </li>
-          <li class="contact-item">
-            <span class="contact-label">X</span>
-            <a href="https://x.com/Dreammko" target="_blank" rel="noopener noreferrer" class="contact-value">x.com/Dreammko</a>
-          </li>
-          <li class="contact-item">
-            <span class="contact-label">Based in</span>
-            <span class="contact-value contact-value--plain" id="contactLocation"></span>
-          </li>
-        </ul>
-      </div>
-    </section>
   </main>
 
   <!-- TRANSITION 3: JOURNAL -> ENDING -->
@@ -246,7 +205,7 @@
   <!-- =========================================================
        05. ENDING — Night Studio
   ========================================================= -->
-  <footer class="ending-section" id="ending" aria-label="Ending">
+  <footer class="ending-section" id="ending" aria-label="Contact and ending">
     <picture class="ending-bg-media">
       <source media="(max-width: 820px) and (orientation: portrait)" srcset="assets/ending-night-m.webp" />
       <img
@@ -263,10 +222,32 @@
     <div class="ending-lamp-glow" aria-hidden="true"></div>
     <div class="ending-vignette" aria-hidden="true"></div>
 
-    <div class="ending-copy">
-      <p class="ending-line-1">Thanks for visiting.</p>
-      <p class="ending-line-2">The journey continues.</p>
-      <a href="#home" class="back-to-top" id="backToTopBtn">↑ Back to top</a>
+    <div class="ending-inner">
+      <div class="ending-copy">
+        <p class="ending-line-1">Thanks for visiting.</p>
+        <p class="ending-line-2">The journey continues.</p>
+        <a href="#home" class="back-to-top" id="backToTopBtn">↑ Back to top</a>
+      </div>
+
+      <ul class="contact-list">
+        <li class="contact-item">
+          <span class="contact-label">Email</span>
+          <a href="mailto:dreamxiang4413@gmail.com" class="contact-value">dreamxiang4413@gmail.com</a>
+          <button type="button" class="copy-email-btn" id="copyEmailBtn">复制</button>
+        </li>
+        <li class="contact-item">
+          <span class="contact-label">GitHub</span>
+          <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer" class="contact-value">github.com/Meng-p7</a>
+        </li>
+        <li class="contact-item">
+          <span class="contact-label">X</span>
+          <a href="https://x.com/Dreammko" target="_blank" rel="noopener noreferrer" class="contact-value">x.com/Dreammko</a>
+        </li>
+        <li class="contact-item">
+          <span class="contact-label">Based in</span>
+          <span class="contact-value contact-value--plain" id="contactLocation"></span>
+        </li>
+      </ul>
     </div>
   </footer>
 
