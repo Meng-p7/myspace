@@ -1,7 +1,7 @@
 # MY SPACE
 
 <p align="center">
-<img src="assets/home-sketch.webp" width="100%" alt="My Space — the sketch on the home page"/>
+<img src="assets/IMG_5305.jpeg" width="100%" alt="My Space — the sketch on the home page"/>
 </p>
 <p align="center">
 <em>A little world of my own.</em>
