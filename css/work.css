@@ -25,6 +25,7 @@ html {
   color: var(--ink);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 body {
@@ -192,7 +193,7 @@ html[data-lang="en"] .lang-zh { display: none; }
   padding-top: 0.45rem;
 }
 
-.case-prose { max-width: 68ch; }
+.case-prose { max-width: 68ch; min-width: 0; }
 
 .case-prose p {
   font-size: 1.02rem;
@@ -356,7 +357,7 @@ html[data-lang="en"] .lang-zh { display: none; }
   .case-nav-links { gap: 0.9rem; }
   .case-nav-links a { font-size: 0.66rem; }
   .case-section {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.9rem;
   }
   .case-h2 { padding-top: 0; }
