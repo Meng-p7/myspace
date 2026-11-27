@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>yam-peg-insert — Moon</title>
+  <meta name="description" content="Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec with 6-DoF IK (98%) and ACT+TE (66%) ablations." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌒</text></svg>" />
+  <script>
+    (function () {
+      try {
+        var lang = localStorage.getItem('moon-lang');
+        if (lang === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.classList.add('lang-en');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/case.css" />
+</head>
+<body class="case-page">
+
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html#hero" aria-label="Moon home">
+        <span>Moon</span><span class="brand-dot">.</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <a href="../index.html#about" data-zh="关于" data-en="About">关于</a>
+        <a href="../index.html#work" data-zh="作品" data-en="Work">作品</a>
+        <a href="../index.html#contact" data-zh="联系" data-en="Contact">联系</a>
+        <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">
+          <span class="lang-zh">中文</span>
+          <span class="lang-sep">/</span>
+          <span class="lang-en">EN</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="case-hero">
+      <div class="case-hero-inner">
+        <a class="case-back" href="../index.html#work" data-zh="← 返回作品" data-en="← All work">← 返回作品</a>
+        <div class="case-meta-line">
+          <span>04</span>
+          <span>2026</span>
+          <span data-zh="精密插销 · MuJoCo · 模仿学习" data-en="Precision Peg-in-Hole · MuJoCo · Imitation Learning">精密插销 · MuJoCo · 模仿学习</span>
+        </div>
+        <h1 class="case-title">yam-peg-insert</h1>
+        <p class="case-subtitle" data-zh="基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。" data-en="Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec: 6-DoF IK oracle achieves 98% success, with ACT+TE ablation reaching 66%.">基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。</p>
+        <dl class="case-facts">
+          <div>
+            <dt data-zh="角色" data-en="Role">角色</dt>
+            <dd data-zh="作者 · 仿真基准与策略评估" data-en="Author · benchmark &amp; policy evaluation">作者 · 仿真基准与策略评估</dd>
+          </div>
+          <div>
+            <dt data-zh="时间" data-en="Timeline">时间</dt>
+            <dd>2026</dd>
+          </div>
+          <div>
+            <dt data-zh="技术栈" data-en="Stack">技术栈</dt>
+            <dd>MuJoCo · MjSpec · 6-DoF IK · ACT</dd>
+          </div>
+          <div>
+            <dt data-zh="代码仓库" data-en="Repo">代码仓库</dt>
+            <dd><a href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer">Meng-p7/yam-peg-insert ↗</a></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="case-body">
+      <article class="case-section">
+        <div class="case-section-label">01 <span data-zh="概述" data-en="Overview">概述</span></div>
+        <h2 data-zh="面向毫米级接触任务的轻量化精密插销基准" data-en="Lightweight precision peg-in-hole benchmark for contact-rich manipulation">面向毫米级接触任务的轻量化精密插销基准</h2>
+        <p data-zh="yam-peg-insert 基于 MuJoCo Menagerie 的 i2rt_yam 六轴机械臂模型与 MjSpec 程序化场景构建接口，搭建了一套可复现的精密插销（Peg-in-Hole）仿真基准与数据采集流水线。" data-en="yam-peg-insert builds a reproducible peg-in-hole simulation benchmark and data-collection pipeline using the i2rt_yam 6-DoF arm from MuJoCo Menagerie and MuJoCo's programmatic MjSpec API.">yam-peg-insert 基于 MuJoCo Menagerie 的 i2rt_yam 六轴机械臂模型与 MjSpec 程序化场景构建接口，搭建了一套可复现的精密插销（Peg-in-Hole）仿真基准与数据采集流水线。</p>
+        <p data-zh="项目覆盖程序化孔位与销轴随机化、高精度 6-DoF 逆运动学（IK）专家轨迹生成、以及基于 LeRobot / Hugging Face 数据集格式的 ACT（Action Chunking with Transformers）策略训练与时间集成（Temporal Ensembling）消融评估。" data-en="The benchmark covers procedural peg/socket randomization, high-precision 6-DoF IK expert demonstrations, and ACT (Action Chunking with Transformers) policy training with Temporal Ensembling (TE) ablations backed by a Hugging Face dataset.">项目覆盖程序化孔位与销轴随机化、高精度 6-DoF 逆运动学（IK）专家轨迹生成、以及基于 LeRobot / Hugging Face 数据集格式的 ACT（Action Chunking with Transformers）策略训练与时间集成（Temporal Ensembling）消融评估。</p>
+      </article>
+
+      <article class="case-section">
+        <div class="case-section-label">02 <span data-zh="关键指标" data-en="Key Metrics">关键指标</span></div>
+        <h2 data-zh="核心架构与基准结果" data-en="Core architecture &amp; benchmark results">核心架构与基准结果</h2>
+        <ul class="case-list">
+          <li data-zh="MjSpec 程序化建模：基于 MuJoCo Menagerie i2rt_yam 动态装配插销、底座与多视角相机。" data-en="MjSpec procedural scene assembly: composes i2rt_yam from MuJoCo Menagerie with randomized pegs, sockets, and multi-view cameras.">MjSpec 程序化建模：基于 MuJoCo Menagerie i2rt_yam 动态装配插销、底座与多视角相机。</li>
+          <li data-zh="6-DoF IK 专家基准：闭环逆运动学控制器在精密插销任务上实现 98% 的任务成功率。" data-en="6-DoF IK oracle: closed-loop inverse kinematics controller achieves a 98% insertion success rate.">6-DoF IK 专家基准：闭环逆运动学控制器在精密插销任务上实现 98% 的任务成功率。</li>
+          <li data-zh="ACT + TE 消融实验：引入 Temporal Ensembling（TE）后，ACT 视觉运动策略在随机化测试集上达到 66% 成功率。" data-en="ACT + TE ablation: adding Temporal Ensembling (TE) enables the ACT visuomotor policy to reach 66% success on randomized evaluations.">ACT + TE 消融实验：引入 Temporal Ensembling（TE）后，ACT 视觉运动策略在随机化测试集上达到 66% 成功率。</li>
+        </ul>
+      </article>
+
+      <article class="case-section">
+        <div class="case-section-label">03 <span data-zh="开源资源" data-en="Resources">开源资源</span></div>
+        <h2 data-zh="代码仓库与公开数据集" data-en="Open-source code &amp; dataset">代码仓库与公开数据集</h2>
+        <p data-zh="完整的仿真环境、6-DoF IK 采集脚本、ACT+TE 训练与评估配置均已开源在 GitHub，配套的专家演示轨迹数据集托管于 Hugging Face（dream0906/yam），便于直接复现消融结果。" data-en="The simulation environment, 6-DoF IK data generator, and ACT+TE training/evaluation scripts are open-sourced on GitHub, paired with the demonstration dataset hosted on Hugging Face (dream0906/yam) for full reproducibility.">完整的仿真环境、6-DoF IK 采集脚本、ACT+TE 训练与评估配置均已开源在 GitHub，配套的专家演示轨迹数据集托管于 Hugging Face（dream0906/yam），便于直接复现消融结果。</p>
+      </article>
+
+      <article class="case-section case-section-links">
+        <div class="case-section-label">Links</div>
+        <div class="case-link-row">
+          <a class="btn-primary" href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer" data-zh="GitHub 仓库 ↗" data-en="GitHub repo ↗">GitHub 仓库 ↗</a>
+          <a class="btn-ghost" href="https://huggingface.co/datasets/dream0906/yam" target="_blank" rel="noopener noreferrer" data-zh="Hugging Face 数据集 ↗" data-en="Hugging Face dataset ↗">Hugging Face 数据集 ↗</a>
+          <a class="btn-ghost" href="../index.html#work" data-zh="← 全部作品" data-en="← All work">← 全部作品</a>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span>Moon</span>
+        <span class="footer-sep">·</span>
+        <span>Shanghai</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span class="footer-sep">·</span>
+        <a href="../index.html#contact" data-zh="联系" data-en="Contact">联系</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/case.js"></script>
+</body>
+</html>
