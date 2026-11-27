@@ -1,130 +1,170 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>yam-peg-insert — Moon</title>
-  <meta name="description" content="Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec with 6-DoF IK (98%) and ACT+TE (66%) ablations." />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌒</text></svg>" />
-  <script>
-    (function () {
-      try {
-        var lang = localStorage.getItem('moon-lang');
-        if (lang === 'en') {
-          document.documentElement.lang = 'en';
-          document.documentElement.classList.add('lang-en');
-        }
-      } catch (e) {}
-    })();
-  </script>
+  <meta name="description" content="Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec: 6-DoF IK oracle achieves 98% success, with ACT+TE ablation reaching 66%." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='%23f6f3eb'/%3E%3Ccircle cx='21' cy='13' r='9' fill='%23171717'/%3E%3Ccircle cx='24' cy='22' r='2.4' fill='%232563eb'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/case.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/work.css" />
 </head>
-<body class="case-page">
-
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <a class="brand" href="../index.html#hero" aria-label="Moon home">
-        <span>Moon</span><span class="brand-dot">.</span>
-      </a>
-      <nav class="nav" aria-label="Primary">
-        <a href="../index.html#about" data-zh="关于" data-en="About">关于</a>
-        <a href="../index.html#work" data-zh="作品" data-en="Work">作品</a>
-        <a href="../index.html#contact" data-zh="联系" data-en="Contact">联系</a>
-        <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">
-          <span class="lang-zh">中文</span>
-          <span class="lang-sep">/</span>
-          <span class="lang-en">EN</span>
-        </button>
-      </nav>
-    </div>
+<body>
+  <header class="case-nav">
+    <a href="../index.html#home" class="case-brand">Moon<span class="case-brand-dot" aria-hidden="true"></span></a>
+    <nav class="case-nav-links">
+      <a href="../index.html#work">Work</a>
+      <a href="../index.html#journal">Journal</a>
+      <a href="../index.html#contact">Contact</a>
+      <button type="button" class="case-lang-btn" id="caseLangBtn" aria-label="Switch language">EN</button>
+    </nav>
   </header>
 
-  <main>
-    <section class="case-hero">
-      <div class="case-hero-inner">
-        <a class="case-back" href="../index.html#work" data-zh="← 返回作品" data-en="← All work">← 返回作品</a>
-        <div class="case-meta-line">
-          <span>04</span>
-          <span>2026</span>
-          <span data-zh="精密插销 · MuJoCo · 模仿学习" data-en="Precision Peg-in-Hole · MuJoCo · Imitation Learning">精密插销 · MuJoCo · 模仿学习</span>
-        </div>
+  <main class="case-body">
+    <article>
+      <header class="case-hero">
+        <a class="case-back" href="../index.html#work">
+          <span class="lang-zh">← 返回首页</span>
+          <span class="lang-en">← Back to index</span>
+        </a>
+        <p class="case-kicker">
+          <span class="lang-zh">· 04 / 工程与机器人</span>
+          <span class="lang-en">· 04 / ENGINEERING &amp; ROBOTICS</span>
+        </p>
         <h1 class="case-title">yam-peg-insert</h1>
-        <p class="case-subtitle" data-zh="基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。" data-en="Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec: 6-DoF IK oracle achieves 98% success, with ACT+TE ablation reaching 66%.">基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。</p>
-        <dl class="case-facts">
+        <p class="case-lede">
+          <span class="lang-zh">基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。</span>
+          <span class="lang-en">Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec: 6-DoF IK oracle achieves 98% success, with ACT+TE ablation reaching 66%.</span>
+        </p>
+        <dl class="case-meta">
           <div>
-            <dt data-zh="角色" data-en="Role">角色</dt>
-            <dd data-zh="作者 · 仿真基准与策略评估" data-en="Author · benchmark &amp; policy evaluation">作者 · 仿真基准与策略评估</dd>
+            <dt><span class="lang-zh">角色</span><span class="lang-en">Role</span></dt>
+            <dd><span class="lang-zh">作者 · 仿真基准</span><span class="lang-en">Author · Simulation Benchmark</span></dd>
           </div>
           <div>
-            <dt data-zh="时间" data-en="Timeline">时间</dt>
+            <dt><span class="lang-zh">时间</span><span class="lang-en">Year</span></dt>
             <dd>2026</dd>
           </div>
           <div>
-            <dt data-zh="技术栈" data-en="Stack">技术栈</dt>
-            <dd>MuJoCo · MjSpec · 6-DoF IK · ACT</dd>
+            <dt><span class="lang-zh">技术栈</span><span class="lang-en">Stack</span></dt>
+            <dd>MuJoCo · MjSpec · ACT · LeRobot</dd>
           </div>
           <div>
-            <dt data-zh="代码仓库" data-en="Repo">代码仓库</dt>
-            <dd><a href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer">Meng-p7/yam-peg-insert ↗</a></dd>
+            <dt><span class="lang-zh">代码仓库</span><span class="lang-en">Repo</span></dt>
+            <dd><a href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer">Meng-p7/yam-peg-insert</a></dd>
           </div>
         </dl>
-      </div>
-    </section>
+      </header>
 
-    <section class="case-body">
-      <article class="case-section">
-        <div class="case-section-label">01 <span data-zh="概述" data-en="Overview">概述</span></div>
-        <h2 data-zh="面向毫米级接触任务的轻量化精密插销基准" data-en="Lightweight precision peg-in-hole benchmark for contact-rich manipulation">面向毫米级接触任务的轻量化精密插销基准</h2>
-        <p data-zh="yam-peg-insert 基于 MuJoCo Menagerie 的 i2rt_yam 六轴机械臂模型与 MjSpec 程序化场景构建接口，搭建了一套可复现的精密插销（Peg-in-Hole）仿真基准与数据采集流水线。" data-en="yam-peg-insert builds a reproducible peg-in-hole simulation benchmark and data-collection pipeline using the i2rt_yam 6-DoF arm from MuJoCo Menagerie and MuJoCo's programmatic MjSpec API.">yam-peg-insert 基于 MuJoCo Menagerie 的 i2rt_yam 六轴机械臂模型与 MjSpec 程序化场景构建接口，搭建了一套可复现的精密插销（Peg-in-Hole）仿真基准与数据采集流水线。</p>
-        <p data-zh="项目覆盖程序化孔位与销轴随机化、高精度 6-DoF 逆运动学（IK）专家轨迹生成、以及基于 LeRobot / Hugging Face 数据集格式的 ACT（Action Chunking with Transformers）策略训练与时间集成（Temporal Ensembling）消融评估。" data-en="The benchmark covers procedural peg/socket randomization, high-precision 6-DoF IK expert demonstrations, and ACT (Action Chunking with Transformers) policy training with Temporal Ensembling (TE) ablations backed by a Hugging Face dataset.">项目覆盖程序化孔位与销轴随机化、高精度 6-DoF 逆运动学（IK）专家轨迹生成、以及基于 LeRobot / Hugging Face 数据集格式的 ACT（Action Chunking with Transformers）策略训练与时间集成（Temporal Ensembling）消融评估。</p>
-      </article>
+      <section class="case-section">
+        <h2><span class="lang-zh">背景</span><span class="lang-en">Background</span></h2>
+        <p>
+          <span class="lang-zh">精密插销（peg-in-hole）对亚毫米级对齐、接触力学建模与多视角视觉反馈极为敏感。项目基于 MuJoCo Menagerie 的 i2rt_yam 机械臂与 MjSpec 构建了可复现的精密插销仿真环境与训练评测闭环。</span>
+          <span class="lang-en">Precision peg-in-hole manipulation is highly sensitive to sub-millimeter alignment, contact dynamics, and multi-view visual feedback. Built on MuJoCo Menagerie's i2rt_yam arm and MjSpec, this project establishes a reproducible simulation benchmark and end-to-end training/evaluation loop.</span>
+        </p>
+      </section>
 
-      <article class="case-section">
-        <div class="case-section-label">02 <span data-zh="关键指标" data-en="Key Metrics">关键指标</span></div>
-        <h2 data-zh="核心架构与基准结果" data-en="Core architecture &amp; benchmark results">核心架构与基准结果</h2>
-        <ul class="case-list">
-          <li data-zh="MjSpec 程序化建模：基于 MuJoCo Menagerie i2rt_yam 动态装配插销、底座与多视角相机。" data-en="MjSpec procedural scene assembly: composes i2rt_yam from MuJoCo Menagerie with randomized pegs, sockets, and multi-view cameras.">MjSpec 程序化建模：基于 MuJoCo Menagerie i2rt_yam 动态装配插销、底座与多视角相机。</li>
-          <li data-zh="6-DoF IK 专家基准：闭环逆运动学控制器在精密插销任务上实现 98% 的任务成功率。" data-en="6-DoF IK oracle: closed-loop inverse kinematics controller achieves a 98% insertion success rate.">6-DoF IK 专家基准：闭环逆运动学控制器在精密插销任务上实现 98% 的任务成功率。</li>
-          <li data-zh="ACT + TE 消融实验：引入 Temporal Ensembling（TE）后，ACT 视觉运动策略在随机化测试集上达到 66% 成功率。" data-en="ACT + TE ablation: adding Temporal Ensembling (TE) enables the ACT visuomotor policy to reach 66% success on randomized evaluations.">ACT + TE 消融实验：引入 Temporal Ensembling（TE）后，ACT 视觉运动策略在随机化测试集上达到 66% 成功率。</li>
+      <section class="case-section">
+        <h2><span class="lang-zh">目标</span><span class="lang-en">Goal</span></h2>
+        <p>
+          <span class="lang-zh">提供稳定、高速的 6-DoF 精密插销专家数据采集管线（100% / 98% 级专家基准），并通过不同策略架构与时序集成（Temporal Ensembling）消融，定量评估模仿学习在高精度接触任务上的瓶颈与改进空间。</span>
+          <span class="lang-en">Provide a stable, high-speed 6-DoF expert data collection pipeline (98%-level oracle) and systematically benchmark imitation learning policies and Temporal Ensembling (TE) ablations on tight-tolerance contact-rich insertion.</span>
+        </p>
+      </section>
+
+      <section class="case-section">
+        <h2><span class="lang-zh">我的贡献</span><span class="lang-en">What I Built</span></h2>
+        <ul>
+          <li>
+            <span class="lang-zh">基于 MuJoCo MjSpec 程序化组装 i2rt_yam 机械臂、双视角相机与可调公差插销-孔座场景，并完成接触参数标定。</span>
+            <span class="lang-en">Programmatically assembled the i2rt_yam arm, dual-camera setup, and tolerance-configurable peg-and-hole scene via MuJoCo MjSpec with tuned contact physics.</span>
+          </li>
+          <li>
+            <span class="lang-zh">实现 6-DoF 逆运动学（IK）专家轨迹生成器，覆盖随机初始位姿与孔位扰动，在 50 次评估中达成 98% 成功率并生成公开数据集 <code>dream0906/yam</code>。</span>
+            <span class="lang-en">Implemented a 6-DoF IK oracle trajectory generator across randomized initial poses and hole perturbations, achieving 98% success over 50 eval episodes and publishing dataset <code>dream0906/yam</code>.</span>
+          </li>
+          <li>
+            <span class="lang-zh">搭建 LeRobot 策略训练与评测管线，完成 ACT、ACT + Temporal Ensembling（TE）及 Diffusion Policy 的对比消融实验。</span>
+            <span class="lang-en">Built the LeRobot training and evaluation pipeline to run controlled ablations comparing ACT, ACT + Temporal Ensembling (TE), and Diffusion Policy.</span>
+          </li>
         </ul>
-      </article>
+      </section>
 
-      <article class="case-section">
-        <div class="case-section-label">03 <span data-zh="开源资源" data-en="Resources">开源资源</span></div>
-        <h2 data-zh="代码仓库与公开数据集" data-en="Open-source code &amp; dataset">代码仓库与公开数据集</h2>
-        <p data-zh="完整的仿真环境、6-DoF IK 采集脚本、ACT+TE 训练与评估配置均已开源在 GitHub，配套的专家演示轨迹数据集托管于 Hugging Face（dream0906/yam），便于直接复现消融结果。" data-en="The simulation environment, 6-DoF IK data generator, and ACT+TE training/evaluation scripts are open-sourced on GitHub, paired with the demonstration dataset hosted on Hugging Face (dream0906/yam) for full reproducibility.">完整的仿真环境、6-DoF IK 采集脚本、ACT+TE 训练与评估配置均已开源在 GitHub，配套的专家演示轨迹数据集托管于 Hugging Face（dream0906/yam），便于直接复现消融结果。</p>
-      </article>
-
-      <article class="case-section case-section-links">
-        <div class="case-section-label">Links</div>
-        <div class="case-link-row">
-          <a class="btn-primary" href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer" data-zh="GitHub 仓库 ↗" data-en="GitHub repo ↗">GitHub 仓库 ↗</a>
-          <a class="btn-ghost" href="https://huggingface.co/datasets/dream0906/yam" target="_blank" rel="noopener noreferrer" data-zh="Hugging Face 数据集 ↗" data-en="Hugging Face dataset ↗">Hugging Face 数据集 ↗</a>
-          <a class="btn-ghost" href="../index.html#work" data-zh="← 全部作品" data-en="← All work">← 全部作品</a>
+      <section class="case-section">
+        <h2><span class="lang-zh">实测与消融</span><span class="lang-en">Benchmarks &amp; Ablation</span></h2>
+        <div class="case-table-wrap">
+          <table class="case-table">
+            <thead>
+              <tr>
+                <th><span class="lang-zh">策略 / 基准</span><span class="lang-en">Policy / Baseline</span></th>
+                <th><span class="lang-zh">成功率</span><span class="lang-en">Success Rate</span></th>
+                <th><span class="lang-zh">关键说明</span><span class="lang-en">Notes</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>6-DoF IK Oracle</td>
+                <td>98% (49 / 50)</td>
+                <td><span class="lang-zh">用于高质量示范采集的几何专家基准</span><span class="lang-en">Geometric oracle used for high-quality demonstration generation</span></td>
+              </tr>
+              <tr>
+                <td>ACT + TE</td>
+                <td>66% (33 / 50)</td>
+                <td><span class="lang-zh">加入 Temporal Ensembling 后显著抑制插入段抖动</span><span class="lang-en">Temporal Ensembling significantly reduces jitter during insertion</span></td>
+              </tr>
+              <tr>
+                <td>ACT (baseline)</td>
+                <td>54% (27 / 50)</td>
+                <td><span class="lang-zh">无时序集成时接触阶段易出现轻微卡滞</span><span class="lang-en">More prone to slight jamming near contact without ensembling</span></td>
+              </tr>
+              <tr>
+                <td>Diffusion Policy</td>
+                <td>48% (24 / 50)</td>
+                <td><span class="lang-zh">相同训练预算下对亚毫米对齐收敛较慢</span><span class="lang-en">Slower convergence on sub-millimeter alignment under matched budget</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </article>
-    </section>
+      </section>
+
+      <section class="case-section">
+        <h2><span class="lang-zh">反思</span><span class="lang-en">Reflection</span></h2>
+        <p>
+          <span class="lang-zh">时序集成（TE）能有效平滑高频动作抖动，从而大幅提升插销阶段的一次通过率；但纯视觉策略在最后 1–2 mm 的盲区卡滞仍受限于腕部视角遮挡与缺乏力/触觉反馈，这也是后续引入合规控制与触觉表征的重点方向。</span>
+          <span class="lang-en">Temporal Ensembling effectively smooths high-frequency action jitter and boosts insertion pass rates. However, pure vision policies still struggle with the final 1–2 mm due to wrist-view occlusion and lack of force/tactile feedback—motivating future work on compliant control and tactile representations.</span>
+        </p>
+      </section>
+
+      <div class="case-links">
+        <a href="https://github.com/Meng-p7/yam-peg-insert" target="_blank" rel="noopener noreferrer">
+          <span class="lang-zh">GitHub 仓库</span>
+          <span class="lang-en">GitHub Repository</span>
+        </a>
+        <a href="https://huggingface.co/datasets/dream0906/yam" target="_blank" rel="noopener noreferrer">
+          <span class="lang-zh">Hugging Face 数据集</span>
+          <span class="lang-en">Hugging Face Dataset</span>
+        </a>
+      </div>
+
+      <nav class="case-next" aria-label="Next case study">
+        <a href="piper-sim.html">
+          <span>
+            <small><span class="lang-zh">上一个项目</span><span class="lang-en">Previous project</span></small>
+            <strong>PiperSim</strong>
+          </span>
+          <span aria-hidden="true">←</span>
+        </a>
+      </nav>
+    </article>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-inner">
-      <div class="footer-left">
-        <span>Moon</span>
-        <span class="footer-sep">·</span>
-        <span>Shanghai</span>
-      </div>
-      <div class="footer-right">
-        <a href="https://github.com/Meng-p7" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <span class="footer-sep">·</span>
-        <a href="../index.html#contact" data-zh="联系" data-en="Contact">联系</a>
-      </div>
-    </div>
+  <footer class="case-foot">
+    <span>© Moon</span>
+    <a href="../index.html#home"><span class="lang-zh">返回首页</span><span class="lang-en">Back to home</span></a>
   </footer>
 
-  <script src="../js/case.js"></script>
+  <script src="../js/case.js" defer></script>
 </body>
 </html>
