@@ -28,7 +28,7 @@ const I18N = {
     workIntro:
       "我做的项目大致分两类：一类是让机器人真的动起来的工程与研究，另一类是让日常更顺手的数字产品。每一条都写了背景、我做了什么、结果如何，以及没做好的地方。",
     workGroups: [
-      { index: "A", title: "工程与机器人", count: "03 entries" },
+      { index: "A", title: "工程与机器人", count: "04 entries" },
       { index: "B", title: "数字产品与创意实验", count: "01 entry" },
     ],
     projects: [
@@ -77,6 +77,22 @@ const I18N = {
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
       },
+      {
+        num: "04",
+        title: "yam-peg-insert",
+        group: "A",
+        span: "narrow",
+        year: "2026 · Open source",
+        caseStudy: "work/yam-peg-insert.html",
+        description: "基于 MuJoCo Menagerie i2rt_yam 与 MjSpec 的精密插销基准：6-DoF IK 基准达成 98% 成功率，ACT+TE 消融实验达到 66% 成功率。",
+        image: "assets/arm-simulation.webp",
+        ar: "1200 / 896",
+        imageSm: "assets/arm-simulation-sm.webp",
+        tags: ["MuJoCo", "MjSpec", "ACT"],
+        projectUrl: "https://huggingface.co/datasets/dream0906/yam",
+        projectLabel: "Dataset ↗",
+        github: "https://github.com/Meng-p7/yam-peg-insert"
+      }, 
       {
         num: "04",
         title: "LifeOS",
@@ -225,7 +241,7 @@ const I18N = {
     workIntro:
       "My work splits roughly in two: the engineering and research that makes robots actually move, and the digital products that make an ordinary day run smoother. Each entry covers the background, what I did, how it turned out, and what I would do differently.",
     workGroups: [
-      { index: "A", title: "Engineering & Robotics", count: "03 entries" },
+      { index: "A", title: "Engineering & Robotics", count: "04 entries" },
       { index: "B", title: "Digital Products & Creative Experiments", count: "01 entry" },
     ],
     projects: [
@@ -262,6 +278,22 @@ const I18N = {
         tags: ["ROS 2", "MuJoCo", "MoveIt"],
         github: "https://github.com/Meng-p7/PiperSim"
       },
+      {
+        num: "04",
+        title: "yam-peg-insert",
+        group: "A",
+        span: "narrow",
+        year: "2026 · Open source",
+        caseStudy: "work/yam-peg-insert.html",
+        description: "Precision peg-in-hole benchmark built on MuJoCo Menagerie i2rt_yam and MjSpec: 6-DoF IK oracle achieves 98% success, with ACT+TE ablation reaching 66%.",
+        image: "assets/arm-simulation.webp",
+        ar: "1200 / 896",
+        imageSm: "assets/arm-simulation-sm.webp",
+        tags: ["MuJoCo", "MjSpec", "ACT"],
+        projectUrl: "https://huggingface.co/datasets/dream0906/yam",
+        projectLabel: "Dataset ↗",
+        github: "https://github.com/Meng-p7/yam-peg-insert"
+      }, 
       {
         num: "04",
         title: "LifeOS",
